@@ -763,6 +763,26 @@ The user added this requirement while the guidance was being written:
 
 - The [partner guide](../user.md) was published on GitHub before implementation. The green-wave code, updated tests, and guide additions are checkpointed locally. [Open the demo](http://127.0.0.1:8000/simulator) on Lenovo. The slide deck owner still needs to arrange access or an export for presenters. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Locate the public simulator frontend
+
+> if we are without a public frontend than something is wrong with our ci/cd. I don't get it. where is our public frontend of the simulator?
+
+### Decisions
+
+- Check the local deployment and GitHub's publish status against the current spec, which puts FastAPI on the demo laptop and leaves public hosting as a separate decision. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Clarified that Supabase is the hosted database and that FastAPI serves the current frontend and the live simulator API together. A public deployment needs a reachable FastAPI service or a browser-only simulation. [GitHub Pages hosting](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) · [Supabase GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration#deploying-changes-to-production) · [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The local simulator returned HTTP 200. GitHub reported a public repo with Pages disabled, zero Actions workflows, zero deployments, and no homepage. The local checkout had no deployment workflow, and remote main matched the local milestone 3 commit at the time of the check. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The current working URL is [the simulator on the demo laptop](http://127.0.0.1:8000/simulator). No public simulator frontend is configured. The GitHub check found no deployment pipeline for the simulator to fail. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Project cover slide
 
 > ADD, as 1st slide, a short description of the project.  Add inspirational immage
@@ -830,6 +850,26 @@ The user added this requirement while the guidance was being written:
 
 - The deck commit and its merge with milestone 3 are pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Complete the merge and sync
+
+> complete the merge, and sync
+
+### Decisions
+
+- The user requested completing the active merge and syncing with GitHub. Codex kept the local hosting investigation and the incoming pedagogy deck entries in the logbook, with each branch's entries in their original order. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Resolved the single logbook conflict and prepared the merge of local `main` with `origin/main`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Verified that every logbook section from both merge parents was intact and that rebuilding the five-slide deck reproduced the existing HTML byte for byte. The routing check initially failed when run as a script because it uses package-relative imports. Running the routing, priority and simulation checks as Python modules passed. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Resolved the merge with both branches' work included. The sync target is GitHub's `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Architecture slide
 
 > ADD additional slide with graphical representation of the system architecture
@@ -870,6 +910,7 @@ The user added this requirement while the guidance was being written:
 ### Independent checks
 
 - In the browser pane, presentation mode opened on slide 1, scaled to the window, and the left arrow moved to the architecture slide with the counter at 2 / 6. The publish succeeded and listed the architecture slide among the deck's files. The claude.ai page itself was not viewed, because the built-in browser requires a sign-in. [Rubric criterion 3](../docs/rubric.html#c3)
+- While pushing, `git pull` brought in a logbook-only merge from `origin/main`. Claude kept both sides' entries, with the incoming one first, and confirmed that the deck, backend and frontend files were unchanged and that `deck.html` rebuilds identically. [Rubric criterion 3](../docs/rubric.html#c3)
 
 ### Session result
 
