@@ -101,4 +101,69 @@ The user then asked for this correction to be included in the record.
 
 ### Session result
 
-- This commit records the Dispatcher Copilot requirements and the HackatonIntel development history together. GitHub's branch history provides the publication record. [Rubric criterion 4](../docs/rubric.html#c4)\n
+- This commit records the Dispatcher Copilot requirements and the HackatonIntel development history together. GitHub's branch history provides the publication record. [Rubric criterion 4](../docs/rubric.html#c4)
+
+
+## User prompt · Android language, simulator and hosting
+
+> we are free to choose language.
+>
+> 1. Do you want to code the android part in Flutter or in Java?
+> 2. Is the spec clear  to you and specific enough as far as the lights simulator app and backend go? Is it clear where they will be hosted?
+
+### Decisions
+
+- Recommended Java for the Android vehicle app and a separate browser-based simulator and dispatch console. The current cross-platform UI requirement in §4 would need to change if this split is adopted. Suggested using recorded or simulated Manhattan coordinates for the first end-to-end demo. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Reviewed the interface between the phone, backend, and desktop simulator. Proposed a FastAPI backend owning the simulation clock and signal state, with the desktop browser rendering the simulation. Proposed hosting the backend and desktop web UI on the demo laptop, with the phone on the same private network. A public deployment remains a separate hosting decision. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Checked [the spec](../docs/specification.md) §§2–5, 6.1–6.5, and 7 for the target platforms, division of responsibilities, update cadence, wire protocol, and deployment. The document describes a desktop simulator and a shared server, leaves framework alternatives open, gives one location message example, and supplies no hosting target or deployment topology. The demo assumes a Manhattan route and does not define the source of simulated vehicle positions on the phone. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The review found enough detail to prototype, with an implementation contract still needed for simulated versus live location input, state ownership and recovery, signal phase behavior, protocol and message schemas, and deployment. The proposed architecture and hosting are recorded as recommendations for review. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Backend decision before implementation
+
+> we cannot proceed until we agree on backend (be it my firebase RTDB that is shared among projects) or the supabase we used for Maagar (erase and repurpose).
+
+### Decisions
+
+- The user made backend agreement a prerequisite for implementation. The decision is open. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Recommended a dedicated ClearPath Supabase project for PostgreSQL, with FastAPI owning routing and simulated signal state and publishing live updates over WebSockets. If reuse of existing resources is required, recommended Firebase RTDB for the live state only after verifying that ClearPath's data can be isolated from the other projects. The proposed design preserves the separate Maagar submission. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### Independent checks
+
+- Checked the [specification](../docs/specification.md) for the 200 ms live update target, relational tables and transactional dispatch. Reviewed the provider documentation for dedicated Supabase databases and Firebase's inherited permissions. The actual shared Firebase rules and Supabase account capacity are unverified. [Firebase rules](https://firebase.google.com/docs/database/security/core-syntax#read_and_write_rules_cascade) · [Supabase platform](https://supabase.com/docs/guides/platform) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Implementation and provisioning are on hold pending agreement. The proposal puts the first demo's FastAPI process on the demo laptop and its persistent database in a dedicated hosted project. A public API deployment is a separate decision. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Approve backend and deployment
+
+> yes, let's go with a dedicated Supabase project for ClearPath and FastAPI on the demo laptop. keep Maagar separate and update the spec and logbook.
+> document, commit-push
+
+### Decisions
+
+- Approved a dedicated Supabase project for ClearPath AI's persistent PostgreSQL data and FastAPI on the demo laptop. Maagar's Supabase project belongs to its separate submission. The Android framework remains an open choice from the earlier review. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Updated the architecture diagram, deployment section, data model description, and milestones. The deployment uses the demo laptop for FastAPI, the browser UI, and the existing Redis requirement. Phones connect to FastAPI over the demo's private network. FastAPI owns live simulation and connects over TLS to the dedicated PostgreSQL database. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Cross-checked the architecture, hosting, database section, and milestones for consistent placement of FastAPI, Redis, and PostgreSQL. Verified that the spec still defines eight milestones and retains the Android framework choice as open. The milestone for demo rehearsal now explicitly covers client connectivity and persistence. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The [ClearPath AI spec](../docs/specification.md) records the agreed backend and its deployment. This session documents the decision. Provisioning and the demo network rehearsal are implementation milestones. [Rubric criterion 4](../docs/rubric.html#c4)
