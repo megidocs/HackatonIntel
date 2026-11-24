@@ -92,7 +92,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 .alinks { width: 130px; display: flex; flex-direction: column; justify-content: space-around; }
 .alink { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .proto { font-size: 24px; font-weight: 600; color: var(--accent); text-align: center; white-space: nowrap; }
-.proto.small { font-weight: 400; color: var(--soft); }
+.proto.small { font-weight: 400; color: var(--soft); white-space: normal; line-height: 1.25; }
 .laptop { flex: 1; background: var(--ink); border-radius: 18px; padding: 16px 22px; display: flex; flex-direction: column; gap: 10px; }
 .api { background: #24345A; border-radius: 12px; padding: 12px 18px; display: flex; flex-direction: column; gap: 4px; }
 .hosts { display: flex; gap: 10px; }

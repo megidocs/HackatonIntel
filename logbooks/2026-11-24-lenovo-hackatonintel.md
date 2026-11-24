@@ -986,6 +986,29 @@ The user added this requirement while the guidance was being written:
 
 - The public deck and the repository copy match at eight slides. This entry was committed but not pushed. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Update the slides for milestone 5
+
+> Push
+
+> Yes, update slides
+
+### Decisions
+
+- The user approved the push, which merged four incoming milestone 5 commits cleanly. The user then asked to update the slides, because the deck still showed milestone 5 and PostgreSQL as not started. [Rubric criterion 4](../docs/rubric.html#c4)
+- Milestone 5 is marked done, against each item in specification section 7. The six Supabase tables with row-level security are applied, FastAPI connects to PostgreSQL over verified TLS and to local Redis, Supabase Auth JWTs map to roles stored in PostgreSQL, and the threat table has automated checks. The hosted checks passed from the demo laptop with one demo account per role. Its remaining gaps move to the remaining-work slide: no Android sign-in, signed-in dispatch disabled on Render, and priority requests that are recorded but do not drive the simulated signals. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### AI contribution
+
+- Claude read [the dispatch guide](../docs/dispatch.md), the [milestone 5 logbook](2026-11-24-hackatonintel-dispatch.md) and `backend/dispatch.py`. It updated [the architecture slide](../docs/slides/pedagogy-deck/slides/arch.html) with Supabase PostgreSQL and Auth, local Redis, and the dispatch and authorization module. It updated [the milestone status](../docs/slides/pedagogy-deck/slides/milestones.html) and [remaining work](../docs/slides/pedagogy-deck/slides/remaining.html) slides and their speaker notes, and rebuilt `deck.html`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Measured all eight slides: each ends inside the slide margin and no text overflows. The presentation-mode view showed that the label under the client arrow was wider than its column and was cut off behind the server box; it now wraps inside the column. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The updated deck is committed locally. Publishing to claude.ai and pushing to GitHub wait for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Open the published slides
 
 > open the slides link (its link is in the users.md normally)
