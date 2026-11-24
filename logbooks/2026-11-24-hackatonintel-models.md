@@ -39,3 +39,7 @@
 ### Session result
 
 - The slide team has a dedicated source for the comparison, one reproducible demo, and limitations to explain. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## Verification checkpoint · CI and public simulator
+
+- [Dispatch CI](https://github.com/megidocs/HackatonIntel/actions/runs/45411340680) and [simulator CI](https://github.com/megidocs/HackatonIntel/actions/runs/45411341199) passed for the pushed model revision. The Render release check timed out waiting for that revision. Public health continued to report `ok` on `f96b6b1`. The report review feature was verified on the laptop with the local model and real Supabase identities. [Rubric criterion 3](../docs/rubric.html#c3)
