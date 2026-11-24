@@ -19,3 +19,23 @@
 ### Session result
 
 - The WebSocket and presenter command path work against the local server. The follow-up checkpoint records the Android build and device rehearsal. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Confirm the desktop simulator on Render
+
+> simulator is working fine on Render.
+
+### Decisions
+
+- The user confirmed the desktop simulator worked on Render. The agent kept Render Free as the Android app’s default server and used the local simulator for tests that alter priority or closures. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Built a debug APK configured for the public simulator. Rehearsed both Android roles in the emulator using the local server and then the deployed Render service. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- [GitHub Actions](https://github.com/megidocs/HackatonIntel/actions/runs/45403934864) passed and the public HTTPS smoke check verified release `e8b0450`. External WSS calls verified both feeds and confirmed that the citizen feed omits position and route data. The emulator showed the 3.16 km rescue route and the Vehicle 1 alert on Render. Locally, the alert cleared when priority was off, the phone’s priority write failed without a presenter code and succeeded with one, and a road closure produced the same reroute in the rescue feed and desktop API. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Milestone 4’s Android demo is live against the Render simulator. The physical phone returned `INSTALL_FAILED_USER_RESTRICTED` during USB installation. The emulator verified the app and visual alerts. Checking spoken audio and rehearsing with two physical phones remain manual presentation checks. The APK defaults to the live service, and the [Android guide](../mobile/README.md) gives the local USB commands. [Rubric criterion 4](../docs/rubric.html#c4)
