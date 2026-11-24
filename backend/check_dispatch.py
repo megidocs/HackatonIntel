@@ -1,9 +1,11 @@
 """Exercise the dispatch API with disposable PostgreSQL and Redis services."""
 
 import argparse
+import os
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from time import sleep, time
+from unittest.mock import patch
 from uuid import uuid4
 
 import httpx
@@ -34,7 +36,7 @@ def main() -> None:
                 owner.execute("insert into clearpath.users values (%s, %s, %s)", (user, role, role))
         owner.execute("insert into clearpath.units values (%s, 'medical', %s)", (vehicle, identities["rescue"]))
 
-        with TestClient(app) as client:
+        with patch.dict(os.environ, {"CLEARPATH_DISPATCH_SIMULATION": "1"}), TestClient(app) as client:
             dispatch: DispatchServices = app.state.dispatch
             dispatch.identity.close()
             auth_delay = 0
@@ -109,7 +111,12 @@ def main() -> None:
             call("POST", "preemption", "rescue", dict(priority, request_id=str(uuid4())), 403)
             assert call("POST", f"incidents/{incident_id}/close", "dispatcher")["status"] == "closed"
 
-            proposal = {"incident": {"incident_type": "medical", "severity": 4, "lat": 40.7391, "lon": -73.9760},
+            traffic = client.post("/simulation/control", json={"running": True}).json()
+            assert traffic["running"] and traffic["route_status"] == "awaiting_dispatch"
+            assert all(vehicle["id"] != 0 for vehicle in traffic["vehicles"])
+            assert client.post("/simulation/point", json={"target": "destination", "lat": 40.75, "lon": -73.98}).status_code == 409
+
+            proposal = {"incident": {"incident_type": "medical", "severity": 4, "lat": 40.75360, "lon": -73.98323},
                         "candidates": [{"unit_id": str(vehicle)}], "recommended_unit_ids": [str(vehicle)]}
             draft_id = uuid4()
             dispatcher = identities["dispatcher"]
@@ -118,9 +125,19 @@ def main() -> None:
             review = {"decision": "approved", "unit_ids": [str(vehicle)]}
             call("POST", f"copilot/drafts/{draft_id}/review", "citizen", review, 403)
             call("POST", f"copilot/drafts/{draft_id}/review", "dispatcher", dict(review, unit_ids=[str(uuid4())]), 409)
+            with client.websocket_connect("/simulation/mobile?role=rescue") as phone:
+                idle = phone.receive_json()
+                assert idle["route_status"] == "awaiting_dispatch" and idle["position"] is None
             accepted = call("POST", f"copilot/drafts/{draft_id}/review", "dispatcher", review)
             assert len(accepted["assignments"]) == 1 and not accepted["edited"]
             assert call("POST", f"copilot/drafts/{draft_id}/review", "dispatcher", review) == accepted
+            running = client.get("/simulation/state").json()
+            assert running["running"] and running["time"] >= idle["time"]
+            assert running["dispatch_destination"] == "Bryant Park" and running["route_status"] == "en_route"
+            with client.websocket_connect("/simulation/mobile?role=rescue") as phone:
+                deployed = phone.receive_json()
+                assert deployed["dispatch_destination"] == "Bryant Park" and deployed["route"] == running["route"]
+                assert deployed["position"] is not None
 
             occupied = uuid4()
             dispatch.query("select clearpath.save_dispatch_draft(%s, %s, %s, %s)",
@@ -132,6 +149,9 @@ def main() -> None:
                         {"decision": "rejected"})["status"] == "rejected"
             call("POST", f"assignments/{accepted['assignments'][0]['dispatch_id']}/arrive", "rescue")
             call("POST", f"incidents/{accepted['incident_id']}/close", "dispatcher")
+            assert client.post("/simulation/control", json={"reset": True}).json()["route_status"] == "awaiting_dispatch"
+            assert call("POST", f"copilot/drafts/{draft_id}/review", "dispatcher", review) == accepted
+            assert client.get("/simulation/state").json()["route_status"] == "awaiting_dispatch"
 
             now = int(time() * 1000)
             sample = {"nonce": str(uuid4()), "lat": 40.7391, "lon": -73.9760, "time_ms": now}

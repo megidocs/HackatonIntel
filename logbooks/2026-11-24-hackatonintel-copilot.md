@@ -325,3 +325,128 @@
 ### Session result
 
 - Partners can copy either example from the guide and see which steps show the assignment or traffic lights. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-ups · Free the ambulance and set up simulator playback
+
+> I'm trying to propose dispatch on the `Medical emergency at Bryant Park. One adult has collapsed and is unresponsive. Send an ambulance.` but I got `No reachable available unit for medical. Review manually.`
+>
+> also unsure if I should reset and if I should click start simulation to put the simulator in the appropriate state
+
+### Decisions
+
+- Complete and close the preceding Bellevue rehearsal to free the only demo ambulance. Leave the traffic scenario for the presenter to configure manually. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Matched the open Bellevue incident to the active Rescue unit, recorded arrival, and closed the incident. Added the [playback steps](../user.md#dispatch-rehearsal-reports) to the partner guide. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The exact Bryant Park report returned a reviewable proposal after the ambulance became available. The modeled ETA was 229.2 seconds. Both local and Render traffic scenarios were paused at time zero, and the simulator source confirmed Reset restores the default route and the playback button starts its clock. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Rejected the verification draft to keep the ambulance available. The user can retry Bryant Park and start the manually configured traffic scenario when ready. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-ups · Set Bryant Park on the shared simulator
+
+> I don't know where Bryant Park is on the map. can you show or edit the destination the the right place? I'm not from new york
+>
+> browser is open and logged it
+
+### Decisions
+
+- Use the unlocked presenter tab to set Bryant Park on the shared Render simulator and leave it ready for playback. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Used the map's destination control in the open Edge tab to select the route endpoint. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Compared the live destination with the nearest road node for Bryant Park in the [place catalog](../backend/report_extraction.py). The coordinates matched. The simulator showed a 2.56 km route, about 3.8 modeled minutes, and a paused clock. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The shared Bellevue Hospital to Bryant Park route is set and ready for **Start simulation**. The destination field displays the road node's coordinates. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Locate the session logbook
+
+> in what logbook is this session logged?
+
+### Decisions
+
+- Point to this ClearPath copilot logbook and the Bryant Park setup entry. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Located the entry **Set Bryant Park on the shared simulator** in this file. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Confirmed the session entries are present in the working copy and the latest changes are pending commit. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Shared the logbook path and direct link to the Bryant Park entry. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Start playback after the Bryant Park dispatch approval
+
+> I approved the Bryan Park dispatch. nothing happended on the simulator. I did not click start before.
+
+### Decisions
+
+- Start the existing Bryant Park traffic route in the unlocked presenter browser. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Confirmed the simulator was paused at zero and clicked **Start simulation** without resetting the route. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The browser showed **Running** and the server later reported 19.65 simulated seconds, en-route status, two priority signals, and one yield alert. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The shared simulator played the Bryant Park route after a manual start. Dispatch approval records the assignment, and the simulator's start control runs the traffic scene. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Separate standalone traffic and dispatch-driven demos
+
+> look it cannot work this way. starting the simulator should happen long before dipatching the new call. I don't get it. As the  simulator is designed now, clicking start will show a moving car  irrespective of that dispatch that we do from dispatch/report. there must be some separation between the 2 types of demos.
+
+### Decisions
+
+- Keep the existing standalone demo on Render. Use a dispatch-driven simulator on Lenovo port 8004 where the traffic clock can start before a rescue assignment. Preserve the existing rehearsal service on port 8003. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Added an opt-in mode to the [simulator](../backend/simulation.py), [authenticated approval endpoint](../backend/dispatch.py), [map](../frontend/public/simulator.js), and [Rescue view](../mobile/lib/route_view.dart). In this mode, a committed active assignment starts the displayed rescue vehicle while civilian traffic keeps moving. The simulator represents one selected vehicle and ignores duplicate or older approvals. Updated the [partner walkthrough](../user.md#dispatch-rehearsal-reports). [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The live Lenovo map and Android feed showed civilian traffic with no rescue marker before approval. Replayed the user's existing Bryant Park approval idempotently through the real Supabase-backed endpoint. The map and connected feed received the same 2.56 km route without resetting the clock. Retrying the approval returned the same assignment and the vehicle kept moving. Render still served the standalone scene. Verified both map labels in Edge. [Rubric criterion 3](../docs/rubric.html#c3)
+- Flutter analysis and tests passed. Built and installed the debug app on the Android emulator. It showed **Arrived**, **Bryant Park**, and the 2.56 km route. Expanded the [disposable dispatch regression](../backend/check_dispatch.py) to check waiting, approval, retries, and reset. The live check reused the existing approved incident, and the disposable database suite was not run in this session. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Lenovo port 8004 and the Android emulator are ready to show the dispatch-driven flow. The verified Bryant Park scene is paused on arrival. The prior dispatch record remains active until it is completed through the documented dispatch controls. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Publish the two-mode simulator update
+
+> when done don't forget to commit-push as we need the deploy on Render.
+
+### Decisions
+
+- Publish the two-mode changes to `main` so the existing Render build can deploy the standalone simulator. Lenovo port 8004 runs the dispatch-driven mode with local inference. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Reviewed the application changes, partner guide, and dispatch regression. Confirmed that the existing [Render configuration](../render.yaml) watches the affected application paths and waits for GitHub checks. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The local branch was aligned with `origin/main` before the release commit. Prior checks covered the live approval replay, Android emulator, and both map modes. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The release commit contains the simulator modes, regression coverage, and presentation steps. GitHub and Render verification results follow in the release checkpoint. [Rubric criterion 4](../docs/rubric.html#c4)

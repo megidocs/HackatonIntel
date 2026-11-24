@@ -37,6 +37,8 @@ The emulator can open these API docs at `http://10.0.2.2:8003/docs`. For the pro
 
 The [local report review](http://127.0.0.1:8003/dispatch/reports) accepts the demo email and password directly. For a Swagger rehearsal, run the following from the repository root and change `$role` to `RESCUE` or `CITIZEN` to test that role. The last command copies the short-lived token for **Authorize**.
 
+For the dispatch-driven map and Android rehearsal, start the same service on port **8004** with `CLEARPATH_DISPATCH_SIMULATION=1` and `CLEARPATH_MODEL_URL=http://127.0.0.1:8011` in its PowerShell environment. Use the [map](http://127.0.0.1:8004/simulator) and the [report page](http://127.0.0.1:8004/dispatch/reports) on that same port. The Android emulator uses `http://10.0.2.2:8004`. Start traffic before approving. The demo visualizes one assigned vehicle, preferring the medical unit when multiple units are approved. Simulator state lives in that FastAPI process, and the dispatch records persist in Supabase.
+
 ```powershell
 $settings = @{}
 Get-Content -LiteralPath .env.dispatch.local | ForEach-Object {

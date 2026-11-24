@@ -3,6 +3,7 @@
 from bisect import bisect_right
 from collections import defaultdict, deque
 from dataclasses import dataclass
+from datetime import datetime
 from itertools import accumulate, pairwise
 from math import hypot
 from random import Random
@@ -58,8 +59,10 @@ class Vehicle:
 
 
 class Simulation:
-    def __init__(self, router: ManhattanRouter):
+    def __init__(self, router: ManhattanRouter, dispatch_mode: bool = False):
         self.router = router
+        self.dispatch_mode = dispatch_mode
+        self.last_dispatch: tuple[datetime, str] | None = None
         self.lock = Lock()
         self.roads: dict[Edge, Road] = {}
         self.outgoing: dict[int, list[Road]] = defaultdict(list)
@@ -116,6 +119,8 @@ class Simulation:
         self.speed = 4
         self.closed: set[int] = set()
         self.origin, self.destination = self.default_origin, self.default_destination
+        self.dispatch_id: str | None = None
+        self.dispatch_destination: str | None = None
         self.emergency: Vehicle | None = None
         self.traffic: list[Vehicle] = []
         self.priority = PriorityCorridor()
@@ -131,6 +136,15 @@ class Simulation:
                         break
                     distance -= road.meters
             self.update_priority()
+
+    def launch_dispatch(self, dispatch: tuple[datetime, str], origin: int, destination: int, label: str | None) -> None:
+        if self.last_dispatch is not None and dispatch <= self.last_dispatch:
+            return
+        self.dispatch_id = dispatch[1]
+        self.dispatch_destination = label
+        self.origin, self.destination = origin, destination
+        self.plan_route(keep_vehicle=False)
+        self.last_dispatch = dispatch
 
     def set_density(self, density: int) -> None:
         if density <= len(self.traffic):
@@ -168,6 +182,13 @@ class Simulation:
         self.priority.update(self.time, rescue, list(self.pending), self.signals, self.traffic)
 
     def plan_route(self, keep_vehicle: bool) -> None:
+        if self.dispatch_mode and self.dispatch_id is None:
+            self.pending = deque()
+            self.route_line = []
+            self.route_meters = self.route_seconds = 0
+            self.arrival_time = None
+            self.route_status = "awaiting_dispatch"
+            return
         if not keep_vehicle:
             self.departure_time = self.time
             self.arrival_time: float | None = None
@@ -300,6 +321,8 @@ class Simulation:
             "destination": self.nodes[self.destination],
             "route": self.route_line,
             "route_status": self.route_status,
+            "dispatch_mode": self.dispatch_mode,
+            "dispatch_destination": self.dispatch_destination,
             "route_meters": round(self.route_meters),
             "route_seconds": round(self.route_seconds),
             "arrival_time": self.arrival_time,

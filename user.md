@@ -16,6 +16,7 @@
 | Model development for presenters | [Technical brief for the slide team](docs/model-development-brief.md) with the training method, benchmark, and demo example. |
 | Rehearsal and measurements | [Performance report and demo sequence](docs/rehearsal.md), including browser frame timing and the authenticated dispatch check. |
 | Dispatcher copilot | [Final rehearsal, approval flow and benchmark](docs/copilot.md). |
+| Dispatch-driven simulator | [Lenovo traffic map](http://127.0.0.1:8004/simulator) and [dispatch approval](http://127.0.0.1:8004/dispatch/reports). Start civilian traffic before approving a report. |
 | Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
 | Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md), and [public deployment log](logbooks/2026-11-24-hackatonintel-public-hosting.md) |
 
@@ -66,4 +67,8 @@ Use this to rehearse approval and the Rescue assignment. The modeled ETA is zero
 Medical emergency at Bryant Park. One adult has collapsed and is unresponsive. Send an ambulance.
 ```
 
-The modeled route from Bellevue crosses 14 traffic-signal points and takes about 3 minutes 49 seconds before traffic delays. To show the lights changing, manually set the simulator destination to Bryant Park and start playback with **Green wave and alerts** enabled. After dispatch approval, click **Refresh assignment** in the signed-in Rescue browser. See the [copilot guide](docs/copilot.md#run-the-demo) for how to close a rehearsal before repeating it.
+The modeled route from Bellevue crosses 14 traffic-signal points and takes about 3 minutes 49 seconds before traffic delays. After dispatch approval, click **Refresh assignment** in the signed-in Rescue browser. If the copilot reports no available medical unit, finish the previous assignment and close its incident to free the ambulance. Simulator **Reset** only resets the traffic scene. See the [copilot guide](docs/copilot.md#run-the-demo) for the dispatch reset steps.
+
+For the **dispatch-driven demo**, open the [Lenovo map on port 8004](http://127.0.0.1:8004/simulator) and click **Start traffic** before proposing a report. The map shows civilian traffic and **Waiting for an approved dispatch**. Approve from the [dispatcher page on port 8004](http://127.0.0.1:8004/dispatch/reports). The incident pin, route and rescue vehicle appear automatically. For the Android emulator, connect the app in **Rescue** mode to `http://10.0.2.2:8004` so it follows that same scene. See the [startup instructions](docs/dispatch.md#start-with-the-private-local-file).
+
+For the **standalone traffic demo** on Render, unlock **Presenter access**, use **Destination → Edit** if you want a different route, and click **Start simulation**. **Reset** restores Bellevue Hospital → Times Square. Android viewers on the Render server follow that standalone scene.

@@ -71,7 +71,9 @@ async def advance_simulation(simulation: Simulation):
 async def lifespan(app: FastAPI):
     path = Path(os.environ.get("CLEARPATH_GRAPH_PATH", DEFAULT_GRAPH_PATH))
     app.state.router = ManhattanRouter(path)
-    app.state.simulation = Simulation(app.state.router)
+    app.state.simulation = Simulation(
+        app.state.router, dispatch_mode=os.environ.get("CLEARPATH_DISPATCH_SIMULATION") == "1",
+    )
     app.state.simulation_map = JSONResponse(app.state.simulation.map_data).body
     app.state.control_token = os.environ.get("CLEARPATH_CONTROL_TOKEN", "")
     app.state.restricted_controls = (
@@ -222,6 +224,8 @@ def simulation_closure(segment: int, request: Request):
 def simulation_point(payload: SimulationPoint, request: Request):
     require_control(request)
     simulation = request.app.state.simulation
+    if simulation.dispatch_mode:
+        raise HTTPException(status_code=409, detail="An approved dispatch sets the route in this demo.")
     try:
         node = simulation.router.nearest_node(payload.lat, payload.lon)
     except PointOutsideGraph as error:

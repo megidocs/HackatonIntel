@@ -18,6 +18,7 @@ class RouteView extends StatelessWidget {
     final routeStatus = switch (state['route_status']) {
       'en_route' => 'En route',
       'arrived' => 'Arrived',
+      'awaiting_dispatch' => 'Waiting for dispatch',
       _ => 'Route blocked',
     };
 
@@ -25,9 +26,12 @@ class RouteView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(routeStatus, style: Theme.of(context).textTheme.headlineSmall),
-        Text(
-          '${kilometers.toStringAsFixed(2)} km · ${minutes.toStringAsFixed(1)} modeled min',
-        ),
+        if (state['dispatch_destination'] case final String destination)
+          Text(destination),
+        if (state['route_status'] != 'awaiting_dispatch')
+          Text(
+            '${kilometers.toStringAsFixed(2)} km · ${minutes.toStringAsFixed(1)} modeled min',
+          ),
         if (route.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 12),

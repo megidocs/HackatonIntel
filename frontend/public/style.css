@@ -85,6 +85,7 @@ h2 { font-size: 13px; margin: 0 0 10px; font-weight: 650; }
 .origin-icon { border: 2px solid var(--teal); }
 .destination-icon { background: var(--amber); border-radius: 2px; transform: rotate(45deg); }
 .route-metrics { display: grid; grid-template-columns: 1fr 1fr; margin-top: 12px; gap: 8px; }
+.endpoints[hidden], .route-metrics[hidden] { display: none; }
 .route-metrics > div { padding: 9px 11px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; min-width: 0; }
 .route-metrics strong, .route-metrics span { display: block; }
 .route-metrics strong { font-size: 19px; letter-spacing: -.035em; }

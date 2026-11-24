@@ -25,6 +25,7 @@ def mobile_snapshot(simulation: Simulation, role: str, vehicle_id: int) -> dict:
             "position": simulation.vehicle_position(simulation.emergency) if simulation.emergency else None,
             "route": simulation.route_line,
             "route_status": simulation.route_status,
+            "dispatch_destination": simulation.dispatch_destination,
             "route_meters": round(simulation.route_meters),
             "route_seconds": round(simulation.route_seconds),
             "priority_enabled": simulation.priority.enabled,

@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from datetime import datetime
 from time import time_ns
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
@@ -15,8 +16,8 @@ from psycopg_pool import ConnectionPool, PoolClosed, PoolTimeout
 from pydantic import BaseModel, Field
 from redis import Redis, RedisError
 
-from .copilot import plan_dispatch
-from .report_extraction import extract_report, verified_location
+from .copilot import DEFAULT_STATIONS, plan_dispatch
+from .report_extraction import LOCATIONS, extract_report, verified_location
 from .routing import PointOutsideGraph
 
 router = APIRouter(prefix="/dispatch", tags=["Dispatch"])
@@ -252,12 +253,31 @@ def draft_dispatch(payload: FreeTextReport, actor: SignedIn, dispatch: Services,
 
 
 @router.post("/copilot/drafts/{draft_id}/review")
-def review_dispatch(draft_id: UUID, payload: DraftReview, actor: SignedIn, dispatch: Services):
+def review_dispatch(draft_id: UUID, payload: DraftReview, actor: SignedIn, dispatch: Services, request: Request):
     if actor.role != "dispatcher":
         raise HTTPException(403, "Only a dispatcher can review a draft.")
-    return dispatch.query("select clearpath.review_dispatch_draft(%s,%s,%s,%s::uuid[])", (
+    result = dispatch.query("select clearpath.review_dispatch_draft(%s,%s,%s,%s::uuid[])", (
         actor.user_id, draft_id, payload.decision, sorted(payload.unit_ids),
     ))[0]
+    simulation = request.app.state.simulation
+    if simulation.dispatch_mode and result["status"] == "approved":
+        current = dispatch.query("select clearpath.dispatch_board(%s)", (actor.user_id,))[0]
+        incident = next((item for item in current["incidents"] if item["incident_id"] == result["incident_id"]), None)
+        approved = {assignment["dispatch_id"]: assignment for assignment in result["assignments"]}
+        active = [unit for unit in current["units"] if unit["dispatch_id"] in approved]
+        if incident and active:
+            # The rehearsal map represents one rescue vehicle. Show the ambulance first when present.
+            unit = min(active, key=lambda item: (item["unit_type"] != "medical", item["unit_id"]))
+            station = DEFAULT_STATIONS[unit["unit_type"]]
+            origin = simulation.router.nearest_node(*LOCATIONS[station][:2])
+            destination = simulation.router.nearest_node(incident["latitude"], incident["longitude"])
+            label = next((name for name, point in LOCATIONS.items()
+                          if simulation.router.nearest_node(*point[:2]) == destination), None)
+            dispatch_id = unit["dispatch_id"]
+            dispatched_at = datetime.fromisoformat(approved[dispatch_id]["dispatched_at"])
+            with simulation.lock:
+                simulation.launch_dispatch((dispatched_at, dispatch_id), origin, destination, label)
+    return result
 
 
 @router.post("/incidents")

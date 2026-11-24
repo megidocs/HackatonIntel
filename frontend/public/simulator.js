@@ -171,6 +171,9 @@ function clockText(seconds) {
 }
 
 function showState(next) {
+  const waiting = next.route_status === "awaiting_dispatch";
+  const newDispatch = next.dispatch_mode && !waiting && (state?.route_status === "awaiting_dispatch" ||
+    state?.destination.join() !== next.destination.join() || state?.origin.join() !== next.origin.join());
   const first = !state;
   const now = performance.now();
   const mix = Math.min(1, (now - frameStart) / 210);
@@ -184,18 +187,20 @@ function showState(next) {
   frameStart = now;
   state = next;
 
-  const key = JSON.stringify([next.origin, next.destination, next.route]);
+  $("#demo-type").textContent = next.dispatch_mode ? "Dispatch-driven demo" : "Traffic simulator demo";
+  $(".endpoints").hidden = Boolean(next.dispatch_mode);
+  const key = JSON.stringify([next.origin, next.destination, next.route, next.dispatch_destination]);
   if (key !== routeKey) {
     routeKey = key;
     map.getSource("route").setData(collection(next.route.length >= 2 ? [{
       type: "Feature", geometry: { type: "LineString", coordinates: next.route }, properties: {},
     }] : []));
-    map.getSource("endpoints").setData(collection([
+    map.getSource("endpoints").setData(collection(waiting ? [] : [
       point(next.origin, { color: "#65e0ce" }), point(next.destination, { color: "#ffad68" }),
     ]));
     $("#origin-label").textContent = locationLabel(next.origin, "Bellevue Hospital", next.default_origin);
     $("#destination-label").textContent = locationLabel(next.destination, "Times Square", next.default_destination);
-    if (first) {
+    if (first || newDispatch) {
       const [x, y] = next.origin;
       const [otherX, otherY] = next.destination;
       map.fitBounds(
@@ -232,7 +237,7 @@ function showState(next) {
   $("#clock").textContent = clockText(next.time);
   $("#connection").dataset.state = next.running ? "running" : "paused";
   $("#connection-text").textContent = next.running ? "Running" : "Paused";
-  $("#play-text").textContent = next.running ? "Pause" : next.time > 0 ? "Resume" : "Start simulation";
+  $("#play-text").textContent = next.running ? "Pause" : next.time > 0 ? "Resume" : next.dispatch_mode ? "Start traffic" : "Start simulation";
   $("#play > span:first-child").textContent = next.running ? "Ⅱ" : "▶";
   $("#closure-count").textContent = next.closures.length;
   $("#priority").checked = next.priority_enabled;
@@ -240,9 +245,12 @@ function showState(next) {
   $("#alert-count").textContent = next.alerted_count;
   $("#distance").textContent = next.route_status === "blocked" ? "—" : `${(next.route_meters / 1000).toFixed(2)} km`;
   $("#eta").textContent = next.route_status === "blocked" ? "—" : `${(next.route_seconds / 60).toFixed(1)} min`;
+  $(".route-metrics").hidden = waiting;
   const status = {
+    awaiting_dispatch: "Waiting for an approved dispatch.",
     blocked: "No open route to the destination.",
     arrived: `Arrived in ${clockText(next.arrival_time ?? 0)} simulated time.`,
+    en_route: next.dispatch_mode ? `En route${next.dispatch_destination ? ` to ${next.dispatch_destination}` : ""}.` : "",
   };
   const routeStatus = status[next.route_status] ?? "";
   if ($("#route-status").textContent !== routeStatus) $("#route-status").textContent = routeStatus;
