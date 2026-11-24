@@ -1073,3 +1073,27 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - At the user's request (“Publish and push”), the deck was published as claude.ai version 13 and pushed to `origin/main`. The previous publish from this session was version 11. The Slides type's release had changed in between, which likely accounts for version 12. The five slides and the index not sent in this publish match the repository byte for byte. Version 12's contents could not be read, so a change in it to the three replaced slides cannot be ruled out. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Describe the AI milestones by function
+
+> באבני דרך: מה ההבדל הפונקציונלי בין  מודל השפה המסווג  בשלב 6 ל סוכן עוזר מוקדן ב 8?
+
+> תקן את שלבי ה AI (שקף 3 ,  שלב 6 ושלב 8) כך שתוסבר הפונקצינאליות .הטכנולוגיה בשימוש לא מענינת)   למשל  שלב6: "מודל סיווג חומרת מקרה , התלמידים אימנו)
+
+### Decisions
+
+- **User decision:** the milestone slide describes what milestones 6 and 8 do, not the technology. [Rubric criterion 4](../docs/rubric.html#c4)
+- Claude explained the difference first. Milestone 6 is one call that turns a free-text report into an incident draft. Milestone 8 is an agent that loops over the system's tools (location, open incidents, available units, A\* arrival times) to propose an assignment that the dispatcher approves. [Rubric criterion 2](../docs/rubric.html#c2)
+- The user's example called the trained model a severity classifier. Per the [model development brief](../docs/model-development-brief.md), the students' classifier predicts the incident type, and severity comes from the language-model draft, so the slide says so. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### AI contribution
+
+- Milestone 6 is now "הבנת דיווח המוקדן": a classifier the students trained identifies the incident type, and a language model drafts the type, severity and location. Milestone 8 is now "עוזר מוקדן": it suggests which units to send from arrival times and available units, flags duplicate reports, and the dispatcher approves. Claude rebuilt `deck.html`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The milestone slide ends inside the slide margin with no overflow. Both new descriptions fit in three lines, like the Android card. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Committed locally. Publishing to claude.ai and pushing to GitHub wait for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
