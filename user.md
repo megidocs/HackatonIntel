@@ -76,6 +76,8 @@ The port identifies which server process you're opening. On a current checkout, 
 
 Tel Aviv dispatch opens by path with the normal simulator startup command. If `/simulator/tel-aviv/dispatch` returns 404, sync to current `main` and restart the simulator or launch a fresh process on a free port. Use that port in the link. For example, with `--port 8005` open [local Tel Aviv dispatch on port 8005](http://127.0.0.1:8005/simulator/tel-aviv/dispatch).
 
+The signed-in event-creation app at `/dispatch/reports` supports Manhattan only. Changing ports or setting `CLEARPATH_DISPATCH_SIMULATION=1` does not change its report catalog. To create a Tel Aviv demo event, use the report form inside **Tel Aviv dispatch**. That event drives the simulated Tel Aviv fleet on the same page.
+
 For the signed-in dispatch rehearsal on Lenovo, the private configuration and demo credentials are in `C:\Users\3stra\AndroidStudioProjects\HackatonIntel\.env.dispatch.local`. Git ignores this file. Use the [dispatch startup instructions](docs/dispatch.md#start-with-the-private-local-file).
 
 ## Brief test plan before presenting

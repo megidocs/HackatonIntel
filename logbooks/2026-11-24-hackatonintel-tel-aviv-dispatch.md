@@ -69,3 +69,23 @@ The team's [user guide](../user.md) now includes both Tel Aviv rehearsals and th
 ### Session result
 
 The [Render demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) was paused on the completed Jaffa Road dispatch. The [updated guide](../user.md#which-local-url-should-i-use) explains how to open the Tel Aviv workflow locally.
+
+## User follow-up · Identify the local event-creation app
+
+> my question was about the app that is only on localhost that is not the simulator but rather the one creating the events.
+
+### Decisions
+
+- The user clarified that the question was about the standalone signed-in report app. Codex answered for that app and clarified its scope in the team guide.
+
+### AI contribution
+
+- Traced the report app's proposal endpoint to the Manhattan planner and the Tel Aviv form to its own simulator endpoints. [Team guide](../user.md#which-local-url-should-i-use)
+
+### Independent checks
+
+- Verified the supported city and launch switch in the [server code](../backend/app.py) and [dispatch router](../backend/dispatch.py). [Judging checkpoint](../docs/rubric.html#c3)
+
+### Session result
+
+The signed-in app creates Manhattan events. Tel Aviv demo events are created in the form on the Tel Aviv dispatch page.
