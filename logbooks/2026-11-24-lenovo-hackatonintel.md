@@ -941,3 +941,27 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The guidance and the algorithms skill now match the decision. At the user's request (“Push”), the commit is pushed to `origin/main` after a clean pull. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Update the architecture slide and add milestone slides
+
+> There are updates in the  repo. Please update the architecture slides
+
+> Please add slides with the project milestones: What was done and what is left
+
+### Decisions
+
+- The user asked for the architecture slide to follow the repository's latest state, and for slides on what is done and what is left. The deck grows to eight slides: cover, architecture, milestone status, remaining work, then the four guidance slides. [Rubric criterion 4](../docs/rubric.html#c4)
+- The architecture now shows what the incoming commits built. FastAPI runs both on the demo laptop and publicly on Render Free in Docker. GitHub Actions gates every Render deploy. The Flutter Android app has rescue and citizen roles on a WebSocket stream, and a presenter code protects the public controls. Only planned components carry a label: Redis, Supabase PostgreSQL and the language model. [Rubric criterion 2](../docs/rubric.html#c2)
+- Milestone status follows specification section 7 and the logbooks' recorded checks. Milestones 1–4 are done. Milestone 7 is partly done: measurements and HTTPS/WSS checks exist, but the performance report and sequence diagram are missing. Milestones 5, 6 and 8 have not started. The 27% figure is labelled as one simulated run. Real phone GPS and background push are listed as open gaps from the completed milestones. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### AI contribution
+
+- Claude read the new commits: `render.yaml`, the CI workflow, `backend/mobile.py`, the presenter-code changes in `backend/app.py`, the mobile and deployment READMEs, and the specification changes. It redrew [the architecture slide](../docs/slides/pedagogy-deck/slides/arch.html), wrote the [milestone status](../docs/slides/pedagogy-deck/slides/milestones.html) and [remaining work](../docs/slides/pedagogy-deck/slides/remaining.html) slides with speaker notes, renumbered the deck and rebuilt `deck.html`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Measured all eight slides in the standalone deck: each ends inside the slide margin, no text overflows, and the milestones run right to left in two rows. Viewed the architecture, milestone and remaining-work slides in presentation mode. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The updated deck is committed locally. Publishing to the shared claude.ai deck and pushing to GitHub wait for the user's review and approval. [Rubric criterion 4](../docs/rubric.html#c4)

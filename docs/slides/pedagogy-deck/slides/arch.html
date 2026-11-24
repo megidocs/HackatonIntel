@@ -1,38 +1,41 @@
 <section id="arch" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 2 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 2 / 8&#8236;</p>
 <h2>&#8235;ארכיטקטורת המערכת&#8236;</h2>
 <div class="arch">
 <div class="acol">
-<p class="azone">&#8235;ענן&#8236;</p>
-<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;PostgreSQL&#8236;</h3></div><p class="adesc">&#8235;Supabase Free · משתמשים, אירועים, שיוכים ותיעוד הגל הירוק&#8236;</p></div>
-<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;מודל שפה&#8236;</h3></div><p class="adesc">&#8235;חילוץ דיווח ל-JSON, ועוזר מוקדן שרק מציע&#8236;</p></div>
+<p class="azone">&#8235;ענן ופריסה&#8236;</p>
+<div class="anode cloud"><div class="ahead"><h3>&#8235;GitHub Actions&#8236;</h3></div><p class="adesc">&#8235;בונה Docker ובודק תחת מגבלות Render, ורק אז Render מפרסם&#8236;</p></div>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;PostgreSQL&#8236;</h3></div><p class="adesc">&#8235;Supabase Free · אירועים, שיוכים ותיעוד&#8236;</p></div>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;מודל שפה&#8236;</h3></div><p class="adesc">&#8235;חילוץ דיווח ועוזר מוקדן שרק מציע&#8236;</p></div>
 </div>
 <div class="alinks">
-<div class="alink"><p class="proto">&#8235;SQL · TLS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+<div class="alink"><p class="proto">&#8235;פריסה&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="2" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+<div class="alink"><p class="proto">&#8235;SQL · TLS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3" stroke-dasharray="7 6"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
 <div class="alink"><p class="proto">&#8235;HTTPS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3" stroke-dasharray="7 6"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
 </div>
 <div class="laptop">
-<div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><p class="azone dark">&#8235;מחשב ההדגמה&#8236;</p></div>
-<div class="api"><h3>&#8235;FastAPI · Python&#8236;</h3><p class="adesc light">&#8235;REST לפעולות, WebSocket לעדכון כל 200 ms&#8236;</p></div>
+<p class="azone dark">&#8235;שרת FastAPI · Python&#8236;</p>
+<div class="hosts"><p class="host">&#8235;Render Free · ציבורי, Docker&#8236;</p><p class="host">&#8235;מחשב ההדגמה · מקומי&#8236;</p></div>
+<div class="api"><p class="adesc light">&#8235;REST לדפדפן · WebSocket לטלפונים כל 200 ms · קוד מציג לשינוי התרחיש&#8236;</p></div>
 <div class="mods">
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;סימולציית תנועה&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;ניתוב A*&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;Geofencing והתרעות&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גל ירוק לרמזורים&#8236;</p></div>
-<div class="mod"><p class="tag plan">&#8235;מתוכנן&#8236;</p><p class="mname">&#8235;Redis · מצב זמני&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גרף מנהטן · OSM&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;ניתוב A*&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;סימולציית תנועה&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;התרעות לאזרחים&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;גל ירוק לרמזורים&#8236;</p></div>
+<div class="mod"><p class="tag plan">&#8235;מתוכנן&#8236;</p><p class="mname">&#8235;Redis&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;גרף מנהטן · OSM&#8236;</p></div>
 </div>
 </div>
 <div class="alinks">
-<div class="alink"><p class="proto">&#8235;HTTPS · WSS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg><p class="proto small">&#8235;רשת מקומית&#8236;</p></div>
+<div class="alink"><p class="proto">&#8235;HTTPS · WSS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg><p class="proto small">&#8235;אותו מצב סימולציה&#8236;</p></div>
 </div>
 <div class="acol">
 <p class="azone">&#8235;לקוחות&#8236;</p>
-<div class="anode"><div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><h3>&#8235;סימולטור ומרכז שליטה&#8236;</h3></div><p class="adesc">&#8235;דפדפן במחשב · MapLibre, מפת מנהטן חיה&#8236;</p></div>
-<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית רכב חירום&#8236;</h3></div><p class="adesc">&#8235;Android · מיקום, מסלול ובקשת עדיפות&#8236;</p></div>
-<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית אזרח&#8236;</h3></div><p class="adesc">&#8235;התרעה לפנות את הנתיב&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;סימולטור בדפדפן&#8236;</h3></div><p class="adesc">&#8235;MapLibre · מפת מנהטן חיה ומרכז שליטה&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;Android · נהג הצלה&#8236;</h3></div><p class="adesc">&#8235;Flutter · מסלול, מיקום וגל ירוק בזמן אמת&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;Android · אזרח&#8236;</h3></div><p class="adesc">&#8235;התרעה מוקראת לפנות את הנתיב&#8236;</p></div>
 </div>
 </div>
-<p class="foot">&#8235;<b>פועל:</b> אבני דרך 1–3. <b>מתוכנן:</b> 4–8. ה-AI מציע בלבד, והרמזורים נשלטים בקוד דטרמיניסטי.&#8236;</p>
-<aside>הארכיטקטורה לפי סעיף 4 באפיון. במרכז מחשב ההדגמה, שמריץ את שרת FastAPI בפייתון. השרת מחזיק את שעון הסימולציה, מחשב מסלולים ב-A* על גרף הרחובות של מנהטן מ-OpenStreetMap, מתזמן את הגל הירוק ברמזורים ומתריע לאזרחים בדרך. מימין הלקוחות: הסימולטור ומרכז השליטה בדפדפן, אפליקציית Android לרכב החירום ואפליקציית האזרח. הם מתחברים לשרת ברשת המקומית ב-HTTPS וב-WebSocket מאובטח. משמאל הענן: מסד PostgreSQL בפרויקט Supabase החינמי לנתונים מתמשכים, ומודל שפה לחילוץ דיווחים ולעוזר המוקדן. התגיות מראות מה כבר פועל: אבני הדרך 1 עד 3, כלומר הניתוב, הסימולטור והגל הירוק. כרגע הדפדפן מושך את המצב מהשרת ב-REST, ועדכוני WebSocket, Redis, Supabase, האפליקציות ורכיבי ה-AI מתוכננים לאבני הדרך הבאות. עיקרון הבטיחות: ה-AI רק מציע, ופקודות לרמזורים ושיוך רכבים עוברים בקוד דטרמיניסטי.</aside>
+<p class="foot">&#8235;<b>רכיב בלי תגית:</b> פועל ונבדק, אבני דרך 1–4. ה-AI מציע בלבד, והרמזורים נשלטים בקוד דטרמיניסטי.&#8236;</p>
+<aside>הארכיטקטורה כפי שהיא בקוד היום. במרכז שרת FastAPI בפייתון. אותו שרת רץ בשני מקומות: באופן מקומי במחשב ההדגמה, ובאופן ציבורי בשירות Render החינמי, בתוך קונטיינר Docker ובכתובת HTTPS. השרת מחזיק את שעון הסימולציה, מחשב מסלולים ב-A* על גרף הרחובות של מנהטן מ-OpenStreetMap, מתזמן את הגל הירוק ברמזורים ומתריע לאזרחים בדרך. מימין הלקוחות, וכולם רואים את אותו מצב סימולציה. הסימולטור בדפדפן מציג את מפת מנהטן ב-MapLibre וקורא את המצב ב-REST. אפליקציית Android, שנבנתה ב-Flutter, פועלת בשני תפקידים: נהג ההצלה מקבל מסלול ומיקום, והאזרח מקבל התרעה מוקראת לפנות את הנתיב. שניהם מקבלים עדכוני WebSocket כל 200 מילישניות. בפריסה הציבורית, שינוי התרחיש דורש קוד מציג. משמאל: GitHub Actions בונה את קונטיינר ה-Docker ובודק אותו תחת מגבלות המעבד והזיכרון של Render, ו-Render מפרסם גרסה חדשה רק אחרי שהבדיקות עברו. עדיין מתוכננים Redis, מסד PostgreSQL ב-Supabase, ומודל השפה לחילוץ דיווחים ולעוזר המוקדן. גם GPS אמיתי מהטלפון והתרעות ברקע נשארו מחוץ לחזרה הנוכחית. עיקרון הבטיחות: ה-AI רק מציע, ופקודות לרמזורים ושיוך רכבים עוברים בקוד דטרמיניסטי.</aside>
 </section>

@@ -118,12 +118,30 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 .proto.small { font-weight: 400; color: var(--soft); }
 .laptop { flex: 1; background: var(--ink); border-radius: 18px; padding: 16px 22px; display: flex; flex-direction: column; gap: 10px; }
 .api { background: #24345A; border-radius: 12px; padding: 12px 18px; display: flex; flex-direction: column; gap: 4px; }
+.hosts { display: flex; gap: 10px; }
+.host { flex: 1; font-size: 24px; font-weight: 600; color: #F7F5EF; background: #2E6E62; border-radius: 10px; padding: 8px 14px; text-align: center; }
 .api h3 { color: #F7F5EF; font-size: 30px; }
-.mods { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.mod { background: #1B2A4C; border: 2px solid #34477A; border-radius: 12px; padding: 6px 14px; display: flex; gap: 10px; align-items: center; }
+.mods { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.mod { background: #1B2A4C; border: 2px solid #34477A; border-radius: 12px; padding: 10px 14px; display: flex; gap: 10px; align-items: center; }
 .mname { flex: 1; font-size: 24px; color: #F7F5EF; }
 .laptop .tag.plan { background: #1B2A4C; color: #F2C77E; border-color: #F2C77E; }
 .anode, .laptop { animation: rise 500ms ease-out both; }
+
+/* milestones: 1-4 on the top row, 5-8 below, each row right to left */
+.msgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.ms { background: #FBFAF6; border: 2px solid var(--line); border-top: 8px solid var(--accent); border-radius: 14px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 8px; }
+.ms.part { border-top-color: var(--amber); }
+.ms.todo { border-top: 2px dashed #B7832F; background: #F4F1E8; }
+.mshead { display: flex; gap: 10px; align-items: center; }
+.msnum { flex: 1; font-family: 'Rubik', Arial, sans-serif; font-size: 44px; font-weight: 700; line-height: 1; color: var(--accent); }
+.ms.todo .msnum { color: #8A7A5C; }
+.status { font-size: 24px; font-weight: 600; border-radius: 999px; padding: 2px 14px; white-space: nowrap; }
+.status.done { background: var(--accent); color: #F7F5EF; }
+.status.part { background: var(--amber); color: var(--ink); }
+.status.todo { background: #FBFAF6; color: #6B4A12; border: 2px dashed #B7832F; }
+.msnote { font-size: 24px; line-height: 1.35; color: var(--soft); }
+.ms { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+.cards.four { grid-template-columns: repeat(4, 1fr); }
 
 /* slide 4: T model (B right, A centre, C left, X under A) */
 .tgrid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 20px; }
@@ -233,45 +251,76 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>ClearPath AI היא מערכת שמקצרת את זמן ההגעה של רכבי חירום. היא מחשבת מסלול שעוקף פקקים ותאונות, מחליפה לירוק את הרמזורים לאורך המסלול לפני שהרכב מגיע אליהם, ומתריעה לנהגים שבדרכו לפנות את הנתיב. התלמידים בונים סימולטור תנועה של מנהטן, אפליקציית Android לרכב החירום ששולטת ברמזורים, שרת זמן אמת ומרכז שליטה עם עוזר AI למוקדן. בתסריט ההדגמה המערכת מציגה חיסכון של 35% עד 45% בזמן ההגעה לעומת נסיעה בלעדיה. האיור מראה את הרעיון: אמבולנס יוצא מבית החולים, הרמזורים לפניו בירוק בתוך מסדרון ההתרעה, והרמזורים ברחובות האחרים נשארים באדום ובצהוב.</aside>
 </section>
 <section id="arch" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 2 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 2 / 8&#8236;</p>
 <h2>&#8235;ארכיטקטורת המערכת&#8236;</h2>
 <div class="arch">
 <div class="acol">
-<p class="azone">&#8235;ענן&#8236;</p>
-<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;PostgreSQL&#8236;</h3></div><p class="adesc">&#8235;Supabase Free · משתמשים, אירועים, שיוכים ותיעוד הגל הירוק&#8236;</p></div>
-<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;מודל שפה&#8236;</h3></div><p class="adesc">&#8235;חילוץ דיווח ל-JSON, ועוזר מוקדן שרק מציע&#8236;</p></div>
+<p class="azone">&#8235;ענן ופריסה&#8236;</p>
+<div class="anode cloud"><div class="ahead"><h3>&#8235;GitHub Actions&#8236;</h3></div><p class="adesc">&#8235;בונה Docker ובודק תחת מגבלות Render, ורק אז Render מפרסם&#8236;</p></div>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;PostgreSQL&#8236;</h3></div><p class="adesc">&#8235;Supabase Free · אירועים, שיוכים ותיעוד&#8236;</p></div>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;מודל שפה&#8236;</h3></div><p class="adesc">&#8235;חילוץ דיווח ועוזר מוקדן שרק מציע&#8236;</p></div>
 </div>
 <div class="alinks">
-<div class="alink"><p class="proto">&#8235;SQL · TLS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+<div class="alink"><p class="proto">&#8235;פריסה&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="2" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+<div class="alink"><p class="proto">&#8235;SQL · TLS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3" stroke-dasharray="7 6"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
 <div class="alink"><p class="proto">&#8235;HTTPS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3" stroke-dasharray="7 6"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
 </div>
 <div class="laptop">
-<div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><p class="azone dark">&#8235;מחשב ההדגמה&#8236;</p></div>
-<div class="api"><h3>&#8235;FastAPI · Python&#8236;</h3><p class="adesc light">&#8235;REST לפעולות, WebSocket לעדכון כל 200 ms&#8236;</p></div>
+<p class="azone dark">&#8235;שרת FastAPI · Python&#8236;</p>
+<div class="hosts"><p class="host">&#8235;Render Free · ציבורי, Docker&#8236;</p><p class="host">&#8235;מחשב ההדגמה · מקומי&#8236;</p></div>
+<div class="api"><p class="adesc light">&#8235;REST לדפדפן · WebSocket לטלפונים כל 200 ms · קוד מציג לשינוי התרחיש&#8236;</p></div>
 <div class="mods">
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;סימולציית תנועה&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;ניתוב A*&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;Geofencing והתרעות&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גל ירוק לרמזורים&#8236;</p></div>
-<div class="mod"><p class="tag plan">&#8235;מתוכנן&#8236;</p><p class="mname">&#8235;Redis · מצב זמני&#8236;</p></div>
-<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גרף מנהטן · OSM&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;ניתוב A*&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;סימולציית תנועה&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;התרעות לאזרחים&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;גל ירוק לרמזורים&#8236;</p></div>
+<div class="mod"><p class="tag plan">&#8235;מתוכנן&#8236;</p><p class="mname">&#8235;Redis&#8236;</p></div>
+<div class="mod"><p class="mname">&#8235;גרף מנהטן · OSM&#8236;</p></div>
 </div>
 </div>
 <div class="alinks">
-<div class="alink"><p class="proto">&#8235;HTTPS · WSS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg><p class="proto small">&#8235;רשת מקומית&#8236;</p></div>
+<div class="alink"><p class="proto">&#8235;HTTPS · WSS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg><p class="proto small">&#8235;אותו מצב סימולציה&#8236;</p></div>
 </div>
 <div class="acol">
 <p class="azone">&#8235;לקוחות&#8236;</p>
-<div class="anode"><div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><h3>&#8235;סימולטור ומרכז שליטה&#8236;</h3></div><p class="adesc">&#8235;דפדפן במחשב · MapLibre, מפת מנהטן חיה&#8236;</p></div>
-<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית רכב חירום&#8236;</h3></div><p class="adesc">&#8235;Android · מיקום, מסלול ובקשת עדיפות&#8236;</p></div>
-<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית אזרח&#8236;</h3></div><p class="adesc">&#8235;התרעה לפנות את הנתיב&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;סימולטור בדפדפן&#8236;</h3></div><p class="adesc">&#8235;MapLibre · מפת מנהטן חיה ומרכז שליטה&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;Android · נהג הצלה&#8236;</h3></div><p class="adesc">&#8235;Flutter · מסלול, מיקום וגל ירוק בזמן אמת&#8236;</p></div>
+<div class="anode"><div class="ahead"><h3>&#8235;Android · אזרח&#8236;</h3></div><p class="adesc">&#8235;התרעה מוקראת לפנות את הנתיב&#8236;</p></div>
 </div>
 </div>
-<p class="foot">&#8235;<b>פועל:</b> אבני דרך 1–3. <b>מתוכנן:</b> 4–8. ה-AI מציע בלבד, והרמזורים נשלטים בקוד דטרמיניסטי.&#8236;</p>
-<aside>הארכיטקטורה לפי סעיף 4 באפיון. במרכז מחשב ההדגמה, שמריץ את שרת FastAPI בפייתון. השרת מחזיק את שעון הסימולציה, מחשב מסלולים ב-A* על גרף הרחובות של מנהטן מ-OpenStreetMap, מתזמן את הגל הירוק ברמזורים ומתריע לאזרחים בדרך. מימין הלקוחות: הסימולטור ומרכז השליטה בדפדפן, אפליקציית Android לרכב החירום ואפליקציית האזרח. הם מתחברים לשרת ברשת המקומית ב-HTTPS וב-WebSocket מאובטח. משמאל הענן: מסד PostgreSQL בפרויקט Supabase החינמי לנתונים מתמשכים, ומודל שפה לחילוץ דיווחים ולעוזר המוקדן. התגיות מראות מה כבר פועל: אבני הדרך 1 עד 3, כלומר הניתוב, הסימולטור והגל הירוק. כרגע הדפדפן מושך את המצב מהשרת ב-REST, ועדכוני WebSocket, Redis, Supabase, האפליקציות ורכיבי ה-AI מתוכננים לאבני הדרך הבאות. עיקרון הבטיחות: ה-AI רק מציע, ופקודות לרמזורים ושיוך רכבים עוברים בקוד דטרמיניסטי.</aside>
+<p class="foot">&#8235;<b>רכיב בלי תגית:</b> פועל ונבדק, אבני דרך 1–4. ה-AI מציע בלבד, והרמזורים נשלטים בקוד דטרמיניסטי.&#8236;</p>
+<aside>הארכיטקטורה כפי שהיא בקוד היום. במרכז שרת FastAPI בפייתון. אותו שרת רץ בשני מקומות: באופן מקומי במחשב ההדגמה, ובאופן ציבורי בשירות Render החינמי, בתוך קונטיינר Docker ובכתובת HTTPS. השרת מחזיק את שעון הסימולציה, מחשב מסלולים ב-A* על גרף הרחובות של מנהטן מ-OpenStreetMap, מתזמן את הגל הירוק ברמזורים ומתריע לאזרחים בדרך. מימין הלקוחות, וכולם רואים את אותו מצב סימולציה. הסימולטור בדפדפן מציג את מפת מנהטן ב-MapLibre וקורא את המצב ב-REST. אפליקציית Android, שנבנתה ב-Flutter, פועלת בשני תפקידים: נהג ההצלה מקבל מסלול ומיקום, והאזרח מקבל התרעה מוקראת לפנות את הנתיב. שניהם מקבלים עדכוני WebSocket כל 200 מילישניות. בפריסה הציבורית, שינוי התרחיש דורש קוד מציג. משמאל: GitHub Actions בונה את קונטיינר ה-Docker ובודק אותו תחת מגבלות המעבד והזיכרון של Render, ו-Render מפרסם גרסה חדשה רק אחרי שהבדיקות עברו. עדיין מתוכננים Redis, מסד PostgreSQL ב-Supabase, ומודל השפה לחילוץ דיווחים ולעוזר המוקדן. גם GPS אמיתי מהטלפון והתרעות ברקע נשארו מחוץ לחזרה הנוכחית. עיקרון הבטיחות: ה-AI רק מציע, ופקודות לרמזורים ושיוך רכבים עוברים בקוד דטרמיניסטי.</aside>
+</section>
+<section id="milestones" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 3 / 8&#8236;</p>
+<h2>&#8235;אבני הדרך: איפה אנחנו עומדים&#8236;</h2>
+<div class="msgrid">
+<div class="ms done" style="--i:3"><div class="mshead"><p class="status done">&#8235;הושלם&#8236;</p><p class="msnum">4</p></div><h3>&#8235;אפליקציית Android&#8236;</h3><p class="msnote">&#8235;Flutter לנהג ולאזרח, עדכוני WebSocket, הותקנה על טלפון Xiaomi&#8236;</p></div>
+<div class="ms done" style="--i:2"><div class="mshead"><p class="status done">&#8235;הושלם&#8236;</p><p class="msnum">3</p></div><h3>&#8235;גל ירוק והתרעות&#8236;</h3><p class="msnote">&#8235;בריצה מדומה: מ-394.8 ל-288.4 שניות, כ-27% פחות&#8236;</p></div>
+<div class="ms done" style="--i:1"><div class="mshead"><p class="status done">&#8235;הושלם&#8236;</p><p class="msnum">2</p></div><h3>&#8235;סימולטור ניו יורק&#8236;</h3><p class="msnote">&#8235;מפה חיה ב-MapLibre, עד 500 רכבים, חסימת כביש משנה מסלול&#8236;</p></div>
+<div class="ms done" style="--i:0"><div class="mshead"><p class="status done">&#8235;הושלם&#8236;</p><p class="msnum">1</p></div><h3>&#8235;שרת, מפה וניתוב A*&#8236;</h3><p class="msnote">&#8235;A* זהה ל-Dijkstra ב-100 זוגות, p95 של 18.6 ms&#8236;</p></div>
+<div class="ms todo" style="--i:7"><div class="mshead"><p class="status todo">&#8235;טרם התחיל&#8236;</p><p class="msnum">8</p></div><h3>&#8235;סוכן עוזר מוקדן&#8236;</h3><p class="msnote">&#8235;כלים, לולאת הסוכן, מסך אישור והערכה מול baseline&#8236;</p></div>
+<div class="ms part" style="--i:6"><div class="mshead"><p class="status part">&#8235;חלקי&#8236;</p><p class="msnum">7</p></div><h3>&#8235;מדידות ותיעוד&#8236;</h3><p class="msnote">&#8235;יש מדידות ובדיקת HTTPS ו-WSS. חסרים דוח ביצועים ותרשים רצף&#8236;</p></div>
+<div class="ms todo" style="--i:5"><div class="mshead"><p class="status todo">&#8235;טרם התחיל&#8236;</p><p class="msnum">6</p></div><h3>&#8235;מודלים&#8236;</h3><p class="msnote">&#8235;חילוץ JSON ב-LLM, מסווג טקסט וניסוי השוואה&#8236;</p></div>
+<div class="ms todo" style="--i:4"><div class="mshead"><p class="status todo">&#8235;טרם התחיל&#8236;</p><p class="msnum">5</p></div><h3>&#8235;מסד נתונים ואבטחה&#8236;</h3><p class="msnote">&#8235;טבלאות Supabase, JWT ותפקידים, טבלת איומים&#8236;</p></div>
+</div>
+<p class="foot">&#8235;<b>נוסף מעבר לתוכנית:</b> תצוגה ציבורית ב-Render Free, בדיקות GitHub Actions לפני כל פריסה, וקוד מציג שמגן על שינוי התרחיש.&#8236;</p>
+<aside>שמונה אבני הדרך מפרק 7 באפיון. ארבע הראשונות הושלמו ונבדקו. בשלב 1 הוקם שרת FastAPI עם גרף הרחובות של מנהטן, ו-A* החזיר אותו מרחק כמו Dijkstra בכל 100 הזוגות, עם p95 של 18.6 מילישניות. בשלב 2 נבנה הסימולטור בדפדפן: מפה חיה, עד 500 רכבים, וחסימת כביש שמשנה את המסלול. בשלב 3 נוספו הגל הירוק וההתרעות לאזרחים. בריצה מדומה אחת, עם אותו תרחיש, רכב ההצלה הגיע אחרי 288.4 שניות במקום 394.8, כ-27% פחות. זו ריצה אחת, ולא מדידה סטטיסטית. בשלב 4 נבנתה אפליקציית Android ב-Flutter לנהג ההצלה ולאזרח, והיא הותקנה על טלפון אמיתי. שלב 7 חלקי: יש מדידות ובדיקות חיבור, אבל עוד אין דוח ביצועים ותרשים רצף. שלבים 5, 6 ו-8 טרם התחילו. מעבר לתוכנית נוספה תצוגה ציבורית ב-Render עם בדיקות אוטומטיות וקוד מציג.</aside>
+</section>
+<section id="remaining" class="alt" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 4 / 8&#8236;</p>
+<h2>&#8235;מה נשאר לעשות&#8236;</h2>
+<div class="cards four">
+<div class="card" style="--i:3"><h3>&#8235;סוכן עוזר מוקדן&#8236;</h3><p class="when">&#8235;שלב 8&#8236;</p><p class="pt">&#8235;• הגדרת הכלים ולולאת הסוכן&#8236;</p><p class="pt">&#8235;• מסך אישור, עריכה או דחייה למוקדן&#8236;</p><p class="pt">&#8235;• הערכה מול baseline על 30 תרחישים&#8236;</p><p class="pt">&#8235;• ניסיון prompt injection שנחסם&#8236;</p></div>
+<div class="card" style="--i:2"><h3>&#8235;מדידות ותיעוד&#8236;</h3><p class="when">&#8235;שלב 7&#8236;</p><p class="pt">&#8235;• חזרה מלאה על התסריט עם המחשב והטלפונים&#8236;</p><p class="pt">&#8235;• דוח ביצועים לפני ואחרי אופטימיזציה&#8236;</p><p class="pt">&#8235;• תרשים רצף והסבר החלטות החומרה&#8236;</p></div>
+<div class="card" style="--i:1"><h3>&#8235;מודלים&#8236;</h3><p class="when">&#8235;שלב 6&#8236;</p><p class="pt">&#8235;• חילוץ JSON מדיווח ב-LLM, עם schema&#8236;</p><p class="pt">&#8235;• אימון מסווג טקסט&#8236;</p><p class="pt">&#8235;• ניסוי השוואה על דיווחים שאנשים כתבו&#8236;</p></div>
+<div class="card" style="--i:0"><h3>&#8235;מסד נתונים ואבטחה&#8236;</h3><p class="when">&#8235;שלב 5&#8236;</p><p class="pt">&#8235;• טבלאות ב-Supabase וחיבור FastAPI&#8236;</p><p class="pt">&#8235;• JWT והרשאות לפי תפקיד&#8236;</p><p class="pt">&#8235;• טבלת איומים ושתי תקיפות שנחסמות&#8236;</p><p class="pt">&#8235;• Redis למצב הזמני&#8236;</p></div>
+</div>
+<p class="foot">&#8235;<b>פערים משלבים שהושלמו:</b> מיקום GPS אמיתי מהטלפון במקום רכב מדומה, והתרעה ב-Push כשאפליקציית האזרח ברקע.&#8236;</p>
+<aside>העבודה שנשארה, לפי אבני הדרך שבאפיון. בשלב 5: טבלאות במסד PostgreSQL ב-Supabase וחיבור השרת אליו, אימות JWT והרשאות לפי תפקיד, טבלת איומים ושתי תקיפות חיות שהמערכת חוסמת, ו-Redis למצב הזמני. בשלב 6: חילוץ JSON מדיווח חופשי בעזרת מודל שפה, אימון מסווג טקסט, וניסוי השוואה ביניהם על דיווחים שנכתבו בידי אנשים. בשלב 7: חזרה מלאה על תסריט ההדגמה עם המחשב והטלפונים, דוח ביצועים עם מדידה לפני ואחרי אופטימיזציה, תרשים רצף של התקשורת והסבר החלטות החומרה. בשלב 8: עוזר המוקדן, עם הכלים, לולאת הסוכן, מסך האישור, הערכה מול כלל פשוט על 30 תרחישים, וניסיון prompt injection שנחסם. נשארו גם שני פערים משלבים שהושלמו: הטלפון עוד לא שולח מיקום GPS אמיתי, ואפליקציית האזרח לא מקבלת התרעה כשהיא ברקע.</aside>
 </section>
 <section id="teacher" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 3 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 5 / 8&#8236;</p>
 <h2>&#8235;מדריך פדגוגי למורה&#8236;</h2>
 <p class="lead">&#8235;המוצר הוא המערכת. המטרה היא התלמיד שבנה אותה, ויודע להסביר, לבדוק ולהגן על כל חלק בה.&#8236;</p>
 <div class="phases">
@@ -300,7 +349,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>המדריך עוקב אחרי שמונת שלבי הפיתוח בפרק 7 באפיון, ומוסיף שלב פתיחה ושלב הגנה. לכל שלב מוגדרים מושגי הליבה, מה ה-AI מאפשר מעבר לחיסכון בזמן, נקודת בקרה שבה הפלט נבדק מול מדידה, חישוב או ניסוי, שאלה לשיחת בדיקה בלי מחשב, וטעויות שהמורה מחפש. שיחת הבדיקה נמשכת 5 עד 10 דקות לתלמיד, והמשוב בה איכותני. במאגר יש גם כישורי Claude Code שמנהלים שיחת בדיקה בשמונה נושאי ליבה, במצב תרגול או הערכה.</aside>
 </section>
 <section id="profile" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 4 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 6 / 8&#8236;</p>
 <h2>&#8235;פרופיל הבוגר ומחוון המגמה&#8236;</h2>
 <div class="cols">
 <div class="rubric">
@@ -326,7 +375,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>מחוון המגמה בנוי לפי מודל ה-T: עמוד הליבה A, שתי הזרועות B ו-C, הצלילה לעומק X ושקיפות. המשקלות לקוחים ממסמך המודל והם הצעה לדיון. הסולם הוא ארבע רמות: מצוין, טוב, בסיסי ולא עומד. יש שני תנאי סף: הדיאלוגים המלאים עם ה-AI מצורפים לפרויקט, וציון 1 ברכיב A פוסל את הפרויקט כולו. כל רכיב בפרופיל הבוגר נבדק ברכיב של המחוון ומודגם בפרויקט, ומחוון השיפוט של ההאקתון בודק בדיוק את ההלימה הזו. המשוב לאורך התהליך איכותני, והדירוג ניתן בבחינה.</aside>
 </section>
 <section id="templates" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 5 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 7 / 8&#8236;</p>
 <h2>&#8235;תבניות עבודה&#8236;</h2>
 <p class="lead">&#8235;קצרות בכוונה: רשומה טובה לוקחת כמה דקות. התלמיד ממלא, והמורה קורא ומגיב.&#8236;</p>
 <div class="cards">
@@ -340,7 +389,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>ארבע תבניות ומבנה קבצים אחד. הרשומות החשובות ביותר ביומן הן אלה שבהן התלמיד תפס טעות של ה-AI. הדיאלוגים נשמרים בתיקייה ai-dialogues/ לפי תלמיד, בשם קובץ של תאריך, רכיב ונושא. מותר להסתיר רק סיסמאות, מפתחות API ומידע אישי, ושום דבר אחר לא נערך.</aside>
 </section>
 <section id="tmodel" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 6 / 6&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 8 / 8&#8236;</p>
 <h2>&#8235;מודל ה-T בפרויקט ClearPath AI&#8236;</h2>
 <div class="tgrid">
 <div class="tbox arm armc" style="--i:2">
