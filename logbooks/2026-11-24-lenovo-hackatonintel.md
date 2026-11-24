@@ -456,7 +456,7 @@ The user then asked for this correction to be included in the record.
 
 ### Session result
 
-- Milestone 2 is available on the demo laptop at [the simulator](http://127.0.0.1:8000/simulator), reset and paused at the default route. The [runbook](../backend/README.md) documents setup and verification. Both simulator checkpoints are local commits following the milestone 1 sync. The simulator does not require Supabase or an external map tile service. [Rubric criterion 4](../docs/rubric.html#c4)
+- Milestone 2 is available on the demo laptop at [the simulator](http://127.0.0.1:8000/simulator), reset and paused at the default route. The [runbook](../backend/README.md) documents setup and verification. A final Git check found the implementation checkpoint already on GitHub's main branch, following a separate merge that included the milestone 1 checkpoint. This follow-up records the verified simulator before syncing its final changes. The simulator does not require Supabase or an external map tile service. [Rubric criterion 4](../docs/rubric.html#c4)
 
 ## User prompt · Teacher and student guidance
 
