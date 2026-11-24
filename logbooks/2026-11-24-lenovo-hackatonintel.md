@@ -650,3 +650,26 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The backend, routing API and desktop simulator run on this laptop at `http://127.0.0.1:8000`. The virtual environment, OSM cache, GraphML and `frontend/node_modules` are generated locally and are not committed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Rerun after sync
+
+> I just synched. run again
+
+### Decisions
+
+- The user synced and asked for a rerun. The sync changed only `frontend/public/simulator.js` (Hudson River label position, and road-closure clicks now choose the closest rendered street) and the logbook. Claude kept the existing dependencies and restarted the server. [Rubric criterion 4](../docs/rubric.html#c4)
+- The Python checks do not cover the changed click behavior, so Claude also tested a road closure by hand in the browser. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### AI contribution
+
+- Claude restarted FastAPI, reran both check scripts, and drove the simulator in the in-app browser. The user widened the browser pane and started playback during the test. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- `/health` returned 4,671 nodes and 9,962 directed edges. `backend.check_routing` passed, and A* matched Dijkstra for 100 pairs, with mean 16.4 ms and p95 42.3 ms for local routing. The laptop was busy during this run, as in the previous one. [Rubric criterion 3](../docs/rubric.html#c3)
+- `backend.check_simulation` passed on 8,254 road segments and 2,752 signal nodes. [Rubric criterion 3](../docs/rubric.html#c3)
+- In closure mode, a click on the rescue route closed East 42nd Street. The route changed from 3.16 km / 4.7 min to 2.93 km / 4.4 min. A second click reopened the street, and the route returned to it. The console showed no errors. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The synced backend and simulator run and pass their checks on this laptop. The simulator is still running at `http://127.0.0.1:8000`. [Rubric criterion 4](../docs/rubric.html#c4)
