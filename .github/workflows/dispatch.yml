@@ -1,0 +1,41 @@
+name: ClearPath dispatch
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ['backend/**', 'supabase/migrations/**', '.github/workflows/dispatch.yml']
+  push:
+    branches: [main]
+    paths: ['backend/**', 'supabase/migrations/**', '.github/workflows/dispatch.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  verify-dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 3s --health-retries 6
+      redis:
+        image: redis:8-alpine
+        ports: ['6379:6379']
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 6
+    env:
+      CLEARPATH_DATABASE_URL: postgresql://clearpath_app@127.0.0.1:5432/postgres
+      CLEARPATH_REDIS_URL: redis://127.0.0.1:6379/0
+      CLEARPATH_SUPABASE_URL: https://test.supabase.co
+      CLEARPATH_SUPABASE_PUBLISHABLE_KEY: test
+      CLEARPATH_GRAPH_PATH: deploy/manhattan.graphml.gz
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -r backend/requirements.txt
+      - run: python -m backend.check_dispatch --owner postgresql://postgres@127.0.0.1:5432/postgres

@@ -2,3 +2,5 @@
 __pycache__/
 backend/data/
 frontend/node_modules/
+.env
+.env.*
