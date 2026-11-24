@@ -13,6 +13,7 @@ from psycopg.conninfo import conninfo_to_dict
 from pydantic import BaseModel, Field
 from redis import Redis, RedisError
 
+from .report_extraction import extract_report, verified_location
 from .routing import PointOutsideGraph
 
 router = APIRouter(prefix="/dispatch", tags=["Dispatch"])
@@ -164,6 +165,10 @@ class PriorityRequest(BaseModel):
     osm_node_id: int = Field(gt=0, le=2**63 - 1)
 
 
+class FreeTextReport(BaseModel):
+    report: str = Field(min_length=1, max_length=1200)
+
+
 @router.get("/me")
 def me(actor: SignedIn):
     return {"user_id": actor.user_id, "role": actor.role}
@@ -172,6 +177,28 @@ def me(actor: SignedIn):
 @router.get("/board")
 def board(actor: SignedIn, dispatch: Services):
     return dispatch.query("select clearpath.dispatch_board(%s)", (actor.user_id,))[0]
+
+
+@router.post("/report-suggestions")
+def report_suggestion(payload: FreeTextReport, actor: SignedIn, request: Request):
+    if actor.role != "dispatcher":
+        raise HTTPException(403, "Only a dispatcher can request a report draft.")
+    model_url = os.getenv("CLEARPATH_MODEL_URL")
+    if not model_url:
+        raise HTTPException(503, "The local report model is disabled.")
+    report = payload.report.strip()
+    if not report:
+        raise HTTPException(422, "Enter a report to analyze.")
+    try:
+        with httpx.Client(timeout=35, trust_env=False) as client:
+            draft = extract_report(client, model_url, report)
+    except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError) as error:
+        raise HTTPException(502, "The report model did not return a valid draft.") from error
+    try:
+        location = verified_location(report, draft, request.app.state.router)
+    except PointOutsideGraph:
+        location = None
+    return {"proposal": draft, "map_location": location, "requires_review": True}
 
 
 @router.post("/incidents")
