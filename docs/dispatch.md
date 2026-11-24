@@ -35,7 +35,7 @@ $env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
 
 The emulator can open these API docs at `http://10.0.2.2:8003/docs`. For the protected calls, use the access token from a demo account's [Supabase password sign-in](https://supabase.com/docs/reference/javascript/auth-signinwithpassword) in **Authorize**. Keep the service bound to loopback for this rehearsal.
 
-From the repository root, run the following to sign in for a rehearsal. Change `$role` to `RESCUE` or `CITIZEN` to test that role. The last command copies the short-lived access token so you can paste it into Swagger **Authorize** or the [local report review](http://127.0.0.1:8003/dispatch/reports) form.
+The [local report review](http://127.0.0.1:8003/dispatch/reports) accepts the demo email and password directly. For a Swagger rehearsal, run the following from the repository root and change `$role` to `RESCUE` or `CITIZEN` to test that role. The last command copies the short-lived token for **Authorize**.
 
 ```powershell
 $settings = @{}

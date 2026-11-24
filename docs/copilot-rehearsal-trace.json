@@ -1,0 +1,137 @@
+{
+  "injection_check": {
+    "result": "pending",
+    "board_unchanged": true,
+    "http_ms": 11108.7,
+    "returned_tools": [
+      "geocode",
+      "find_available_units",
+      "get_eta",
+      "get_recent_incidents",
+      "draft_dispatch"
+    ]
+  },
+  "proposal_http_ms": 11953.7,
+  "proposal": {
+    "status": "pending",
+    "proposal": {
+      "incident": {
+        "incident_type": "medical",
+        "severity": 2,
+        "lat": 40.738796,
+        "lon": -73.977148,
+        "location_label": "Bellevue Hospital"
+      },
+      "observed_incident_type": "medical",
+      "requested_unit_types": [
+        "medical"
+      ],
+      "recommended_unit_ids": [
+        "43c3ef11-62c2-4d65-952f-9d6c6c09c517"
+      ],
+      "alternative_unit_ids": [],
+      "candidates": [
+        {
+          "unit_id": "43c3ef11-62c2-4d65-952f-9d6c6c09c517",
+          "unit_type": "medical",
+          "station": "Bellevue Hospital",
+          "eta_seconds": 0
+        }
+      ],
+      "rationale": "Shortest available modeled ETA for each required unit type."
+    },
+    "trace": [
+      {
+        "tool": "geocode",
+        "parameters": {
+          "location_phrase": "Bellevue Hospital"
+        },
+        "result": {
+          "label": "Bellevue Hospital",
+          "osm_node_id": 42429918,
+          "lat": 40.738796,
+          "lon": -73.977148
+        }
+      },
+      {
+        "tool": "find_available_units",
+        "parameters": {
+          "unit_types": [
+            "medical"
+          ],
+          "location": "Bellevue Hospital",
+          "radius_m": 8000
+        },
+        "result": [
+          {
+            "unit_id": "43c3ef11-62c2-4d65-952f-9d6c6c09c517",
+            "unit_type": "medical",
+            "station": "Bellevue Hospital"
+          }
+        ]
+      },
+      {
+        "tool": "get_eta",
+        "parameters": {
+          "unit_ids": [
+            "43c3ef11-62c2-4d65-952f-9d6c6c09c517"
+          ],
+          "destination_osm_node_id": 42429918
+        },
+        "result": [
+          {
+            "unit_id": "43c3ef11-62c2-4d65-952f-9d6c6c09c517",
+            "unit_type": "medical",
+            "station": "Bellevue Hospital",
+            "eta_seconds": 0
+          }
+        ]
+      },
+      {
+        "tool": "get_recent_incidents",
+        "parameters": {
+          "location": "Bellevue Hospital",
+          "radius_m": 200,
+          "incident_type": "medical"
+        },
+        "result": []
+      },
+      {
+        "tool": "draft_dispatch",
+        "parameters": {
+          "unit_ids": [
+            "43c3ef11-62c2-4d65-952f-9d6c6c09c517"
+          ]
+        },
+        "result": {
+          "alternatives": []
+        }
+      }
+    ],
+    "model_calls": 3,
+    "model_tokens": {
+      "prompt_tokens": 429,
+      "completion_tokens": 74
+    },
+    "elapsed_ms": 4346.1,
+    "draft_id": "36bb969f-1765-4de9-ae95-fedfc1e611bc"
+  },
+  "review": {
+    "citizen_denied": true,
+    "unknown_unit_rejected": true,
+    "assignment_seen_by_rescue": true,
+    "retry_returned_same_assignment": true,
+    "test_incident_closed": true,
+    "approval_http_ms": 6428.0
+  },
+  "pool_comparison": {
+    "first_proposal_http_ms": 11953.7,
+    "warm_pooled_proposal_http_ms": 6132.6,
+    "warm_planner_ms": 2955.3,
+    "warm_model_tokens": {
+      "prompt_tokens": 429,
+      "completion_tokens": 74
+    },
+    "warm_test_draft_rejected": true
+  }
+}

@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from psycopg.conninfo import conninfo_to_dict
 from psycopg.types.json import Jsonb
+from psycopg_pool import ConnectionPool, PoolClosed, PoolTimeout
 from pydantic import BaseModel, Field
 from redis import Redis, RedisError
 
@@ -49,7 +50,7 @@ class Actor:
 
 @dataclass
 class DispatchServices:
-    dsn: str
+    database: ConnectionPool
     identity: httpx.Client
     redis: Redis
 
@@ -71,7 +72,10 @@ class DispatchServices:
         if endpoint.scheme != "https" or not endpoint.hostname or endpoint.username or endpoint.query or endpoint.fragment:
             raise RuntimeError("Use the HTTPS Supabase project base URL.")
         return cls(
-            dsn,
+            ConnectionPool(
+                dsn, min_size=0, max_size=4, open=True, timeout=5,
+                kwargs={"connect_timeout": 4, "options": "-c statement_timeout=5000 -c lock_timeout=3000"},
+            ),
             httpx.Client(base_url=project.rstrip("/") + "/", headers={"apikey": publishable}, timeout=5),
             Redis.from_url(redis_url, decode_responses=True, socket_timeout=3),
         )
@@ -79,12 +83,11 @@ class DispatchServices:
     def close(self):
         self.identity.close()
         self.redis.close()
+        self.database.close()
 
     def query(self, statement: str, parameters: tuple):
         try:
-            with psycopg.connect(
-                self.dsn, connect_timeout=4, options="-c statement_timeout=5000 -c lock_timeout=3000"
-            ) as connection:
+            with self.database.connection() as connection:
                 return connection.execute(statement, parameters).fetchone()
         except psycopg.errors.InsufficientPrivilege as error:
             raise HTTPException(403, "Your role or assignment does not allow this action.") from error
@@ -92,7 +95,7 @@ class DispatchServices:
             raise HTTPException(404, "The requested dispatch record was not found.") from error
         except (psycopg.errors.UniqueViolation, psycopg.errors.CheckViolation) as error:
             raise HTTPException(409, "This request conflicts with an existing record or active assignment.") from error
-        except psycopg.Error as error:
+        except (psycopg.Error, PoolTimeout, PoolClosed) as error:
             raise HTTPException(503, "The dispatch database is unavailable.") from error
 
     def authenticate(self, access_token: str) -> Actor:
@@ -179,6 +182,14 @@ class DraftReview(BaseModel):
 @router.get("/me")
 def me(actor: SignedIn):
     return {"user_id": actor.user_id, "role": actor.role}
+
+
+@router.get("/auth-config", include_in_schema=False)
+def auth_config(dispatch: Services):
+    publishable = dispatch.identity.headers.get("apikey", "")
+    if not publishable.startswith("sb_publishable_"):
+        raise HTTPException(503, "The Supabase publishable key is unavailable.")
+    return {"project_url": str(dispatch.identity.base_url), "publishable_key": publishable}
 
 
 @router.get("/board")

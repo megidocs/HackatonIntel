@@ -51,7 +51,7 @@ def main() -> None:
             dispatch.identity = httpx.Client(
                 base_url="https://test.supabase.co", headers={"apikey": "test"}, transport=httpx.MockTransport(auth)
             )
-            with psycopg.connect(dispatch.dsn) as limited:
+            with dispatch.database.connection() as limited:
                 try:
                     limited.execute("update clearpath.users set role = 'dispatcher'")
                 except psycopg.errors.InsufficientPrivilege:

@@ -30,7 +30,7 @@
 
 ### AI contribution
 
-- Queried Supabase Auth's provider settings and prepared the [Google OAuth and Rescue enrollment guide](../docs/google-rescue-enrollment.md) with the exact project callback. Asked for the selected Google accounts and whether there is already a ClearPath OAuth client. [Rubric criterion 2](../docs/rubric.html#c2)
+- Queried Supabase Auth's provider settings, checked the exact project callback, and asked for the selected Google accounts and whether there was already a ClearPath OAuth client. [Rubric criterion 2](../docs/rubric.html#c2)
 
 ### Independent checks
 
@@ -39,3 +39,44 @@
 ### Session result
 
 - Google sign-in and the individual enrollments await the Google OAuth client setup and the selected accounts. The existing demo sign-in is available for the final-phase rehearsal. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Use email/password for Amit’s demo
+
+> I did not define this project on google at all. there is no way to open this stuff on supabase without the google setup?
+> I don't want to setup a new google project just for this hackathon. can we do something else or should we go back to email/pw sign-in?
+>
+> so give me the way Amit should login to demonstrate.
+
+### Decisions
+
+- Use the existing Supabase email/password provider and pre-enrolled Rescue account for the hackathon. The user supplied two addresses for later named enrollment and indicated that a new Google project is out of scope. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Added direct email/password sign-in to the laptop page, a Rescue assignment view, and a read-only preview for enrolling verified accounts. Documented the [steps Amit can use](../docs/rescue-accounts.md) and the separate Android viewer and presenter behavior. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The enrollment preview found neither requested address as a verified Supabase account. The local sign-in endpoint configuration, Supabase password exchange, Rescue role, and existing unit passed with the demo account. The [live copilot trace](../docs/copilot-rehearsal-trace.json) verifies approval and the assigned Rescue unit. The dispatch regression covers rollback on unavailable units. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Amit has a documented demonstration path with the existing demo Rescue login. An administrator can grant the two individual roles after account verification. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## Final milestone checkpoint · Verify the copilot and presentation handoff
+
+### Decisions
+
+- Keep the copilot on the authenticated laptop service and use a bounded local PostgreSQL connection pool to reduce repeated remote connection setup. Use measured latency and the model’s weak categories in the presentation. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Completed the [copilot rehearsal and handoff](../docs/copilot.md), including the model-selected tool loop, candidate review, manual fallback, and instructions for the demo Rescue account. The browser falls back after a ten-second proposal timeout. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Across 30 synthetic scenarios, the copilot scored 22 correct and the nearest-ETA baseline 20. The copilot flagged five duplicates, selected the expected pair in two compound cases, and missed all five roadblocks. A live injection request left the dispatch board unchanged. An explicit dispatcher approval created one assignment, the Rescue account saw it, and a retry returned the same record. The test incident was closed. With a warm pool, the observed full proposal improved from 11.95 to 6.13 seconds, with 2.96 seconds in the planner. [Benchmark](../models/copilot-benchmark-result.json) · [Live trace](../docs/copilot-rehearsal-trace.json) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The final phase is ready for the local hackathon rehearsal with the pre-enrolled accounts. The five-second end-to-end proposal goal and the independent student-authored evaluation remain follow-up measurements. [Rubric criterion 4](../docs/rubric.html#c4)

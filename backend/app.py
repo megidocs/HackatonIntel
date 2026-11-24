@@ -139,7 +139,7 @@ def simulator_page():
 
 @app.get("/dispatch/reports", include_in_schema=False)
 def report_page(request: Request):
-    if request.app.state.dispatch is None or not os.getenv("CLEARPATH_MODEL_URL"):
+    if request.app.state.dispatch is None:
         raise HTTPException(status_code=404)
     return FileResponse(FRONTEND / "public" / "dispatch-report.html", headers={"Cache-Control": "no-store"})
 

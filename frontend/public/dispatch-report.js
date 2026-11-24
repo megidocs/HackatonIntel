@@ -15,7 +15,7 @@ class DispatchError extends Error {
   }
 }
 
-async function post(path, body) {
+async function post(path, body, signal) {
   const response = await fetch(path, {
     method: 'POST',
     headers: {
@@ -24,12 +24,14 @@ async function post(path, body) {
     },
     body: JSON.stringify(body),
     cache: 'no-store',
+    signal,
   });
   if (!response.ok) throw new DispatchError(response.status);
   return response.json();
 }
 
 function message(error) {
+  if (error.name === 'TimeoutError') return 'The copilot timed out. Continue in the manual dispatch API.';
   return ({
     401: 'This token expired or was rejected. Sign in again.',
     403: 'A dispatcher account is required.',
@@ -77,12 +79,14 @@ form.addEventListener('submit', async (event) => {
   review.hidden = true;
   dispatchReview.hidden = true;
   draftButtons.forEach((button) => { button.disabled = true; });
+  const token = get('token').value;
   const copilot = event.submitter?.value === 'copilot';
   status.textContent = copilot ? 'Checking dispatch options…' : 'Preparing draft…';
   try {
     const data = await post(copilot ? '/dispatch/copilot/drafts' : '/dispatch/report-suggestions', {
       report: get('report').value,
-    });
+    }, copilot ? AbortSignal.timeout(10000) : undefined);
+    if (get('token').value !== token) return;
     if (copilot) {
       showDispatch(data);
       return;
@@ -95,7 +99,7 @@ form.addEventListener('submit', async (event) => {
     review.hidden = false;
     status.textContent = 'Check the draft before creating an incident.';
   } catch (error) {
-    status.textContent = message(error);
+    if (get('token').value === token) status.textContent = message(error);
   } finally {
     draftButtons.forEach((button) => { button.disabled = false; });
   }
@@ -114,14 +118,16 @@ async function reviewDispatch(decision) {
   approve.disabled = true;
   reject.disabled = true;
   draftButtons.forEach((button) => { button.disabled = true; });
+  const token = get('token').value;
   try {
     const result = await post(`/dispatch/copilot/drafts/${pendingDraft}/review`, { decision, unit_ids: unitIds });
+    if (get('token').value !== token) return;
     output.textContent = result.status === 'approved'
       ? `Approved ${result.assignments.length} assignment(s) for incident ${result.incident_id}.`
       : 'Draft rejected.';
     pendingDraft = null;
   } catch (error) {
-    output.textContent = message(error);
+    if (get('token').value === token) output.textContent = message(error);
     approve.disabled = false;
     reject.disabled = false;
   } finally {

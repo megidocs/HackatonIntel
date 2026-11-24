@@ -27,15 +27,29 @@
     :focus-visible { outline: 2px solid #8ee5d1; outline-offset: 3px; }
   </style>
   <script type="module" src="/sim/assets/dispatch-report.js"></script>
+  <script type="module" src="/sim/assets/dispatch-sign-in.js"></script>
 </head>
 <body>
   <main>
     <a href="/simulator">ClearPath simulator</a>
     <h1>Review an incident report</h1>
-    <p>Use a dispatcher access token. The local model prepares a draft for your review.</p>
-    <form id="report-form">
-      <label for="token">Dispatcher access token</label>
-      <input id="token" type="password" autocomplete="off" spellcheck="false" required>
+    <p>Sign in with a ClearPath demo account to rehearse your role.</p>
+    <form id="account-sign-in">
+      <label for="account-email">Email</label>
+      <input id="account-email" type="email" autocomplete="username" required>
+      <label for="account-password">Password</label>
+      <input id="account-password" type="password" autocomplete="current-password" required>
+      <button id="email-sign-in" type="submit">Sign in</button>
+    </form>
+    <button id="account-sign-out" type="button" hidden>Sign out</button>
+    <p id="identity-status" role="status"></p>
+    <section id="rescue-assignment" hidden>
+      <h2>Rescue assignment</h2>
+      <ul id="rescue-units"></ul>
+      <button id="refresh-rescue" type="button">Refresh assignment</button>
+    </section>
+    <form id="report-form" hidden>
+      <input id="token" type="hidden">
       <label for="report">Incident report</label>
       <textarea id="report" maxlength="1200" required></textarea>
       <div class="actions">
