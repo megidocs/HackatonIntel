@@ -468,3 +468,43 @@
 ### Session result
 
 - The updated [standalone traffic simulator](https://clearpath-hackatonintel.onrender.com/simulator) is live on Render. The [Lenovo simulator](http://127.0.0.1:8004/simulator) serves the dispatch-driven rehearsal. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Check public dispatch availability
+
+> is the /dispatch/report also available on the render frontend?
+
+### Decisions
+
+- Check the supplied path and the actual plural route on the deployed service. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Matched the results to the [FastAPI route](../backend/app.py) and [Render environment configuration](../render.yaml). [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Render returned 404 for `/dispatch/report` and `/dispatch/reports`. Lenovo port 8004 returned 200 for `/dispatch/reports`. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The dispatch page is available on Lenovo at `/dispatch/reports`. Render serves the public traffic simulator. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Clear the Bryant Park rehearsal event
+
+> clear DB event sothat the Bryant Part can work.
+
+### Decisions
+
+- Close the previous Bryant Park rehearsal through the dispatch lifecycle to free the demo ambulance and preserve the incident history. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Verified the incident location and assignment, recorded the Rescue arrival, and closed the test incident through the dispatcher API on Lenovo. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The Rescue board showed an available medical unit. The exact Bryant Park report returned a pending proposal with a 229.2-second modeled ETA. The dispatch-driven map remained paused on the previous arrival. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Dismissed the verification draft, leaving the ambulance available for the next proposal and approval. [Rubric criterion 4](../docs/rubric.html#c4)

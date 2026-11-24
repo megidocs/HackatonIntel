@@ -55,3 +55,24 @@ The [local Tel Aviv simulator](http://127.0.0.1:8017/simulator/tel-aviv) is runn
 ### Session result
 
 Feature commit `d46512b` is on GitHub `main` and live on [Render](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv). Presenters can unlock the controls to run the walkthrough. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Vehicle availability for different incident locations
+
+> another user question. The tel-aviv map looks great. what if I create a new dispatcher report that is in a somewhat different area. will there be an available vehicle for it? asking because the simulator shows origin and destination for the simulated event (as I understand it). it does not tell me which other rescue vehicles are available to dispatch. this puts me as a demonstrator and creator of dispatch events - facing a wall. or maybe I'm missing something in the big picture.
+
+### Decisions
+
+- The user asked how the current demonstration works and pointed out the lack of fleet visibility before writing a report. Codex checked the deployed simulator and the local dispatcher board to answer the question.
+
+### AI contribution
+
+- Traced the origin and destination on the Tel Aviv desktop map, the report candidate list, and the Copilot eligibility rules for matching unassigned unit types, supported depots, distance, and route availability. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### Independent checks
+
+- Render reported standalone mode for Tel Aviv and returned HTTP 404 for the dispatcher report page. The Lenovo rehearsal on port 8004 reported dispatch mode and served its report page.
+- The authenticated dispatcher board showed one medical unit available. The default modeled medical depot is Bellevue Hospital. The check read the board without creating or changing an incident or an assignment. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The Tel Aviv desktop map shows one simulated rescue trip. The local Manhattan dispatcher chooses from the connected fleet after a report is proposed. The checked fleet had one ambulance and could cover another supported, reachable location while the ambulance was free. A pre-report fleet view and Tel Aviv dispatch integration are open product gaps.

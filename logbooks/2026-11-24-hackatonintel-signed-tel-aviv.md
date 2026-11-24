@@ -23,3 +23,23 @@
 ### Session result
 
 The [signed-in report app](http://127.0.0.1:8006/dispatch/reports) and its [Tel Aviv approved dispatch map](http://127.0.0.1:8006/simulator/tel-aviv/reports) passed the local rehearsal. Feature commit `32aabf2` was pushed to `main`.
+
+## User follow-up · Restart the report app on port 8003
+
+> Can you restart the server on port 8003 with the updated app so I can choose Tel Aviv at the same /dispatch/reports URL I’ve been using? I think I already chose (I had the dropdown) but still got this stupid unrelated message "Which single supported Manhattan location should this report use?" a few seconds after clicking the `propose dispatch`
+
+### Decisions
+
+- The user authorized restarting port 8003. Codex replaced the existing loopback listener and reused the configured dispatch database, Redis, and local report model.
+
+### AI contribution
+
+- Identified the old listener by its executable and app arguments. Started the current checkout at the same URL and checked the report form through Playwright.
+
+### Independent checks
+
+- Before restart, port 8003 returned 404 for the signed-in Tel Aviv map. After restart, Playwright confirmed `city: tel-aviv` in the submitted proposal, received a Jaffa Road proposal listing an ambulance from Nahmani, and opened the returned map URL. The test draft was rejected without assigning a vehicle. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+The updated [signed-in report app](http://127.0.0.1:8003/dispatch/reports) is available at the original localhost URL.
