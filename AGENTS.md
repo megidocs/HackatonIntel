@@ -21,3 +21,5 @@ Permissions outside this repository follow the user's workspace instructions.
 ## Process documentation
 
 Record HackatonIntel work in this repository's [logbooks](logbooks/). Put the user prompt under a level-two heading, followed by level-three headings for decisions, AI contribution, independent checks, and the session result. At each checkpoint, link the relevant evidence to this repository's [judging rubric](docs/rubric.html). Keep teacher vetting qualitative.
+
+Record each project task and follow-up in the logbook, including investigation and decision-only work. Preserve relevant prompts and replies, identify who made each decision, and report the checks actually run and any errors or unresolved work. Before committing or closing a task, check that the logbook covers the prompt, decisions, AI contribution, checks, and result. Include the logbook update in the same commit as the work it documents.

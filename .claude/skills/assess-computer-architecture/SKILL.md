@@ -1,6 +1,6 @@
 ---
 name: assess-computer-architecture
-description: Oral-exam assessment or practice of a ClearPath AI student's core knowledge of computer architecture - CPU vs GPU, cores, processes and threads, the Node.js event loop and worker threads, the memory hierarchy (registers, cache, RAM, disk) and why Redis lives in RAM, float32 vs float64 number representation and map jitter, phone constraints, and how GPS works including the urban canyon (spec 6.3). Use when asked to assess, quiz or practice מבנה המחשב, computer architecture, CPU/GPU, threads, memory or GPS hardware knowledge.
+description: Oral-exam assessment or practice of a ClearPath AI student's core knowledge of computer architecture - CPU vs GPU, cores, processes and threads, the FastAPI (asyncio) event loop, the Python GIL and running A* in a separate process, the memory hierarchy (registers, cache, RAM, disk) and why Redis lives in RAM, float32 vs float64 number representation and map jitter, phone constraints, and how GPS works including the urban canyon (spec 6.3). Use when asked to assess, quiz or practice מבנה המחשב, computer architecture, CPU/GPU, threads, memory or GPS hardware knowledge.
 ---
 
 # הערכת ידע ליבה · מבנה המחשב
@@ -13,7 +13,7 @@ description: Oral-exam assessment or practice of a ClearPath AI student's core k
 
 1. CPU מול GPU: מעט ליבות חזקות לעומת אלפי יחידות פשוטות שמבצעות את אותה פעולה על נתונים רבים במקביל.
 2. תהליך מול thread. ליבות ומקביליות.
-3. ה-event loop של Node.js: thread יחיד, וחישוב כבד חוסם את כל החיבורים. הפתרון הוא worker thread או תהליך נפרד.
+3. ה-event loop של FastAPI (asyncio): חישוב כבד בתוכו חוסם את כל החיבורים. ב-Python, בגלל ה-GIL, threads אינם מריצים חישוב CPU במקביל. לכן `A*` רץ בתהליך Python נפרד (סעיף 6.3 באפיון).
 4. היררכיית הזיכרון: registers, cache, RAM ודיסק. מהירות, גודל ועלות. זיכרון נדיף מול קבוע.
 5. ייצוג מספרים: float32 (כ-7 ספרות משמעותיות) מול float64 (כ-15 עד 16). קואורדינטות יחסיות לנקודת ייחוס.
 6. מגבלות הטלפון: סוללה, חום, מעבד חלש יותר, צריכת אנרגיה של GPS.
@@ -34,10 +34,10 @@ description: Oral-exam assessment or practice of a ClearPath AI student's core k
 
 - **למה הסימולטור רץ רק במחשב ולא בטלפון?**
   תשובה טובה: רינדור מאות רכבים ב-60 FPS ב-GPU (‏WebGL דרך Deck.gl), מסך גדול, וצריכת סוללה וחום בטלפון.
-- **למה חישוב `A*` בשרת Node.js רץ ב-worker thread?**
-  תשובה טובה: ה-event loop יחיד. חישוב של מאות מילישניות עוצר את כל הודעות ה-WebSocket של כל הלקוחות.
-- **למה המיקומים ב-Redis ולא בבסיס הנתונים שעל הדיסק?**
-  תשובה טובה: ‏Redis ב-RAM, וגישה לזיכרון מהירה בסדרי גודל מגישה לדיסק. מיקום הוא מצב רגעי ואינו צריך להישמר לאורך זמן.
+- **למה חישוב `A*` בשרת FastAPI רץ בתהליך Python נפרד, ולא ב-event loop או ב-thread?**
+  תשובה טובה: חישוב של מאות מילישניות בתוך ה-event loop עוצר את כל הודעות ה-WebSocket של כל הלקוחות. thread לא יעזור לחישוב CPU, כי ה-GIL מאפשר רק ל-thread אחד להריץ קוד Python בכל רגע. תהליך נפרד רץ על ליבה אחרת. המחיר: העברת נתונים בין תהליכים.
+- **למה המיקומים ב-Redis המקומי ולא ב-PostgreSQL ב-Supabase?**
+  תשובה טובה: ‏Redis מחזיק אותם ב-RAM של מחשב ההדגמה, וגישה לזיכרון מהירה בסדרי גודל מגישה לדיסק. PostgreSQL נמצא בענן, כך שכל כתיבה עוברת גם ברשת, 5 פעמים בשנייה לכל רכב, ועולה ממכסות המסלול החינמי. מיקום הוא מצב רגעי ואינו צריך להישמר לאורך זמן.
 - **למה הטלפון של אזרח דוגם GPS לאט יותר מרכב חירום?**
   תשובה טובה: GPS צורך אנרגיה רבה. לאזרח מספיק דיוק נמוך יותר בזמן, ורכב החירום הוא שקובע את הגל הירוק.
 
@@ -49,7 +49,7 @@ description: Oral-exam assessment or practice of a ClearPath AI student's core k
 
 ### מה אם
 
-- מה אם מריצים את `A*` ב-thread הראשי ו-50 רכבים מבקשים מסלול באותה שנייה?
+- מה אם מריצים את `A*` בתוך ה-event loop ו-50 רכבים מבקשים מסלול באותה שנייה? ומה אם מעבירים אותו ל-thread במקום לתהליך?
 - מה אם שרת Redis נופל? מה הולך לאיבוד ומה לא?
   תשובה טובה: המיקומים הרגעיים הולכים לאיבוד ומתמלאים מחדש בעדכון הבא. האירועים והשיוכים נשמרו בבסיס הנתונים.
 - מה אם רכב החירום נוסע בין גורדי שחקים, ו-GPS מדווח שהוא ברחוב המקביל?
@@ -57,19 +57,22 @@ description: Oral-exam assessment or practice of a ClearPath AI student's core k
 
 ### איתור שגיאה
 
-```javascript
-wss.on('message', (msg) => {
-  const route = computeAStar(graph, msg.from, msg.to); // ~400 ms
-  ws.send(JSON.stringify(route));
-});
+```python
+@app.websocket("/ws")
+async def ws_handler(ws: WebSocket):
+    await ws.accept()
+    while True:
+        msg = await ws.receive_json()
+        route = a_star(graph, msg["from"], msg["to"])  # ~400 ms of CPU work
+        await ws.send_json(route)
 ```
 
-תשובה טובה: חישוב כבד בתוך ה-event loop חוסם את כל החיבורים במשך 400 מילישניות. צריך להעביר ל-worker.
+תשובה טובה: חישוב כבד בתוך פונקציה `async` חוסם את ה-event loop ואת כל החיבורים במשך 400 מילישניות. צריך להריץ אותו בתהליך נפרד, למשל דרך `ProcessPoolExecutor` עם `run_in_executor`.
 
 ## טעויות נפוצות לזיהוי
 
 - "GPU מהיר יותר מ-CPU" בלי הסבר של סוג העבודה.
-- "Node.js מרובה threads" או בלבול בין async לבין מקביליות.
+- "async הופך את החישוב למקבילי", או "thread ב-Python ירוץ על ליבה נוספת" בלי להכיר את ה-GIL.
 - "float32 לא מדויק" בלי הסבר של ספרות משמעותיות.
 - "GPS שולח את המיקום ללוויין." הטלפון רק מקבל אותות.
 
