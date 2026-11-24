@@ -965,3 +965,23 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The user reviewed the deck and approved publishing and pushing (“Publish and push”). The permission check blocked the publish because the deck is public and updates live. Claude read the live deck and found it byte-identical to the published version 9, so it held no one else's edits. The commit is pushed to `origin/main`. Publishing waits for the user to confirm again. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Publish the eight-slide deck
+
+> Yes, publish
+
+### Decisions
+
+- The user confirmed publishing the eight-slide deck to the public claude.ai link. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude published the deck from `docs/slides/pedagogy-deck` as claude.ai version 10, adding the milestone status and remaining-work slides and the updated architecture slide. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- The publish succeeded and listed all eight slide files. The claude.ai page itself was not viewed, because the built-in browser requires a sign-in. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The public deck and the repository copy match at eight slides. This entry was committed but not pushed. [Rubric criterion 4](../docs/rubric.html#c4)
