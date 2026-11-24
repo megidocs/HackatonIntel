@@ -985,3 +985,44 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The public deck and the repository copy match at eight slides. This entry was committed but not pushed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Open the published slides
+
+> open the slides link (its link is in the users.md normally)
+
+### Decisions
+
+- The user asked to open the presentation. Codex followed the presentation entry in [user.md](../user.md) to the [deck README](../docs/slides/pedagogy-deck/README.md) and chose its published link.
+
+### AI contribution
+
+- Opened the [published ClearPath AI deck](https://claude.ai/artifact/3L7NETeH58eRGv3aj2tF8r) in Microsoft Edge.
+
+### Independent checks
+
+- Edge showed the ClearPath AI cover on slide 1 of 8. The command-line launch was blocked, so Codex used the browser controls. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Session result
+
+- Left the published deck open in Edge. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Identify completed items on the milestone slides
+
+> great. the slideware is not updated regarding what is still left to do (see attached).
+> Write briefly what items should be updated to completed.
+
+### Decisions
+
+- The user asked for a brief status summary. Codex used the specification and the recorded checks to assess the four milestones shown in the screenshot. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Mapped the work recorded in the [dispatch](2026-11-24-hackatonintel-dispatch.md), [models](2026-11-24-hackatonintel-models.md), and [rehearsal](2026-11-24-hackatonintel-rehearsal.md) logs to the milestone and remaining-work slides. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Read the slide source and specification, checked the supporting files and Git history, and reviewed prior test results. No tests were rerun for this status review. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Milestone 5 is complete. Milestone 6 has working extraction and classification and a synthetic benchmark, with human-written evaluation pending. Milestone 7 remains partial and milestone 8 remains planned. [Rubric criterion 4](../docs/rubric.html#c4)

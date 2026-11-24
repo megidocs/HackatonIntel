@@ -19,6 +19,16 @@ map.addControl(new NavigationControl({ showCompass: false }), "top-right");
 
 const canvas = $("#vehicles");
 const context = canvas.getContext("2d");
+const frameMeter = new URLSearchParams(location.search).has("measureFrames") ? $("#frame-meter") : null;
+const frameIntervals = [];
+let lastMeasuredFrame = null;
+let measuredDensity = null;
+let measurementStart = 0;
+if (frameMeter) {
+  frameMeter.hidden = false;
+  frameMeter.textContent = "Start playback to measure frames";
+  document.addEventListener("visibilitychange", clearFrameMeasurement);
+}
 const controls = [...document.querySelectorAll(".sidebar button, .sidebar input, .sidebar select")]
   .filter((control) => !control.closest("#presenter-access"));
 let presenterToken = "";
@@ -271,6 +281,35 @@ function interpolate(a, b, time) {
   return [a[0] + (b[0] - a[0]) * time, a[1] + (b[1] - a[1]) * time];
 }
 
+function clearFrameMeasurement() {
+  frameIntervals.length = 0;
+  lastMeasuredFrame = null;
+}
+
+function measureFrame(now) {
+  if (!state?.running || document.hidden || measuredDensity !== state.density) {
+    clearFrameMeasurement();
+    measuredDensity = state?.density;
+    return;
+  }
+  if (lastMeasuredFrame === null) {
+    measurementStart = now;
+    lastMeasuredFrame = now;
+    return;
+  }
+  frameIntervals.push(now - lastMeasuredFrame);
+  lastMeasuredFrame = now;
+  if (now - measurementStart >= 10_000) {
+    const frames = frameIntervals.length;
+    const fps = frames * 1000 / (now - measurementStart);
+    frameIntervals.sort((a, b) => a - b);
+    const p95 = frameIntervals[Math.ceil(frames * .95) - 1];
+    frameMeter.textContent = `${fps.toFixed(1)} FPS · p95 ${p95.toFixed(1)} ms · ${measuredDensity} cars`;
+    frameIntervals.length = 0;
+    measurementStart = now;
+  }
+}
+
 function drawVehicles(now) {
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
@@ -312,6 +351,7 @@ function drawVehicles(now) {
     context.strokeStyle = "#092d2a";
     context.stroke();
   }
+  if (frameMeter) measureFrame(now);
   requestAnimationFrame(drawVehicles);
 }
 

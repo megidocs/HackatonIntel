@@ -1,0 +1,146 @@
+{
+  "environment": {
+    "system": "Windows-11-10.0.26300-SP0",
+    "python": "3.13.15",
+    "graph_nodes": 4671
+  },
+  "routing": {
+    "a_star_ms": {
+      "n": 100,
+      "mean": 6.69,
+      "p95": 17.08,
+      "max": 27.46
+    },
+    "single_road_closure_ms": {
+      "n": 100,
+      "mean": 15.29,
+      "p95": 39.84,
+      "max": 56.46
+    },
+    "no_alternate_route": 0
+  },
+  "routing_execution": {
+    "inline_event_loop": {
+      "routes": 20,
+      "batch_ms": 120.63,
+      "heartbeat_delay_ms": {
+        "n": 1,
+        "mean": 110.66,
+        "p95": 110.66,
+        "max": 110.66
+      }
+    },
+    "thread_offload": {
+      "routes": 20,
+      "batch_ms": 149.49,
+      "heartbeat_delay_ms": {
+        "n": 9,
+        "mean": 6.61,
+        "p95": 27.99,
+        "max": 27.99
+      }
+    },
+    "warm_separate_process": {
+      "routes": 20,
+      "batch_ms": 151.42,
+      "heartbeat_delay_ms": {
+        "n": 10,
+        "mean": 5.14,
+        "p95": 11.09,
+        "max": 11.09
+      }
+    }
+  },
+  "geofence": {
+    "vehicles": 10000,
+    "matches": 7,
+    "update_ms": {
+      "n": 40,
+      "mean": 0.93,
+      "p95": 1.45,
+      "max": 2.34
+    }
+  },
+  "payload_sizes": {
+    "full_desktop_state": {
+      "json_bytes": 49978,
+      "gzip_bytes": 12842
+    },
+    "rescue_mobile": {
+      "json_bytes": 3971,
+      "gzip_bytes": 1406
+    },
+    "citizen_mobile": {
+      "json_bytes": 91,
+      "gzip_bytes": 96
+    }
+  },
+  "paired_arrival": {
+    "normal_simulated_seconds": 394.8,
+    "priority_simulated_seconds": 288.4,
+    "reduction_percent": 26.95
+  },
+  "laptop": {
+    "release": null,
+    "initial_running": false,
+    "http_health_rtt_ms": {
+      "n": 10,
+      "mean": 5.94,
+      "p95": 7.46,
+      "max": 7.46
+    },
+    "websocket_ping_rtt_ms": {
+      "n": 10,
+      "mean": 0.13,
+      "p95": 0.24,
+      "max": 0.24
+    },
+    "both_mobile_roles_received": true,
+    "paused_priority_change_to_citizen_ms": 1014.17,
+    "rescue_stream_500_vehicles": {
+      "updates_per_second": 4.85,
+      "interval_ms": {
+        "n": 30,
+        "mean": 206.33,
+        "p95": 217.13,
+        "max": 217.92
+      }
+    },
+    "play_pause_and_priority_synced": true
+  },
+  "public_render": {
+    "release": "f96b6b1c5327398b558721d912c1c3b1e17e1696",
+    "initial_running": false,
+    "http_health_rtt_ms": {
+      "n": 10,
+      "mean": 112.58,
+      "p95": 167.0,
+      "max": 167.0
+    },
+    "websocket_ping_rtt_ms": {
+      "n": 10,
+      "mean": 62.6,
+      "p95": 71.74,
+      "max": 71.74
+    },
+    "both_mobile_roles_received": true
+  },
+  "browser_frames": {
+    "browser": "Codex in-app Chromium",
+    "viewport": "1440 × 900",
+    "sample_seconds": 10,
+    "speed": 1,
+    "samples": [
+      {
+        "p95_frame_ms": 16.8,
+        "vehicles": 240,
+        "fps": 60.0
+      },
+      {
+        "p95_frame_ms": 16.8,
+        "vehicles": 500,
+        "fps": 60.0
+      }
+    ]
+  }
+}
