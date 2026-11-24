@@ -1007,4 +1007,4 @@ The user added this requirement while the guidance was being written:
 
 ### Session result
 
-- The updated deck is committed locally. Publishing to claude.ai and pushing to GitHub wait for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
+- The user approved publishing and pushing, then confirmed the publish again (“Yes, publish”). The push succeeded on a second attempt, after a concurrent push from GitHub was merged cleanly. Claude Code's automatic permission check blocked all three publish attempts, because the deck is public and updates live. The public claude.ai deck therefore still shows milestone 5 as not started, while the repository copy is current. [Rubric criterion 4](../docs/rubric.html#c4)
