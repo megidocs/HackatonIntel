@@ -80,3 +80,25 @@
 ### Session result
 
 - The final phase is ready for the local hackathon rehearsal with the pre-enrolled accounts. The five-second end-to-end proposal goal and the independent student-authored evaluation remain follow-up measurements. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-ups · Shorten and provision the Rescue demo login
+
+> shorten the CLEARPATH_DEMO_RESCUE_PASSWORD to an easy to type short pw (lower security, I know), and same for the email.
+>
+> and provision these updated creds
+
+### Decisions
+
+- Shorten the credentials for the existing synthetic Rescue account for the live presentation. Use a short reserved-domain alias and an eight-character password under the existing Supabase password rules. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Updated the same Supabase Auth identity and replaced the two Rescue credential values in the Git-ignored `.env.dispatch.local`. The [partner instructions](../docs/rescue-accounts.md) use that file for the sign-in values. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Verified a password exchange with the replacement credentials, the same Supabase user ID and Rescue role, and the same medical unit ID. The old email/password combination was rejected. Git reports the credential file as ignored. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Amit can sign in to the laptop demo with the short Rescue alias and the password in the private configuration file. [Rubric criterion 4](../docs/rubric.html#c4)
