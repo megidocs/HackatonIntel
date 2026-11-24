@@ -6,6 +6,15 @@ services:
     region: frankfurt
     branch: main
     autoDeployTrigger: checksPass
+    buildFilter:
+      paths:
+        - backend/**
+        - frontend/**
+        - deploy/**
+        - Dockerfile
+        - .dockerignore
+        - render.yaml
+        - .github/workflows/clearpath.yml
     healthCheckPath: /health
     envVars:
       - key: CLEARPATH_PUBLIC_DEMO

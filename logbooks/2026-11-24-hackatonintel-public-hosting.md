@@ -46,3 +46,44 @@
 ### Session result
 
 - The CI and deployment files are ready for the Linux CI run. Gave the user the [Render GitHub App installer](https://github.com/apps/render/installations/new) for Amit to grant access only to HackatonIntel. The public URL is pending service creation and verification. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Connect Render to HackatonIntel and publish the simulator
+
+> we need to add render to github like we did with supabase. tell me what URL Amit (the owner) should open.
+
+### Decisions
+
+- Directed Amit to the [Render GitHub App installer](https://github.com/apps/render/installations/new) to select only HackatonIntel. When `megidocs/HackatonIntel` appeared in Render’s GitHub picker, used the existing access and deployed one Docker web service on Free in Frankfurt. Supabase remained on Free with automatic production deployment off. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Deployed the `ClearPath` Blueprint on `main`. Set the Render build filter to match the GitHub Actions paths after a logbook-only push appeared in Render’s deployment queue with a skipped Supabase check and no ClearPath CI check. This keeps routine documentation syncs from starting application builds. [Render build filters](https://render.com/docs/monorepo-support#setting-build-filters) · [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Verified the Hobby workspace had no card on file and the service dashboard showed Docker, Free, `After CI Checks Pass`, and `/health`. The [first ClearPath Actions run](https://github.com/megidocs/HackatonIntel/actions/runs/45400201821) passed the container, resource-limit, hosted API, routing, simulation, and signal-priority checks. The initial Blueprint deployed `8cff368`, which changes teaching material after `114ac28` and leaves the verified application files intact. An external HTTPS smoke test confirmed that revision, compressed responses, and viewer controls enforced by the API. The browser loaded the Manhattan map, showed Bellevue Hospital → Times Square at 3.16 km, and disabled Start for anonymous viewers. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The [public simulator](https://clearpath-hackatonintel.onrender.com/simulator) is live. [The partner guide](../user.md) and [spec](../docs/specification.md) record the URL and presentation access. The initial access blocker cleared once the repository appeared in Render. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Confirm who signs in when connecting Render
+
+> you said Amit should open the [Render GitHub App installer](https://github.com/apps/render/installations/new) while signed in as `megidocs`, choose **Only select repositories**, select **HackatonIntel**, and install or save.
+> But now when adding render it expects us to put the render credentials... (which are mine and require me to enter through my github 3rd party auth). should I add them there on Amit's computer? I trust amit. we are only connecting this one project.
+
+### Decisions
+
+- The user specified that the installation should cover only HackatonIntel. The assistant advised having Amit verify that selection on GitHub as `megidocs` and having the user complete Render sign-in on their own computer. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Explained that the GitHub repository selection scopes the app installation, while signing in opens the user's Render account. If the repository stays missing from Render, check access for the GitHub account Render uses for deployments. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Checked GitHub's installation and verification instructions and Render's login and Git deployment credential rules. The installer itself blocked automated web access, so the exact screen Amit saw was unverified. [GitHub App settings](https://docs.github.com/en/apps/using-github-apps/reviewing-and-modifying-installed-github-apps) · [Render login settings](https://render.com/docs/login-settings) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Provided the account handoff steps. GitHub App access and the Render repository picker still need confirmation before the public deployment can proceed. [Rubric criterion 4](../docs/rubric.html#c4)

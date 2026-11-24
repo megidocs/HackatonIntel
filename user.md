@@ -5,7 +5,7 @@
 | What | Where |
 | --- | --- |
 | Source code | [megidocs/HackatonIntel](https://github.com/megidocs/HackatonIntel), branch `main` |
-| Public simulator | Render Free setup in progress. Use the local demo until the public HTTPS link is verified. |
+| Public simulator | [ClearPath Manhattan simulator](https://clearpath-hackatonintel.onrender.com/simulator). Open it before presenting so the Free service has time to wake up. |
 | Desktop demo | [Manhattan simulator](http://127.0.0.1:8000/simulator) on the demo laptop or a partner’s own running checkout |
 | Backend checks | [FastAPI docs](http://127.0.0.1:8000/docs) and [health](http://127.0.0.1:8000/health) on that same machine |
 | Public Supabase project URL | [https://uodbkiyevjwgmjnofcpj.supabase.co](https://uodbkiyevjwgmjnofcpj.supabase.co). This is Hackathon-supa’s hosted API base URL. |
@@ -16,7 +16,7 @@
 
 1. Clone `https://github.com/megidocs/HackatonIntel` or sync an existing checkout to `main`. Follow the [Windows setup](backend/README.md) for Python, Node, the Manhattan graph, and the FastAPI startup command.
 2. Open the simulator in a desktop browser. Start with Bellevue Hospital to Times Square. Show the route, start traffic, and close a road on the highlighted route. Reopen it and explain the route change using the location and one-way constraints in the road graph.
-3. Use the deck to explain the learning goals and T model. Use the logbook and routing check to show how the team verified the result. Once the Render preview is live, viewers can follow the shared scenario and the presenter can unlock controls with the presenter code. Supabase is on Free with automatic production deployment off. [Hosting setup and checks](deploy/README.md)
+3. Use the deck to explain the learning goals and T model. Use the logbook and routing check to show how the team verified the result. Public viewers can follow the shared scenario. The presenter can unlock controls with the code from the Render service’s Environment page. Supabase is on Free with automatic production deployment off. [Hosting setup and checks](deploy/README.md)
 
 ## Executive test summary
 
