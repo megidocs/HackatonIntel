@@ -167,3 +167,65 @@ The user then asked for this correction to be included in the record.
 ### Session result
 
 - The [ClearPath AI spec](../docs/specification.md) records the agreed backend and its deployment. This session documents the decision. Provisioning and the demo network rehearsal are implementation milestones. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Clarify the WSL rehearsal and hosting cost
+
+> did yesterday supabase test in  \\wsl.localhost\Ubuntu\home\stra\repos\Maagar\Maagar-supa use supabase or postgre SQL? it's not clear what hosting environment you are aiming for that's free to us.
+
+> sorry. please look at the prep results in [Build Supabase and Astro demos](codex://threads/01a209aa-ec40-7942-ab51-1d50f4cbf713)
+
+### Decisions
+
+- The approved demo runs FastAPI, Redis, and the browser UI on the demo laptop and uses a dedicated hosted Supabase Free project for PostgreSQL if the account has a free slot. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Distinguished the native Supabase stack in WSL, which includes PostgreSQL, Auth, the Data API, and Studio, from the hosted database in the ClearPath deployment plan. Local ClearPath PostgreSQL in WSL is a fallback to consider if a free cloud slot is unavailable or the demo must run without internet. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Read the referenced chat and checked the repo runbooks. The 23 November rehearsal verified sign-in, persistence, per-user isolation, deletion, and migration replay in a local WSL stack. The separate Maagar walkthrough also used a local stack. Neither local test required a hosted project. Supabase documents two active free projects and a 500 MB database limit per free project. The account's remaining slots were not verified. [Supabase Free billing](https://supabase.com/docs/guides/platform/billing-on-supabase#free-plan) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Clarified that ClearPath would use one hosted free slot for PostgreSQL only. The WSL setup demonstrated local development with zero hosted slots, and the current specification remains the agreed deployment plan. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Keep hosting on the free tier
+
+> you can switch backends but must stay on the free tier. you have access to the supabase in [https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj](https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj)
+
+### Decisions
+
+- Keep the dedicated ClearPath Supabase database on the Free plan and retain FastAPI on the demo laptop. Maagar remains a separate submission with its own project. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Made the Free-plan requirement explicit in the [deployment specification](../docs/specification.md) and added a rehearsal check for project availability and the database connection. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The signed-in [Supabase dashboard](https://supabase.com/dashboard/organizations) showed one Free organization with one active project, Maagar-supa. The new-project form was available under that organization. Supabase's documented allowance of two active free projects leaves one slot based on the dashboard. No database connection was tested. [Supabase Free billing](https://supabase.com/docs/guides/platform/billing-on-supabase#free-plan) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Keep the approved backend. The dashboard check established capacity for a separate ClearPath project. Project creation remains part of the provisioning milestone. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Commit and push the Free-plan decision
+
+> commit-push. as always make sure all is logged in logbook - agents must be super strict on this.
+
+### Decisions
+
+- Publish the Free-plan requirement, the WSL rehearsal and Supabase account findings, and the stricter logging instructions in one HackatonIntel commit. Check logbook coverage even when a task only investigates or makes a decision. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Updated [AGENTS.md](../AGENTS.md) to require a complete logbook check before committing or closing a task. The entry should distinguish user decisions from AI contributions and record actual checks, errors, and open work. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Reviewed the pending [specification](../docs/specification.md) and logbook changes. Verified that both pending hosting entries and this commit request have the required four subsections and link to the project rubric. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The documentation commit captures the WSL rehearsal findings, the available free slot, the Free-plan requirement, and the updated logging instructions. The selected backend is a dedicated ClearPath Supabase Free project with FastAPI on the demo laptop. [Rubric criterion 4](../docs/rubric.html#c4)
