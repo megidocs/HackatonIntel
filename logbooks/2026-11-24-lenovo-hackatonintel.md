@@ -723,6 +723,46 @@ The user added this requirement while the guidance was being written:
 
 - Local `main` matches GitHub at the time of this sync, with the partner guide included. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Start milestone 3 after publishing the guide
+
+> after the commit push you may start next phase,
+
+### Decisions
+
+- Begin simulated green-wave priority and route-based civilian alerts after verifying the partner-guide push. Use a 20-second modeled arrival lookahead, a two-second simulated all-red clearance interval, and a 400 m road-following corridor. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Implemented priority scheduling for upcoming simulated signals, restoration of the normal cycle, and yielding for simulated civilians ahead on the same directed route. Added the green-wave switch, corridor overlay, and alert counters to the desktop simulator. Updated the partner checklist and [runbook](../backend/README.md). [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The [priority check](../backend/check_priority.py) passed for clearance in both directions, opposing red, normal-cycle restoration, and route-only alerts. In the same seeded Bellevue–Times Square simulation, the baseline finished in 394.8 simulated seconds and priority finished in 288.4 seconds. The routing and simulator regression checks also passed on the verification port. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- This checkpoint contains the milestone 3 implementation and passing backend tests. The end-to-end browser check and demo-laptop restart are the next checks. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Verify the new phase on the demo laptop
+
+> after the commit push you may start next phase,
+
+### Decisions
+
+- Keep the simulator local on the demo laptop and leave the updated demo paused at Bellevue after verification. The 27.0% timing difference is evidence from one seeded simulation run. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Restarted FastAPI on port 8000 with milestone 3 from local commit d7f83e9. Rechecked the controls and overlay in the browser. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- In the browser, disabling green wave reduced the priority and alert counts to zero. Enabling it and starting playback showed the corridor and prioritized signals moving along the route. Reset restored the initial four simulated yield alerts. The browser error log was empty. The priority and simulator checks passed again on port 8000. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The [partner guide](../user.md) was published on GitHub before implementation. The green-wave code, updated tests, and guide additions are checkpointed locally. [Open the demo](http://127.0.0.1:8000/simulator) on Lenovo. The slide deck owner still needs to arrange access or an export for presenters. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Project cover slide
 
 > ADD, as 1st slide, a short description of the project.  Add inspirational immage
@@ -784,6 +824,8 @@ The user added this requirement while the guidance was being written:
 
 - Pulled from GitHub: nothing new, because the earlier merge had already been pushed. Built `deck.html` and opened it in the browser through a local server: all five slides render at 1920×1080, and their content stays inside the slide margins. The repository copies are the files published as deck version 8. [Rubric criterion 3](../docs/rubric.html#c3)
 
+- While pushing, `git pull` brought in the milestone 3 green-wave commits, and the logbook conflicted again because both sides had appended entries. Claude kept both sides in full, with the incoming milestone 3 entries first. Milestone 3's 20-second lookahead and 400 m alert corridor fall within the ranges the guidance already uses, so the guidance needed no changes. [Rubric criterion 3](../docs/rubric.html#c3)
+
 ### Session result
 
-- The deck, its build script and the logbook updates since the merge, including the cover-slide entries, go into one commit, pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
+- The deck commit and its merge with milestone 3 are pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)

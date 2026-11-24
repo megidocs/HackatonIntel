@@ -12,6 +12,7 @@ import networkx as nx
 from shapely import concave_hull
 from shapely.geometry import MultiPoint, mapping
 
+from .priority import PriorityCorridor
 from .routing import ManhattanRouter
 
 Edge = tuple[int, int, int]
@@ -117,8 +118,19 @@ class Simulation:
         self.origin, self.destination = self.default_origin, self.default_destination
         self.emergency: Vehicle | None = None
         self.traffic: list[Vehicle] = []
+        self.priority = PriorityCorridor()
         self.set_density(240)
         self.plan_route(keep_vehicle=False)
+        if self.emergency:
+            # Place a few reproducible civilian vehicles ahead of the rescue unit for the demo.
+            roads = [self.emergency.road, *self.pending]
+            for car, distance in zip(self.traffic, (55, 110, 180, 270)):
+                for road in roads:
+                    if distance < road.meters:
+                        car.road, car.meters = road, distance
+                        break
+                    distance -= road.meters
+            self.update_priority()
 
     def set_density(self, density: int) -> None:
         if density <= len(self.traffic):
@@ -145,7 +157,20 @@ class Simulation:
             self.closed.add(segment)
         self.plan_route(keep_vehicle=True)
 
+    def set_priority(self, enabled: bool) -> None:
+        self.priority.enabled = enabled
+        if not enabled and self.time == 0:
+            self.priority.signals.clear()
+        self.update_priority()
+
+    def update_priority(self) -> None:
+        rescue = self.emergency if self.route_status == "en_route" else None
+        self.priority.update(self.time, rescue, list(self.pending), self.signals, self.traffic)
+
     def plan_route(self, keep_vehicle: bool) -> None:
+        if not keep_vehicle:
+            self.departure_time = self.time
+            self.arrival_time: float | None = None
         active = self.emergency if keep_vehicle and self.emergency and self.emergency.meters > 0 else None
         source = active.road.key[1] if active else self.origin
         graph = nx.subgraph_view(
@@ -174,6 +199,9 @@ class Simulation:
         self.emergency = active
         if not active and self.pending:
             self.emergency = Vehicle(0, self.pending.popleft())
+        if self.route_status == "arrived" and self.arrival_time is None:
+            self.arrival_time = round(self.time - self.departure_time, 1)
+        self.update_priority()
 
     def advance(self, elapsed: float) -> None:
         with self.lock:
@@ -181,26 +209,31 @@ class Simulation:
                 return
             dt = min(elapsed, .2) * self.speed
             self.time += dt
-            groups: dict[Edge, list[Vehicle]] = defaultdict(list)
+            self.update_priority()
+            groups: dict[tuple[Edge, bool], list[Vehicle]] = defaultdict(list)
             for traffic in self.traffic:
-                groups[traffic.road.key].append(traffic)
+                groups[traffic.road.key, traffic.id in self.priority.alerted].append(traffic)
             if self.emergency and self.route_status != "arrived":
-                groups[self.emergency.road.key].append(self.emergency)
+                groups[self.emergency.road.key, False].append(self.emergency)
 
             # Process leaders first and limit movement behind them on each directed road.
-            occupied = {key: min(car.meters for car in cars) for key, cars in groups.items()}
-            for cars in groups.values():
+            occupied = {key: min(car.meters for car in cars) for (key, yielding), cars in groups.items() if not yielding}
+            for (_, yielding), cars in groups.items():
                 limit = float("inf")
                 for car in sorted(cars, key=lambda car: car.meters, reverse=True):
                     road = car.road
                     old = car.meters
-                    speed = road.meters / road.seconds * (.75 if car.id else 1)
+                    speed = road.meters / road.seconds
+                    if car.id:
+                        speed *= .55 if yielding else .75
                     target = min(road.meters, old + speed * dt, limit)
                     offset = self.signals.get(road.key[1])
                     green = True
                     if offset is not None:
-                        phase = (self.time + offset) % SIGNAL_CYCLE
-                        green = phase < 10 if road.north_south else 12 <= phase < 22
+                        green = self.priority.can_enter(self.time, road.key[1], road.north_south)
+                        if green is None:
+                            phase = (self.time + offset) % SIGNAL_CYCLE
+                            green = phase < 10 if road.north_south else 12 <= phase < 22
                         if not green:
                             target = min(target, max(0, road.meters - 2))
                     car.meters = max(old, target)
@@ -215,6 +248,7 @@ class Simulation:
             if not self.pending:
                 if self.route_status == "en_route":
                     self.route_status = "arrived"
+                    self.arrival_time = round(self.time - self.departure_time, 1)
                 return
             next_road = self.pending[0]
         else:
@@ -230,6 +264,20 @@ class Simulation:
         car.road, car.meters = next_road, 0
         occupied[next_road.key] = 0
 
+    def vehicle_position(self, car: Vehicle) -> Point:
+        road = car.road
+        position = road.position(car.meters)
+        if car.id not in self.priority.alerted:
+            return position
+        before = road.position(max(0, car.meters - 1))
+        after = road.position(car.meters + 1)
+        dx, dy = (after[0] - before[0]) * .76, after[1] - before[1]
+        length = hypot(dx, dy)
+        if not length:
+            return position
+        shift = 4 / 111195 / length
+        return position[0] + dy * shift / .76, position[1] - dx * shift
+
     def snapshot(self) -> dict:
         vehicles = [*self.traffic, self.emergency] if self.emergency else self.traffic
         return {
@@ -238,7 +286,10 @@ class Simulation:
             "speed": self.speed,
             "density": len(self.traffic),
             "vehicles": [
-                {"id": car.id, "point": car.road.position(car.meters), "stopped": car.stopped}
+                {
+                    "id": car.id, "point": self.vehicle_position(car), "stopped": car.stopped,
+                    "alerted": car.id in self.priority.alerted,
+                }
                 for car in vehicles
             ],
             "signal_count": len(self.signals),
@@ -251,4 +302,15 @@ class Simulation:
             "route_status": self.route_status,
             "route_meters": round(self.route_meters),
             "route_seconds": round(self.route_seconds),
+            "arrival_time": self.arrival_time,
+            "priority_enabled": self.priority.enabled,
+            "corridor": self.priority.line,
+            "alerted_count": len(self.priority.alerted),
+            "priority_signals": [
+                {
+                    "point": self.nodes[node],
+                    "phase": "priority" if override.approach is not None and self.time >= override.ready_at else "clearance",
+                }
+                for node, override in self.priority.signals.items()
+            ],
         }

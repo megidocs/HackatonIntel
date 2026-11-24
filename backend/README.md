@@ -65,16 +65,25 @@ and interpolates vehicle positions between updates. The land outline is derived
 from the road-node geometry. The map and simulation run on laptop loopback without
 map tile requests or cloud services.
 
-This milestone models signal cycles, traffic queues, and route changes. The
-emergency green wave, civilian alerts, and Android synchronization are later
-milestones. Use a single FastAPI worker because the demo state is in process memory.
+**Green wave and alerts** enables simulated approach priority and a moving
+400 m corridor. The simulator reserves signals when their modeled ETA is
+within 20 seconds, includes a clearance interval on activation and release,
+and alerts civilian vehicles ahead on the same directed route. Gold markers
+show yielding vehicles. Reset the scenario with the same traffic density
+and run once with the control off and once with it on to compare arrival times.
+The alerts are simulated on the desktop. Android synchronization is milestone 4.
+Use one FastAPI worker because the demo state is in process memory.
 
 Verify the simulator once the server is running. This check resets the local
 scenario and covers vehicle motion, route changes, and signal behavior.
 
 ```powershell
 .\.venv\Scripts\python.exe -m backend.check_simulation
+.\.venv\Scripts\python.exe -m backend.check_priority
 ```
+
+The priority check verifies signal clearance and restoration, route-only alerts,
+and a paired run with seeded traffic. The reported times are simulator results.
 
 Road data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright).
 The graph and data download cache are generated locally.
