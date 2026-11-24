@@ -110,3 +110,25 @@
 ### Session result
 
 - Provided the account handoff steps. GitHub App access and the Render repository picker still need confirmation before the public deployment can proceed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Locate the presenter access code
+
+> another infra question. user.md says we can unlock presenter mode like this: unlock **Presenter access** with the code from the Render service’s Environment page. Start, pause and reset while the first window stays open.
+>
+> What does it mean where is it waiting for us on the render website?
+
+### Decisions
+
+- The user asked for the live location of the presenter code. The assistant inspected the existing service and simulator to identify both controls. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Identified the Render service’s **Environment → Environment Variables → CLEARPATH_CONTROL_TOKEN → Copy value** path and the simulator’s **Simulation controls → Presenter access → Unlock** path. Explained that the two-window rehearsal lets the presenter watch the same shared simulation from a viewer’s perspective. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Confirmed in Edge that the Render service is live, the Environment page has the named variable and its copy control, and the public simulator shows the presenter field and Unlock button. Confirmed in the Blueprint that Render generates the value. [Render environment variable documentation](https://render.com/docs/configure-environment-variables) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Left the service’s Environment page open and provided steps for the presenter. The secret stayed hidden and the live controls were untouched. [Rubric criterion 4](../docs/rubric.html#c4)
