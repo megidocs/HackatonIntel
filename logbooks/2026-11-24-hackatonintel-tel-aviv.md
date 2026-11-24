@@ -49,8 +49,9 @@ The [local Tel Aviv simulator](http://127.0.0.1:8017/simulator/tel-aviv) is runn
 ### Independent checks
 
 - Confirmed that local and remote `main` matched before committing, and that `git diff --check` passed.
-- The local browser and regression checks above passed. The Render workflow provides the container verification.
+- The [container preview and regressions](https://github.com/megidocs/HackatonIntel/actions/runs/45442493753) and [dispatch regression](https://github.com/megidocs/HackatonIntel/actions/runs/45442493748) passed.
+- The [live health endpoint](https://clearpath-hackatonintel.onrender.com/health) reported release `d46512be425d8a0e2b97b83478868282256b03ec`. The hosted smoke test verified both maps and presenter authorization. Playwright opened the deployed Tel Aviv map in Chrome and confirmed the Habima label, Rabin Square default destination, and locked public-viewer controls. [Rubric criterion 3](../docs/rubric.html#c3)
 
 ### Session result
 
-The Tel Aviv feature is ready for the Render release workflow. The hosted release can be checked against the feature commit SHA using `backend.check_hosted`.
+Feature commit `d46512b` is on GitHub `main` and live on [Render](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv). Presenters can unlock the controls to run the walkthrough. [Rubric criterion 4](../docs/rubric.html#c4)
