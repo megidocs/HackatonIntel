@@ -722,3 +722,68 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - Local `main` matches GitHub at the time of this sync, with the partner guide included. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Project cover slide
+
+> ADD, as 1st slide, a short description of the project.  Add inspirational immage
+
+### Decisions
+
+- The user asked for a project description as the deck's first slide, with an inspirational image. No photo library was available, so Claude drew an original vector illustration: an overhead view of Manhattan's grid, with an ambulance driving under a chain of green lights toward an incident. The description and the 35–45% target come from specification sections 1 and 5. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude wrote the cover slide with speaker notes, added its styles, and renumbered the other slides 2 to 5. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- In a local preview, measured the cover: the illustration fills the left side, the text column sits on the right, no text overflows, and the content ends inside the slide margin. [Rubric criterion 3](../docs/rubric.html#c3)
+- Publishing was blocked. The deck is now shared with anyone who has the link and updates live, so the permission check required the user's explicit approval. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Session result
+
+- The cover slide is ready locally but not yet published, pending the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Publish the cover slide
+
+> Yes, publish
+
+### Decisions
+
+- The user approved publishing the cover slide to the deck, which anyone with the link can view. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude published the cover slide, its styles, the index and the renumbered slides as deck version 8. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- The publish succeeded and listed the cover slide among the deck's files. The deck has not been viewed on claude.ai, because the built-in browser requires a sign-in. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The deck has five slides and opens with the project cover. Viewers with the link see it now. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Keep the deck in the repository
+
+> pull.
+> seems like you created some artifacts out of repo??? is this real? docs and slides should be in docs this is basic
+> commit and sync when done.
+
+### Decisions
+
+- The user pointed out that the deck's source lived outside the repository and required docs and slides to live in `docs/`. The deck source now lives in [docs/slides/pedagogy-deck](../docs/slides/pedagogy-deck/README.md), which is the source of truth for the published artifact. [Rubric criterion 4](../docs/rubric.html#c4)
+- The user authorized this commit and its push to GitHub. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- **Error.** Claude had kept the deck's source files in its temporary scratch folder and published them only to claude.ai. The deck was missing from the repository, and the earlier logbook entries pointed only to the artifact link. [Rubric criterion 4](../docs/rubric.html#c4)
+- **Correction.** Claude moved the index, the shared styles and all five slides into `docs/slides/pedagogy-deck/`. It added a README explaining how the files map to the artifact, and a script that builds a standalone `deck.html` for offline viewing. The guidance index now links to the deck. The remaining scratch files are local previews and the Slides type's reference notes, not project work. The guidance, assessment skills and T-model PDF were already in the repository. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Pulled from GitHub: nothing new, because the earlier merge had already been pushed. Built `deck.html` and opened it in the browser through a local server: all five slides render at 1920×1080, and their content stays inside the slide margins. The repository copies are the files published as deck version 8. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The deck, its build script and the logbook updates since the merge, including the cover-slide entries, go into one commit, pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="he">
+<head>
+<meta charset="utf-8">
+<title>ClearPath AI · הנחיות פדגוגיות</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&display=swap">
+<style>
+* { margin: 0 }
+body { background: #2b2b2b; display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 32px 0; }
+body > section { width: 1920px; height: 1080px; overflow: hidden; box-sizing: border-box; position: relative; flex: none; }
+aside { display: none }
+h1 { font-size: 96px; font-weight: 600 }
+h2 { font-size: 64px; font-weight: 600 }
+h3 { font-size: 44px; font-weight: 600 }
+@media (max-width: 1960px) { body { zoom: 0.5 } }
+</style>
+<style>
+:root {
+  --ink: #14213D;
+  --soft: #4A5568;
+  --paper: #F7F5EF;
+  --paper2: #ECE8DD;
+  --accent: #2E6E62;
+  --amber: #E8A33D;
+  --line: #D6D0C2;
+}
+/* Right-to-left is explicit: text is right-aligned and wrapped in RLE marks,
+   and every row or grid lists its children right-to-left in source order. */
+body { font-family: 'Heebo', Arial, sans-serif; color: var(--ink); }
+section {
+  padding: 112px 128px 128px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 28px;
+}
+section.alt { background: var(--paper2); }
+p, h2, h3 { text-align: right; }
+.eyebrow { font-size: 24px; font-weight: 600; color: var(--accent); letter-spacing: 1px; }
+h2 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 72px; line-height: 1.1; color: var(--ink); }
+.lead { font-size: 30px; line-height: 1.4; color: var(--soft); width: 1400px; align-self: flex-end; }
+h3 { font-family: 'Rubik', Arial, sans-serif; font-weight: 500; font-size: 30px; line-height: 1.25; color: var(--ink); }
+.small { font-size: 24px; line-height: 1.4; color: var(--soft); }
+
+/* slide 1: phases */
+.phases { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.phase { background: #FBFAF6; border: 2px solid var(--line); border-radius: 14px; padding: 18px 22px; display: flex; flex-direction: column; gap: 4px; }
+.phase .num { font-family: 'Rubik', Arial, sans-serif; font-size: 30px; font-weight: 700; color: var(--accent); }
+.phase .name { font-size: 24px; line-height: 1.3; color: var(--ink); }
+.split { display: flex; gap: 24px; }
+.panel { flex: 1; background: var(--ink); border-radius: 16px; padding: 26px 32px; display: flex; flex-direction: column; gap: 12px; }
+.panel h3 { color: #F7F5EF; }
+.panel .small { color: #C9D3E3; }
+.pills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.pill { font-size: 24px; background: #24345A; color: #F7F5EF; border-radius: 999px; padding: 6px 18px; }
+.pill.last { grid-column: 2; }
+
+/* slide 2: profile + rubric */
+.cols { display: flex; gap: 40px; }
+.profile { width: 640px; display: flex; flex-direction: column; gap: 12px; }
+.item { display: flex; gap: 14px; align-items: flex-start; }
+.item .text { flex: 1; font-size: 26px; line-height: 1.4; color: var(--ink); }
+.item .n { font-family: 'Rubik', Arial, sans-serif; font-size: 24px; font-weight: 700; color: #F7F5EF; background: var(--accent); border-radius: 999px; width: 40px; height: 40px; line-height: 40px; text-align: center; }
+.rubric { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.dim { display: flex; gap: 18px; align-items: center; background: #FBFAF6; border: 2px solid var(--line); border-radius: 14px; padding: 12px 20px; }
+.dim .letter { font-family: 'Rubik', Arial, sans-serif; font-size: 36px; font-weight: 700; color: var(--accent); width: 44px; text-align: center; }
+.dim .what { flex: 1; font-size: 24px; line-height: 1.35; color: var(--soft); }
+.dim .what b { color: var(--ink); }
+.gate { background: var(--amber); color: var(--ink); border-radius: 14px; padding: 16px 24px; font-size: 26px; line-height: 1.35; }
+
+/* slide 3: templates */
+.cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.card { background: #FBFAF6; border: 2px solid var(--line); border-top: 8px solid var(--accent); border-radius: 14px; padding: 22px 22px 26px; display: flex; flex-direction: column; gap: 10px; }
+.card.key { border-top-color: var(--amber); }
+.card .when { font-size: 24px; font-weight: 600; color: var(--accent); }
+.card .pt { font-size: 24px; line-height: 1.4; color: var(--soft); }
+.foot { font-size: 26px; line-height: 1.4; color: var(--ink); background: var(--paper2); border-radius: 14px; padding: 18px 26px; }
+
+/* cover: project description, illustration on the left, text on the right */
+section.cover { background: var(--ink); flex-direction: row; align-items: center; gap: 72px; padding: 128px; }
+.hero { width: 760px; height: 824px; }
+.cover-text { flex: 1; display: flex; flex-direction: column; gap: 22px; }
+.cover-eyebrow { font-size: 24px; font-weight: 600; color: #4CC9A0; letter-spacing: 1px; }
+h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px; line-height: 1; color: #F7F5EF; text-align: right; }
+.cover-sub { font-family: 'Rubik', Arial, sans-serif; font-weight: 500; font-size: 44px; line-height: 1.2; color: #F7F5EF; }
+.cover-lead { font-size: 30px; line-height: 1.45; color: #C9D3E3; }
+.cover-points { display: flex; flex-direction: column; gap: 6px; }
+.cover-pt { font-size: 28px; line-height: 1.4; color: #F7F5EF; }
+.cover-goal { font-size: 28px; font-weight: 600; color: var(--ink); background: #4CC9A0; border-radius: 999px; padding: 10px 28px; align-self: flex-end; }
+@keyframes coverIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero { animation: coverIn 700ms ease-out both; }
+.cover-text { animation: coverIn 700ms ease-out 200ms both; }
+
+/* slide 4: T model (B right, A centre, C left, X under A) */
+.tgrid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 20px; }
+.tbox { border-radius: 16px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; }
+.arm { background: #FBFAF6; border: 2px solid var(--amber); align-self: start; }
+.armc { grid-column: 1; grid-row: 1; }
+.armb { grid-column: 3; grid-row: 1; }
+.core { grid-column: 2; grid-row: 1; background: #E1ECE9; border: 3px solid var(--accent); }
+.deep { grid-column: 2; grid-row: 2; background: #F6EBD4; border: 2px solid var(--amber); }
+.thead { display: flex; gap: 12px; align-items: center; }
+.tcol { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.tag { font-size: 24px; font-weight: 600; color: var(--accent); }
+.big { font-family: 'Rubik', Arial, sans-serif; font-size: 64px; font-weight: 700; line-height: 1; color: var(--accent); width: 60px; text-align: center; }
+.tbox .pt { font-size: 24px; line-height: 1.4; color: var(--ink); }
+.check { font-size: 24px; line-height: 1.35; color: var(--soft); }
+.topics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.topic { font-size: 24px; background: #FBFAF6; color: var(--ink); border-radius: 10px; padding: 6px 14px; }
+.facets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.facet { font-size: 24px; line-height: 1.3; color: var(--ink); }
+.tbox { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 90ms); }
+
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.phase, .dim, .card { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+</style>
+</head>
+<body>
+<section id="intro" class="cover" data-transition="fade">
+<svg class="hero" width="760" height="824" viewBox="0 0 760 824" aria-label="Overhead map of Manhattan's street grid: an ambulance leaves a hospital and drives up an avenue under a chain of green traffic lights, inside a glowing corridor, toward a pulsing incident marker. The traffic lights on other streets stay red and amber." xmlns="http://www.w3.org/2000/svg">
+<defs>
+<clipPath id="frame"><rect x="0" y="0" width="760" height="824" rx="36"/></clipPath>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1F3160"/><stop offset="1" stop-color="#101A33"/></linearGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+</defs>
+<g clip-path="url(#frame)">
+<rect x="0" y="0" width="760" height="824" fill="url(#sky)"/>
+<g transform="rotate(-29 380 412)">
+<g stroke="#0E1730" stroke-width="16" stroke-linecap="square">
+<line x1="80" y1="-320" x2="80" y2="1160"/>
+<line x1="200" y1="-320" x2="200" y2="1160"/>
+<line x1="320" y1="-320" x2="320" y2="1160"/>
+<line x1="440" y1="-320" x2="440" y2="1160"/>
+<line x1="560" y1="-320" x2="560" y2="1160"/>
+<line x1="680" y1="-320" x2="680" y2="1160"/>
+</g>
+<g stroke="#0E1730" stroke-width="9" stroke-linecap="square">
+<line x1="-320" y1="-130" x2="1080" y2="-130"/>
+<line x1="-320" y1="-60" x2="1080" y2="-60"/>
+<line x1="-320" y1="10" x2="1080" y2="10"/>
+<line x1="-320" y1="80" x2="1080" y2="80"/>
+<line x1="-320" y1="150" x2="1080" y2="150"/>
+<line x1="-320" y1="220" x2="1080" y2="220"/>
+<line x1="-320" y1="290" x2="1080" y2="290"/>
+<line x1="-320" y1="360" x2="1080" y2="360"/>
+<line x1="-320" y1="430" x2="1080" y2="430"/>
+<line x1="-320" y1="500" x2="1080" y2="500"/>
+<line x1="-320" y1="570" x2="1080" y2="570"/>
+<line x1="-320" y1="640" x2="1080" y2="640"/>
+<line x1="-320" y1="710" x2="1080" y2="710"/>
+<line x1="-320" y1="780" x2="1080" y2="780"/>
+<line x1="-320" y1="850" x2="1080" y2="850"/>
+<line x1="-320" y1="920" x2="1080" y2="920"/>
+<line x1="-320" y1="990" x2="1080" y2="990"/>
+</g>
+<rect x="405" y="458" width="70" height="180" rx="35" fill="#4CC9A0" opacity="0.13"/>
+<rect x="405" y="458" width="70" height="180" rx="35" fill="none" stroke="#4CC9A0" stroke-width="2" stroke-dasharray="8 8" opacity="0.6"/>
+<polyline points="440,900 440,290 200,290" fill="none" stroke="#4CC9A0" stroke-width="30" stroke-linejoin="round" opacity="0.35" filter="url(#glow)"/>
+<polyline points="440,900 440,290 200,290" fill="none" stroke="#4CC9A0" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
+<g fill="#E0605A" opacity="0.85">
+<circle cx="560" cy="640" r="8"/><circle cx="680" cy="360" r="8"/><circle cx="80" cy="500" r="8"/><circle cx="320" cy="780" r="8"/><circle cx="560" cy="150" r="8"/><circle cx="80" cy="220" r="8"/>
+</g>
+<g fill="#E8A33D" opacity="0.9">
+<circle cx="200" cy="570" r="8"/><circle cx="680" cy="780" r="8"/><circle cx="320" cy="80" r="8"/>
+</g>
+<g fill="#4CC9A0">
+<circle cx="440" cy="570" r="14" opacity="0.35" filter="url(#soft)"/><circle cx="440" cy="570" r="9"/>
+<circle cx="440" cy="430" r="14" opacity="0.35" filter="url(#soft)"/><circle cx="440" cy="430" r="9"/>
+<circle cx="440" cy="290" r="14" opacity="0.35" filter="url(#soft)"/><circle cx="440" cy="290" r="9"/>
+<circle cx="320" cy="290" r="14" opacity="0.35" filter="url(#soft)"/><circle cx="320" cy="290" r="9"/>
+</g>
+<circle cx="200" cy="290" r="56" fill="#E8A33D" opacity="0.12"/>
+<circle cx="200" cy="290" r="36" fill="none" stroke="#E8A33D" stroke-width="3" opacity="0.55"/>
+<circle cx="200" cy="290" r="15" fill="#E8A33D"/>
+<rect x="420" y="878" width="40" height="40" rx="8" fill="#F7F5EF"/>
+<rect x="436" y="884" width="8" height="28" fill="#2E6E62"/><rect x="426" y="894" width="28" height="8" fill="#2E6E62"/>
+<g transform="translate(440 668)">
+<rect x="-24" y="-40" width="48" height="80" rx="20" fill="#4CC9A0" opacity="0.4" filter="url(#soft)"/>
+<rect x="-15" y="-28" width="30" height="56" rx="7" fill="#F7F5EF"/>
+<rect x="-12" y="-24" width="24" height="9" rx="3" fill="#5B8DEF"/>
+<rect x="-3" y="-4" width="6" height="20" fill="#E0605A"/><rect x="-10" y="3" width="20" height="6" fill="#E0605A"/>
+</g>
+</g>
+</g>
+</svg>
+<div class="cover-text">
+<p class="cover-eyebrow">&#8235;פרויקט גמר · מדעי המחשב&#8236;</p>
+<h1>ClearPath AI</h1>
+<p class="cover-sub">&#8235;פינוי צירים חכם לרכבי חירום, בזמן אמת&#8236;</p>
+<p class="cover-lead">&#8235;כשכל דקה מצילה חיים, המערכת מחשבת לאמבולנס מסלול שעוקף פקקים ותאונות, מחליפה לירוק את הרמזורים לאורך הדרך לפני שהוא מגיע, ומתריעה לנהגים בדרכו לפנות את הנתיב.&#8236;</p>
+<div class="cover-points">
+<p class="cover-pt">&#8235;• סימולטור תנועה של רחובות מנהטן&#8236;</p>
+<p class="cover-pt">&#8235;• אפליקציית Android ברכב החירום&#8236;</p>
+<p class="cover-pt">&#8235;• מרכז שליטה עם עוזר AI למוקדן&#8236;</p>
+</div>
+<p class="cover-goal">&#8235;יעד ההדגמה: חיסכון של 35% עד 45% בזמן ההגעה&#8236;</p>
+</div>
+<aside>ClearPath AI היא מערכת שמקצרת את זמן ההגעה של רכבי חירום. היא מחשבת מסלול שעוקף פקקים ותאונות, מחליפה לירוק את הרמזורים לאורך המסלול לפני שהרכב מגיע אליהם, ומתריעה לנהגים שבדרכו לפנות את הנתיב. התלמידים בונים סימולטור תנועה של מנהטן, אפליקציית Android לרכב החירום ששולטת ברמזורים, שרת זמן אמת ומרכז שליטה עם עוזר AI למוקדן. בתסריט ההדגמה המערכת מציגה חיסכון של 35% עד 45% בזמן ההגעה לעומת נסיעה בלעדיה. האיור מראה את הרעיון: אמבולנס יוצא מבית החולים, הרמזורים לפניו בירוק בתוך מסדרון ההתרעה, והרמזורים ברחובות האחרים נשארים באדום ובצהוב.</aside>
+</section>
+<section id="teacher" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 2 / 5&#8236;</p>
+<h2>&#8235;מדריך פדגוגי למורה&#8236;</h2>
+<p class="lead">&#8235;המוצר הוא המערכת. המטרה היא התלמיד שבנה אותה, ויודע להסביר, לבדוק ולהגן על כל חלק בה.&#8236;</p>
+<div class="phases">
+<div class="phase" style="--i:4"><p class="num">4</p><p class="name">&#8235;אפליקציות רכב ואזרח&#8236;</p></div>
+<div class="phase" style="--i:3"><p class="num">3</p><p class="name">&#8235;גל ירוק ו-Geofence&#8236;</p></div>
+<div class="phase" style="--i:2"><p class="num">2</p><p class="name">&#8235;סימולטור ניו יורק&#8236;</p></div>
+<div class="phase" style="--i:1"><p class="num">1</p><p class="name">&#8235;שרת, מפה וניתוב A*&#8236;</p></div>
+<div class="phase" style="--i:0"><p class="num">0</p><p class="name">&#8235;פתיחה וחוזה עבודה עם AI&#8236;</p></div>
+<div class="phase" style="--i:9"><p class="num">9</p><p class="name">&#8235;הכנה להגנה&#8236;</p></div>
+<div class="phase" style="--i:8"><p class="num">8</p><p class="name">&#8235;סוכן עוזר מוקדן&#8236;</p></div>
+<div class="phase" style="--i:7"><p class="num">7</p><p class="name">&#8235;מדידות ותיעוד&#8236;</p></div>
+<div class="phase" style="--i:6"><p class="num">6</p><p class="name">&#8235;מודל שפה ומסווג&#8236;</p></div>
+<div class="phase" style="--i:5"><p class="num">5</p><p class="name">&#8235;בסיס נתונים ואבטחה&#8236;</p></div>
+</div>
+<div class="split">
+<div class="panel">
+<h3>&#8235;שתי דרישות יסוד&#8236;</h3>
+<p class="small">&#8235;• התלמיד שולט בתהליך הפיתוח: מריץ מאפס, מסביר את סדר הבנייה ואת ה-Git, מדבג ומשנה בעצמו.&#8236;</p>
+<p class="small">&#8235;• הדיאלוגים המלאים עם ה-AI מצורפים לקבצי הפרויקט.&#8236;</p>
+</div>
+<div class="panel">
+<h3>&#8235;בכל שלב&#8236;</h3>
+<div class="pills"><p class="pill">&#8235;AI כמגבר&#8236;</p><p class="pill">&#8235;מושגי ליבה&#8236;</p><p class="pill">&#8235;בדיקה בלי AI&#8236;</p><p class="pill">&#8235;נקודת בקרה מול ראיה&#8236;</p><p class="pill last">&#8235;טעויות נפוצות&#8236;</p></div>
+</div>
+</div>
+<aside>המדריך עוקב אחרי שמונת שלבי הפיתוח בפרק 7 באפיון, ומוסיף שלב פתיחה ושלב הגנה. לכל שלב מוגדרים מושגי הליבה, מה ה-AI מאפשר מעבר לחיסכון בזמן, נקודת בקרה שבה הפלט נבדק מול מדידה, חישוב או ניסוי, שאלה לשיחת בדיקה בלי מחשב, וטעויות שהמורה מחפש. שיחת הבדיקה נמשכת 5 עד 10 דקות לתלמיד, והמשוב בה איכותני. במאגר יש גם כישורי Claude Code שמנהלים שיחת בדיקה בשמונה נושאי ליבה, במצב תרגול או הערכה.</aside>
+</section>
+<section id="profile" class="alt" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 3 / 5&#8236;</p>
+<h2>&#8235;פרופיל הבוגר ומחוון המגמה&#8236;</h2>
+<div class="cols">
+<div class="rubric">
+<h3>&#8235;המחוון לפי מודל ה-T: סולם 1 עד 4&#8236;</h3>
+<div class="dim" style="--i:0"><p class="what">&#8235;<b>ידע תחומי ושליטה בתהליך, בלי AI</b> · 35% · תנאי סף&#8236;</p><p class="letter">A</p></div>
+<div class="dim" style="--i:1"><p class="what">&#8235;<b>ידע בתחום עם AI</b>, מובן ומאומת · 25%&#8236;</p><p class="letter">B</p></div>
+<div class="dim" style="--i:2"><p class="what">&#8235;<b>צלילה לעומק</b> ברכיב אחד, מארבעה כיוונים · 20%&#8236;</p><p class="letter">X</p></div>
+<div class="dim" style="--i:3"><p class="what">&#8235;<b>תחום נוסף</b> שמשפר את הפתרון · 10%&#8236;</p><p class="letter">C</p></div>
+<div class="dim" style="--i:4"><p class="what">&#8235;<b>שקיפות</b>: יומן AI ודיאלוגים מצורפים · 10%&#8236;</p><p class="letter">ש</p></div>
+<p class="gate">&#8235;<b>תנאי סף:</b> בלי הדיאלוגים המלאים, הפרויקט אינו מוגש. ציון 1 ב-A פוסל את הפרויקט.&#8236;</p>
+</div>
+<div class="profile">
+<h3>&#8235;הבוגר&#8236;</h3>
+<div class="item"><p class="text">&#8235;שולט בידע הליבה, ומסביר אותו בלי AI&#8236;</p><p class="n">1</p></div>
+<div class="item"><p class="text">&#8235;שולט בתהליך הפיתוח&#8236;</p><p class="n">2</p></div>
+<div class="item"><p class="text">&#8235;מכיר רכיב אחד עד הסוף&#8236;</p><p class="n">3</p></div>
+<div class="item"><p class="text">&#8235;בונה מערכת מורכבת בעזרת AI, ובודק אותה&#8236;</p><p class="n">4</p></div>
+<div class="item"><p class="text">&#8235;מחבר תחום נוסף ומכיר את גבולותיו&#8236;</p><p class="n">5</p></div>
+<div class="item"><p class="text">&#8235;אחראי לתוצר ושקוף בעבודה עם AI&#8236;</p><p class="n">6</p></div>
+<div class="item"><p class="text">&#8235;מבין את מגבלות ה-AI: האדם מחליט&#8236;</p><p class="n">7</p></div>
+</div>
+</div>
+<aside>מחוון המגמה בנוי לפי מודל ה-T: עמוד הליבה A, שתי הזרועות B ו-C, הצלילה לעומק X ושקיפות. המשקלות לקוחים ממסמך המודל והם הצעה לדיון. הסולם הוא ארבע רמות: מצוין, טוב, בסיסי ולא עומד. יש שני תנאי סף: הדיאלוגים המלאים עם ה-AI מצורפים לפרויקט, וציון 1 ברכיב A פוסל את הפרויקט כולו. כל רכיב בפרופיל הבוגר נבדק ברכיב של המחוון ומודגם בפרויקט, ומחוון השיפוט של ההאקתון בודק בדיוק את ההלימה הזו. המשוב לאורך התהליך איכותני, והדירוג ניתן בבחינה.</aside>
+</section>
+<section id="templates" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 4 / 5&#8236;</p>
+<h2>&#8235;תבניות עבודה&#8236;</h2>
+<p class="lead">&#8235;קצרות בכוונה: רשומה טובה לוקחת כמה דקות. התלמיד ממלא, והמורה קורא ומגיב.&#8236;</p>
+<div class="cards">
+<div class="card key" style="--i:4"><h3>&#8235;תיקיית ai-dialogues/&#8236;</h3><p class="when">&#8235;כל שבוע, בלי עריכה&#8236;</p><p class="pt">&#8235;• השיחה המלאה&#8236;</p><p class="pt">&#8235;• קישור מהיומן&#8236;</p><p class="pt">&#8235;• רק סודות מוסתרים&#8236;</p></div>
+<div class="card" style="--i:3"><h3>&#8235;רפלקציה שבועית&#8236;</h3><p class="when">&#8235;פעם בשבוע&#8236;</p><p class="pt">&#8235;• מה למדתי&#8236;</p><p class="pt">&#8235;• איפה ה-AI טעה&#8236;</p><p class="pt">&#8235;• מה עוד לא ברור&#8236;</p></div>
+<div class="card" style="--i:2"><h3>&#8235;רשומת החלטה&#8236;</h3><p class="when">&#8235;בכל החלטת תכנון&#8236;</p><p class="pt">&#8235;• שתי אפשרויות לפחות&#8236;</p><p class="pt">&#8235;• נימוק במושגי המגמה&#8236;</p><p class="pt">&#8235;• המחיר&#8236;</p></div>
+<div class="card" style="--i:1"><h3>&#8235;כרטיס נקודת בקרה&#8236;</h3><p class="when">&#8235;בסוף כל שלב&#8236;</p><p class="pt">&#8235;• היעד מהאפיון&#8236;</p><p class="pt">&#8235;• התוצאה שנמדדה&#8236;</p><p class="pt">&#8235;• מה עוד לא נבדק&#8236;</p></div>
+<div class="card" style="--i:0"><h3>&#8235;רשומת יומן AI&#8236;</h3><p class="when">&#8235;בכל תרומה משמעותית&#8236;</p><p class="pt">&#8235;• מה ביקשתי&#8236;</p><p class="pt">&#8235;• מה בדקתי ואיך&#8236;</p><p class="pt">&#8235;• מה החלטתי ולמה&#8236;</p><p class="pt">&#8235;• מי כתב מה&#8236;</p></div>
+</div>
+<p class="foot">&#8235;כל רשומה ביומן מפנה לדיאלוג המלא שעליו היא מבוססת. כך המורה משווה בין מה שהתלמיד מתאר לבין מה שקרה.&#8236;</p>
+<aside>ארבע תבניות ומבנה קבצים אחד. הרשומות החשובות ביותר ביומן הן אלה שבהן התלמיד תפס טעות של ה-AI. הדיאלוגים נשמרים בתיקייה ai-dialogues/ לפי תלמיד, בשם קובץ של תאריך, רכיב ונושא. מותר להסתיר רק סיסמאות, מפתחות API ומידע אישי, ושום דבר אחר לא נערך.</aside>
+</section>
+<section id="tmodel" class="alt" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 5 / 5&#8236;</p>
+<h2>&#8235;מודל ה-T בפרויקט ClearPath AI&#8236;</h2>
+<div class="tgrid">
+<div class="tbox arm armc" style="--i:2">
+<div class="thead"><div class="tcol"><h3>&#8235;ידע מחוץ לתחום עם AI&#8236;</h3><p class="tag">&#8235;זרוע שמאלית · 10%&#8236;</p></div><p class="big">C</p></div>
+<p class="pt">&#8235;• הנדסת תנועה: זמן פינוי צומת&#8236;</p>
+<p class="pt">&#8235;• רפואת חירום: ערך הדקה&#8236;</p>
+<p class="pt">&#8235;• פיזיקת GPS: Urban Canyon&#8236;</p>
+<p class="check">&#8235;מסביר את החיבור ואת גבולות הידע&#8236;</p>
+</div>
+<div class="tbox core" style="--i:0">
+<div class="thead"><div class="tcol"><h3>&#8235;ידע תחומי בלי AI&#8236;</h3><p class="tag">&#8235;עמוד הליבה · 35% · תנאי סף&#8236;</p></div><p class="big">A</p></div>
+<div class="topics"><p class="topic">&#8235;תקשורת&#8236;</p><p class="topic">&#8235;גרפים ו-A*&#8236;</p><p class="topic">&#8235;אבטחת מידע&#8236;</p><p class="topic">&#8235;בסיסי נתונים&#8236;</p><p class="topic">&#8235;ביצועים&#8236;</p><p class="topic">&#8235;מבנה המחשב&#8236;</p></div>
+<p class="check">&#8235;נבדק בעל פה ועל הלוח, ובכישורי assess-* במצב הערכה&#8236;</p>
+</div>
+<div class="tbox arm armb" style="--i:1">
+<div class="thead"><div class="tcol"><h3>&#8235;ידע בתחום עם AI&#8236;</h3><p class="tag">&#8235;זרוע ימנית · 25%&#8236;</p></div><p class="big">B</p></div>
+<p class="pt">&#8235;• סימולטור מנהטן ב-60 FPS&#8236;</p>
+<p class="pt">&#8235;• אפליקציית Android לגל ירוק&#8236;</p>
+<p class="pt">&#8235;• LLM לדיווח וסוכן מוקדן&#8236;</p>
+<p class="check">&#8235;אימות: A* מול Dijkstra, FPS, baseline&#8236;</p>
+</div>
+<div class="tbox deep" style="--i:3">
+<div class="thead"><div class="tcol"><h3>&#8235;צלילה לעומק: רכיב אחד לכל תלמיד&#8236;</h3><p class="tag">&#8235;20% · דוגמה: הגל הירוק&#8236;</p></div><p class="big">X</p></div>
+<div class="facets"><p class="facet">&#8235;<b>טכנולוגי:</b> ETA ו-A*&#8236;</p><p class="facet">&#8235;<b>מדעי:</b> תזמון ותורים&#8236;</p><p class="facet">&#8235;<b>אתי:</b> מי מקבל עדיפות&#8236;</p><p class="facet">&#8235;<b>היסטורי:</b> מערכות קדימות&#8236;</p></div>
+</div>
+</div>
+<p class="foot">&#8235;<b>שקיפות · 10%:</b> יומן AI ודיאלוגים מלאים בתיקייה ai-dialogues/. הבוחן קורא את היומן לפני הבחינה ושואל על נקודה אחת ממנו.&#8236;</p>
+<aside>מודל ה-T, שהציע אבי סלמון מאינטל, מסדר את פרויקט הגמר סביב עמוד ליבה ושתי זרועות. העמוד, A, הוא ידע מדעי המחשב שעליו נשען ClearPath AI: אלגוריתמים וגרפים, תקשורת, בסיסי נתונים, אבטחה, מבנה המחשב וביצועים. הוא נבדק בלי AI ומהווה תנאי סף. הזרוע הימנית, B, היא מה שה-AI מאפשר בתוך התחום: סימולטור תנועה של מנהטן, אפליקציית רכב חירום שמבקשת גל ירוק בזמן אמת, ומודל שפה וסוכן שעוזרים למוקדן. התלמיד מאמת כל אחד מהם במדידה או בהשוואה. הזרוע השמאלית, C, מכניסה תחומים אחרים שמשפרים את הפתרון: הנדסת תנועה, רפואת חירום ופיזיקה של GPS. ה-X הוא רכיב אחד שכל תלמיד חוקר לעומק מארבעה כיוונים. בדוגמה של הגל הירוק: הטכנולוגיה, המדע של התזמון, השאלה האתית מי מקבל עדיפות, וההיסטוריה של מערכות קדימות לרכבי חירום. המשקלות לקוחים מהמחוון המוצע במסמך המודל, והם הצעה לדיון.</aside>
+</section>
+</body>
+</html>
