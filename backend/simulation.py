@@ -5,7 +5,7 @@ from collections import defaultdict, deque
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import accumulate, pairwise
-from math import hypot
+from math import cos, hypot, radians
 from random import Random
 from threading import Lock
 
@@ -15,6 +15,7 @@ from shapely.geometry import MultiPoint, mapping
 
 from .priority import PriorityCorridor
 from .routing import ManhattanRouter
+from .scenarios import MANHATTAN, Scenario
 
 Edge = tuple[int, int, int]
 Point = tuple[float, float]
@@ -59,7 +60,7 @@ class Vehicle:
 
 
 class Simulation:
-    def __init__(self, router: ManhattanRouter, dispatch_mode: bool = False):
+    def __init__(self, router: ManhattanRouter, dispatch_mode: bool = False, scenario: Scenario = MANHATTAN):
         self.router = router
         self.dispatch_mode = dispatch_mode
         self.last_dispatch: tuple[datetime, str] | None = None
@@ -74,6 +75,7 @@ class Simulation:
         }
         segments = {}
         street_features = []
+        longitude_scale = round(cos(radians(scenario.origin.lat)), 2)
         for u, v, key, data in router.graph.edges(keys=True, data=True):
             points = router.edge_coordinates(u, v, key)
             canonical = min(tuple(points), tuple(reversed(points)))
@@ -85,7 +87,7 @@ class Simulation:
                     kind=data.get("highway", ""),
                 ))
             lengths = list(accumulate(
-                (hypot((b[0] - a[0]) * .76, b[1] - a[1]) for a, b in pairwise(points)),
+                (hypot((b[0] - a[0]) * longitude_scale, b[1] - a[1]) for a, b in pairwise(points)),
                 initial=0.0,
             ))
             if not lengths[-1]:
@@ -93,14 +95,34 @@ class Simulation:
             meters = data["length"]
             offsets = [length / lengths[-1] * meters for length in lengths]
             a, b = points[-2:]
-            north_south = abs(b[1] - a[1]) >= .76 * abs(b[0] - a[0])
+            north_south = abs(b[1] - a[1]) >= longitude_scale * abs(b[0] - a[0])
             road = Road((u, v, key), segment, points, offsets, meters, data["travel_time"], north_south)
             self.roads[road.key] = road
             self.outgoing[u].append(road)
 
         self.street_features = street_features
         land = concave_hull(MultiPoint(list(self.nodes.values())), ratio=.06).buffer(.00045)
+        self.default_origin = router.nearest_node(scenario.origin.lat, scenario.origin.lon)
+        self.default_destination = router.nearest_node(scenario.destination.lat, scenario.destination.lon)
+        landmarks = scenario.landmarks
+        if scenario.incidents:
+            landmarks += (scenario.origin, *scenario.incidents)
         self.map_data = {
+            "scenario": {
+                "name": scenario.name,
+                "origin": scenario.origin.name,
+                "destination": scenario.destination.name,
+                "bounds": scenario.bounds,
+                "landmarks": [
+                    {"name": place.name, "hebrew": place.hebrew, "coordinates": (place.lon, place.lat)}
+                    for place in landmarks
+                ],
+                "incidents": [
+                    {"name": place.name, "hebrew": place.hebrew,
+                     "point": self.nodes[router.nearest_node(place.lat, place.lon)]}
+                    for place in scenario.incidents
+                ],
+            },
             "roads": collection(street_features),
             "signals": collection([
                 feature({"type": "Point", "coordinates": self.nodes[node]}, offset=offset)
@@ -108,8 +130,6 @@ class Simulation:
             ]),
             "land": collection([feature(mapping(land))]),
         }
-        self.default_origin = router.nearest_node(40.7391, -73.9760)
-        self.default_destination = router.nearest_node(40.7580, -73.9855)
         self.reset()
 
     def reset(self) -> None:

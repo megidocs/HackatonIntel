@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 from .dispatch import DispatchServices, router as dispatch_router
 from .mobile import mobile_router
 from .routing import DEFAULT_GRAPH_PATH, ManhattanRouter, PointOutsideGraph
+from .scenarios import TEL_AVIV, TEL_AVIV_BUNDLE
 from .simulation import Simulation
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
@@ -58,12 +59,13 @@ class SimulationPoint(Position):
     target: Literal["origin", "destination"]
 
 
-async def advance_simulation(simulation: Simulation):
+async def advance_simulations(simulations: tuple[Simulation, ...]):
     previous = monotonic()
     while True:
         await asyncio.sleep(.1)
         current = monotonic()
-        simulation.advance(current - previous)
+        for simulation in simulations:
+            simulation.advance(current - previous)
         previous = current
 
 
@@ -74,7 +76,15 @@ async def lifespan(app: FastAPI):
     app.state.simulation = Simulation(
         app.state.router, dispatch_mode=os.environ.get("CLEARPATH_DISPATCH_SIMULATION") == "1",
     )
-    app.state.simulation_map = JSONResponse(app.state.simulation.map_data).body
+    tel_aviv_path = Path(os.environ.get("CLEARPATH_TEL_AVIV_GRAPH_PATH", TEL_AVIV_BUNDLE))
+    app.state.simulations = {
+        "manhattan": app.state.simulation,
+        "tel-aviv": Simulation(ManhattanRouter(tel_aviv_path), scenario=TEL_AVIV),
+    }
+    app.state.simulation_maps = {
+        city: JSONResponse(simulation.map_data).body
+        for city, simulation in app.state.simulations.items()
+    }
     app.state.control_token = os.environ.get("CLEARPATH_CONTROL_TOKEN", "")
     app.state.restricted_controls = (
         bool(app.state.control_token)
@@ -82,7 +92,7 @@ async def lifespan(app: FastAPI):
         or os.environ.get("RENDER") == "true"
     )
     app.state.dispatch = DispatchServices.from_environment()
-    timer = asyncio.create_task(advance_simulation(app.state.simulation))
+    timer = asyncio.create_task(advance_simulations(tuple(app.state.simulations.values())))
     try:
         yield
     finally:
@@ -135,6 +145,7 @@ def home():
 
 
 @app.get("/simulator", include_in_schema=False)
+@app.get("/simulator/tel-aviv", include_in_schema=False)
 def simulator_page():
     return FileResponse(FRONTEND / "public" / "index.html")
 
@@ -157,14 +168,25 @@ def maplibre_file(filename: str):
     return FileResponse(path, media_type=media_type)
 
 
+def simulation_city(request: Request) -> str:
+    city = request.path_params.get("city", "manhattan")
+    if city not in request.app.state.simulations:
+        raise HTTPException(status_code=404, detail="Simulator city not found.")
+    return city
+
+
 @app.get("/simulation/map")
+@app.get("/simulation/{city}/map", include_in_schema=False)
 def simulation_map(request: Request):
-    return Response(request.app.state.simulation_map, media_type="application/json")
+    return Response(
+        request.app.state.simulation_maps[simulation_city(request)], media_type="application/json",
+    )
 
 
 @app.get("/simulation/state")
+@app.get("/simulation/{city}/state", include_in_schema=False)
 def simulation_state(request: Request):
-    simulation = request.app.state.simulation
+    simulation = request.app.state.simulations[simulation_city(request)]
     with simulation.lock:
         return simulation.snapshot()
 
@@ -191,9 +213,10 @@ def simulation_access(request: Request):
 
 
 @app.post("/simulation/control")
+@app.post("/simulation/{city}/control", include_in_schema=False)
 def simulation_control(payload: SimulationControl, request: Request):
     require_control(request)
-    simulation = request.app.state.simulation
+    simulation = request.app.state.simulations[simulation_city(request)]
     with simulation.lock:
         if payload.reset:
             simulation.reset()
@@ -210,9 +233,10 @@ def simulation_control(payload: SimulationControl, request: Request):
 
 
 @app.post("/simulation/closure/{segment}")
+@app.post("/simulation/{city}/closure/{segment}", include_in_schema=False)
 def simulation_closure(segment: int, request: Request):
     require_control(request)
-    simulation = request.app.state.simulation
+    simulation = request.app.state.simulations[simulation_city(request)]
     if not 0 <= segment < len(simulation.street_features):
         raise HTTPException(status_code=404, detail="Road segment not found.")
     with simulation.lock:
@@ -221,9 +245,10 @@ def simulation_closure(segment: int, request: Request):
 
 
 @app.post("/simulation/point")
+@app.post("/simulation/{city}/point", include_in_schema=False)
 def simulation_point(payload: SimulationPoint, request: Request):
     require_control(request)
-    simulation = request.app.state.simulation
+    simulation = request.app.state.simulations[simulation_city(request)]
     if simulation.dispatch_mode:
         raise HTTPException(status_code=409, detail="An approved dispatch sets the route in this demo.")
     try:

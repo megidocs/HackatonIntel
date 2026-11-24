@@ -44,18 +44,27 @@ def main() -> None:
     assert packed == plain
     assert len(json.loads(plain)["roads"]["features"]) > 4000
     assert json.loads(read(base, "/simulation/state"))["vehicles"]
+    assert b'href="/simulator/tel-aviv"' in read(base, "/simulator/tel-aviv")
+    tel_aviv_map = json.loads(read(base, "/simulation/tel-aviv/map", {"Accept-Encoding": "gzip"}))
+    assert tel_aviv_map["scenario"]["name"] == "Tel Aviv"
+    assert len(tel_aviv_map["roads"]["features"]) > 1000
+    assert tel_aviv_map["signals"]["features"]
+    tel_aviv = json.loads(read(base, "/simulation/tel-aviv/state"))
+    for lon, lat in (tel_aviv["default_origin"], tel_aviv["default_destination"]):
+        assert 34.75 < lon < 34.81 and 32.04 < lat < 32.11
     assert json.loads(read(base, "/simulation/access")) == {"restricted": True, "allowed": False}
-    try:
-        urlopen(Request(
-            base + "/simulation/control", data=b"{}",
-            headers={"Content-Type": "application/json"},
-        ), timeout=15)
-    except HTTPError as failure:
-        if failure.code != 403:
-            raise
-    else:
-        raise AssertionError("Anonymous requests could control the public simulation.")
-    print(f"Verified {base}/simulator, release {health.get('release', 'unknown')}, and read-only viewer access.")
+    for path in ("/simulation/control", "/simulation/tel-aviv/control"):
+        try:
+            urlopen(Request(
+                base + path, data=b"{}",
+                headers={"Content-Type": "application/json"},
+            ), timeout=15)
+        except HTTPError as failure:
+            if failure.code != 403:
+                raise
+        else:
+            raise AssertionError(f"Anonymous requests could control {path}.")
+    print(f"Verified both simulator cities, release {health.get('release', 'unknown')}, and read-only viewer access.")
 
 
 if __name__ == "__main__":

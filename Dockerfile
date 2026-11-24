@@ -12,7 +12,9 @@ COPY backend ./backend
 COPY frontend/public ./frontend/public
 COPY --from=browser-assets /frontend/node_modules/maplibre-gl/dist ./frontend/node_modules/maplibre-gl/dist
 COPY deploy/manhattan.graphml.gz deploy/manhattan.graphml.gz.sha256 ./deploy/
+COPY deploy/tel-aviv.graphml.gz deploy/tel-aviv.graphml.gz.sha256 ./deploy/
 RUN sha256sum --check deploy/manhattan.graphml.gz.sha256 \
+    && sha256sum --check deploy/tel-aviv.graphml.gz.sha256 \
     && mkdir -p backend/data \
     && gzip -dc deploy/manhattan.graphml.gz > backend/data/manhattan.graphml
 USER 10001

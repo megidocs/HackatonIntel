@@ -22,7 +22,11 @@
     <aside class="sidebar">
       <div class="intro">
         <p class="place" id="demo-type">Traffic simulator demo</p>
-        <h1>Manhattan<br>traffic simulator</h1>
+        <h1><span id="city-name">Manhattan</span><br>traffic simulator</h1>
+        <nav class="city-links" aria-label="Simulator city">
+          <a href="/simulator" aria-current="page">Manhattan</a>
+          <a href="/simulator/tel-aviv">Tel Aviv</a>
+        </nav>
       </div>
 
       <section aria-labelledby="scenario-title">
@@ -37,6 +41,13 @@
             <span><small>Destination</small><b id="destination-label">Times Square</b></span><span class="endpoint-action">Edit</span>
           </button>
         </div>
+        <form class="incident-setup" id="incident-setup" hidden>
+          <label for="incident-location">Simulated incident location</label>
+          <select id="incident-location" required disabled>
+            <option value="">Choose a landmark</option>
+          </select>
+          <button type="submit" class="secondary" disabled>Set incident</button>
+        </form>
         <div class="route-metrics">
           <div><strong id="distance">—</strong><span>Route distance</span></div>
           <div><strong id="eta">—</strong><span>Free-flow estimate</span></div>
@@ -78,10 +89,10 @@
       </section>
     </aside>
 
-    <section class="map-area" aria-label="Interactive Manhattan road map">
-      <div id="map" aria-label="Manhattan street map"></div>
+    <section class="map-area" aria-label="Interactive road map">
+      <div id="map" aria-label="Street map"></div>
       <canvas id="vehicles" aria-hidden="true"></canvas>
-      <div id="map-message" class="map-message" role="status">Loading Manhattan road network</div>
+      <div id="map-message" class="map-message" role="status">Loading road network</div>
       <div class="map-legend">
         <span><i class="legend-route"></i>Rescue route</span>
         <span><i class="legend-vehicle"></i>Civilian vehicle</span>

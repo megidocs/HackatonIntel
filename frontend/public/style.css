@@ -64,6 +64,14 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 .place { font-size: 10px; font-weight: 700; letter-spacing: .19em; color: var(--teal); margin: 0 0 9px; }
 h1 { font-size: 31px; margin: 0; letter-spacing: -.045em; line-height: 1.08; font-weight: 660; }
 h2 { font-size: 13px; margin: 0 0 10px; font-weight: 650; }
+.city-links { display: flex; gap: 7px; margin-top: 12px; }
+.city-links a { color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 7px; padding: 5px 10px; font-size: 12px; }
+.city-links a[aria-current], .city-links a:hover { border-color: var(--teal); color: var(--teal); }
+.incident-setup { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px; margin-top: 10px; }
+.incident-setup[hidden] { display: none; }
+.incident-setup label { grid-column: 1 / -1; color: var(--muted); font-size: 11px; }
+.incident-setup select { min-width: 0; padding: 6px; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 7px; font-size: 12px; }
+.incident-setup .secondary { padding: 6px 8px; }
 .endpoints { display: grid; gap: 1px; border: 1px solid var(--line); border-radius: 10px; overflow: clip; background: var(--line); }
 .endpoint {
   text-align: left;
@@ -144,6 +152,7 @@ input[type="range"] { width: 100%; margin: 5px 0 9px; accent-color: var(--teal);
 .map-legend .legend-alert { background: #ffd683; }
 .map-legend .legend-closure { border-radius: 1px; background: var(--amber); transform: rotate(45deg); }
 .map-label { color: #92a6b5; font: 600 10px "Segoe UI", sans-serif; letter-spacing: .15em; pointer-events: none; text-shadow: 0 1px 4px #08131b; }
+.map-landmark { background: #101a22ed; color: #dae3e9; border: 1px solid #435965; border-radius: 4px; padding: 3px 5px; letter-spacing: 0; white-space: nowrap; }
 .maplibregl-ctrl-attrib { font-size: 10px; }
 .desktop-notice { display: none; }
 

@@ -52,6 +52,39 @@ the HTTP checks and 100-pair comparison with Dijkstra.
 
 ## Desktop simulator
 
+### Tel Aviv rehearsal
+
+Open the [Tel Aviv simulator](http://127.0.0.1:8000/simulator/tel-aviv), or click
+**Tel Aviv** above the rescue route. The map covers central Tel Aviv on
+OpenStreetMap roads, with Hebrew labels for the landmarks. The default route
+runs from Ichilov Hospital to Rabin Square. For a repeatable demo:
+
+1. Click **Reset**. The route shows **Ichilov Hospital** and **Rabin Square**.
+2. Under **Simulated incident location**, choose **Habima Square · כיכר הבימה**.
+   Click **Set incident**. The destination and the teal route update.
+3. Click **Start simulation**. Wait for the clock to advance, then click
+   **Pause**. Click **Reset** to restore the Rabin Square route.
+
+To place an incident elsewhere, click **Edit** on the **Destination** row and
+click a road on the map. On the public preview, unlock **Presenter access**
+before changing the shared Tel Aviv scenario.
+
+On a disposable local instance, the same sequence can be checked with
+Playwright. Install Playwright and Chromium once if they are missing.
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install playwright
+.\.venv\Scripts\python.exe -m playwright install chromium
+.\.venv\Scripts\python.exe -m backend.check_tel_aviv_browser
+```
+
+Pass `--channel chrome` or `--channel msedge` to use an installed browser.
+
+The server uses the bundled Tel Aviv graph. See the
+[graph source and regeneration steps](../deploy/README.md#tel-aviv-graph).
+
+### Manhattan rehearsal
+
 Open the [Manhattan simulator](http://127.0.0.1:8000/simulator). Start playback, set
 the civilian vehicle count or playback speed, and use the origin and destination
 buttons to choose new points on the map. To reroute the rescue vehicle, select

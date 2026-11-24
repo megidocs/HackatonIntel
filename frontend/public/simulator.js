@@ -1,6 +1,10 @@
 import { Map as MapLibreMap, Marker, NavigationControl } from "/sim/vendor/maplibre-gl.mjs";
 
 const $ = (selector) => document.querySelector(selector);
+const telAviv = location.pathname === "/simulator/tel-aviv";
+const incidentForm = $("#incident-setup");
+const incidentSelect = $("#incident-location");
+let scenario;
 const map = new MapLibreMap({
   container: "map",
   center: [-73.978, 40.761],
@@ -56,6 +60,23 @@ const collection = (features) => ({ type: "FeatureCollection", features });
 const empty = collection([]);
 
 function addLayers(data) {
+  scenario = data.scenario;
+  $("#city-name").textContent = scenario.name;
+  $("#map").setAttribute("aria-label", `${scenario.name} street map`);
+  $(".map-area").setAttribute("aria-label", `Interactive ${scenario.name} road map`);
+  document.title = `ClearPath AI — ${scenario.name} Traffic Simulator`;
+  if (telAviv) {
+    $('.city-links [aria-current]').removeAttribute("aria-current");
+    $('.city-links a[href="/simulator/tel-aviv"]').setAttribute("aria-current", "page");
+  }
+  for (const place of scenario.incidents) {
+    incidentSelect.add(new Option(`${place.name} · ${place.hebrew}`, place.name));
+  }
+  incidentForm.hidden = !scenario.incidents.length;
+  if (scenario.bounds) {
+    map.fitBounds(scenario.bounds, { padding: 40, duration: 0 });
+  }
+
   map.addSource("land", { type: "geojson", data: data.land });
   map.addLayer({
     id: "land", type: "fill", source: "land",
@@ -129,15 +150,13 @@ function addLayers(data) {
     },
   });
 
-  for (const [name, coordinates] of [
-    ["HUDSON RIVER", [-74.006, 40.757]],
-    ["EAST RIVER", [-73.961, 40.751]],
-    ["CENTRAL PARK", [-73.9689, 40.7822]],
-  ]) {
+  for (const { name, hebrew, coordinates } of scenario.landmarks) {
     const label = document.createElement("span");
-    label.className = "map-label";
-    label.textContent = name;
-    new Marker({ element: label }).setLngLat(coordinates).addTo(map);
+    label.className = hebrew ? "map-label map-landmark" : "map-label";
+    label.textContent = hebrew || name;
+    if (hebrew) label.lang = "he";
+    const options = hebrew ? { anchor: "bottom", offset: [0, -8] } : {};
+    new Marker({ element: label, ...options }).setLngLat(coordinates).addTo(map);
   }
 }
 
@@ -151,7 +170,8 @@ async function request(path, payload, token = presenterToken) {
   if (token && (path === "/simulation/access" || (payload !== undefined && path.startsWith("/simulation/")))) {
     options.headers["X-ClearPath-Control-Token"] = token;
   }
-  const response = await fetch(path, options);
+  const url = telAviv && path !== "/simulation/access" ? path.replace("/simulation/", "/simulation/tel-aviv/") : path;
+  const response = await fetch(url, options);
   if (!response.ok) {
     const { detail } = await response.json().catch(() => ({}));
     throw new Error(typeof detail === "string" ? detail : "The simulator could not complete this request.");
@@ -198,9 +218,12 @@ function showState(next) {
     map.getSource("endpoints").setData(collection(waiting ? [] : [
       point(next.origin, { color: "#65e0ce" }), point(next.destination, { color: "#ffad68" }),
     ]));
-    $("#origin-label").textContent = locationLabel(next.origin, "Bellevue Hospital", next.default_origin);
-    $("#destination-label").textContent = locationLabel(next.destination, "Times Square", next.default_destination);
-    if (first || newDispatch) {
+    $("#origin-label").textContent = locationLabel(next.origin, scenario.origin, next.default_origin);
+    const incident = scenario.incidents.find((place) => place.point.join() === next.destination.join());
+    incidentSelect.value = incident?.name ?? "";
+    $("#destination-label").textContent = incident?.name ??
+      locationLabel(next.destination, scenario.destination, next.default_destination);
+    if ((first && !scenario.bounds) || newDispatch) {
       const [x, y] = next.origin;
       const [otherX, otherY] = next.destination;
       map.fitBounds(
@@ -485,6 +508,14 @@ $("#play").addEventListener("click", () => refresh("/simulation/control", { runn
 $("#reset").addEventListener("click", () => {
   setMode();
   refresh("/simulation/control", { reset: true });
+});
+incidentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const incident = scenario.incidents.find((place) => place.name === incidentSelect.value);
+  if (!incident) return;
+  const [lon, lat] = incident.point;
+  setMode();
+  refresh("/simulation/point", { target: "destination", lat, lon });
 });
 $("#density").addEventListener("input", (event) => { $("#density-output").textContent = event.target.value; });
 $("#density").addEventListener("change", (event) => refresh("/simulation/control", { density: Number(event.target.value) }));
