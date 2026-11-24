@@ -52,11 +52,29 @@ def main() -> None:
     tel_aviv = json.loads(read(base, "/simulation/tel-aviv/state"))
     for lon, lat in (tel_aviv["default_origin"], tel_aviv["default_destination"]):
         assert 34.75 < lon < 34.81 and 32.04 < lat < 32.11
+    assert b'Rescue fleet' in read(base, "/simulator/tel-aviv/dispatch")
+    demo = json.loads(read(base, "/simulation/tel-aviv-dispatch/state"))
+    assert demo["dispatch_mode"]
+    assert {unit["base"] for unit in demo["fleet"]} == {
+        "Pinkas", "Jabotinsky", "Ben Yehuda", "Nahmani", "Jaffa Road", "Sportek",
+    }
     assert json.loads(read(base, "/simulation/access")) == {"restricted": True, "allowed": False}
-    for path in ("/simulation/control", "/simulation/tel-aviv/control"):
+    protected = {
+        "/simulation/control": {},
+        "/simulation/tel-aviv/control": {},
+        "/simulation/tel-aviv-dispatch/control": {},
+        "/simulation/tel-aviv-dispatch/propose": {
+            "report": "Test report", "location": "Nahmani", "unit_type": "medical",
+        },
+        "/simulation/tel-aviv-dispatch/approve": {
+            "report": "Test report", "location": "Nahmani", "unit_type": "medical",
+            "unit_id": "ambulance-2", "version": 0,
+        },
+    }
+    for path, payload in protected.items():
         try:
             urlopen(Request(
-                base + path, data=b"{}",
+                base + path, data=json.dumps(payload).encode(),
                 headers={"Content-Type": "application/json"},
             ), timeout=15)
         except HTTPError as failure:
@@ -64,7 +82,7 @@ def main() -> None:
                 raise
         else:
             raise AssertionError(f"Anonymous requests could control {path}.")
-    print(f"Verified both simulator cities, release {health.get('release', 'unknown')}, and read-only viewer access.")
+    print(f"Verified both cities, the Tel Aviv fleet, viewer access, and release {health.get('release', 'unknown')}.")
 
 
 if __name__ == "__main__":

@@ -201,6 +201,14 @@ class Simulation:
         rescue = self.emergency if self.route_status == "en_route" else None
         self.priority.update(self.time, rescue, list(self.pending), self.signals, self.traffic)
 
+    def open_graph(self):
+        return nx.subgraph_view(
+            self.router.graph,
+            filter_edge=lambda u, v, key: (
+                (u, v, key) in self.roads and self.roads[u, v, key].segment not in self.closed
+            ),
+        )
+
     def plan_route(self, keep_vehicle: bool) -> None:
         if self.dispatch_mode and self.dispatch_id is None:
             self.pending = deque()
@@ -214,14 +222,8 @@ class Simulation:
             self.arrival_time: float | None = None
         active = self.emergency if keep_vehicle and self.emergency and self.emergency.meters > 0 else None
         source = active.road.key[1] if active else self.origin
-        graph = nx.subgraph_view(
-            self.router.graph,
-            filter_edge=lambda u, v, key: (
-                (u, v, key) in self.roads and self.roads[u, v, key].segment not in self.closed
-            ),
-        )
         try:
-            _, keys = self.router.path(source, self.destination, graph)
+            _, keys = self.router.path(source, self.destination, self.open_graph())
         except nx.NetworkXNoPath:
             keys = []
             self.route_status = "blocked"

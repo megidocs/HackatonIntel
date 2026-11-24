@@ -22,12 +22,54 @@
     <aside class="sidebar">
       <div class="intro">
         <p class="place" id="demo-type">Traffic simulator demo</p>
-        <h1><span id="city-name">Manhattan</span><br>traffic simulator</h1>
+        <h1><span id="city-name">Manhattan</span><br><span id="simulator-title">traffic simulator</span></h1>
         <nav class="city-links" aria-label="Simulator city">
           <a href="/simulator" aria-current="page">Manhattan</a>
           <a href="/simulator/tel-aviv">Tel Aviv</a>
+          <a href="/simulator/tel-aviv/dispatch">Tel Aviv dispatch</a>
         </nav>
       </div>
+
+      <form class="presenter-access" id="presenter-access" hidden>
+        <label for="presenter-token">Presenter access</label>
+        <div>
+          <input id="presenter-token" type="password" autocomplete="off" required>
+          <button type="submit" class="secondary">Unlock</button>
+        </div>
+        <p id="presenter-status" role="status">Public viewers can follow the shared simulation.</p>
+      </form>
+
+      <section class="dispatch-workflow" id="dispatch-workflow" aria-labelledby="fleet-title" hidden>
+        <h2 id="fleet-title">Rescue fleet <span id="fleet-count"></span></h2>
+        <ul id="fleet-units" class="fleet-units"></ul>
+        <p id="fleet-trip" class="fleet-trip" role="status"></p>
+        <form id="dispatch-form" class="dispatch-form" aria-labelledby="report-title">
+          <h2 id="report-title">Simulated incident report</h2>
+          <fieldset id="report-fields" disabled>
+            <label for="dispatch-report">What happened?</label>
+            <textarea id="dispatch-report" dir="auto" required maxlength="1200" rows="2"></textarea>
+            <label for="dispatch-location">Incident location</label>
+            <select id="dispatch-location" required><option value="">Choose a location</option></select>
+            <label for="dispatch-type">Response needed</label>
+            <select id="dispatch-type" required>
+              <option value="medical">Ambulance</option>
+              <option value="fire">Fire engine</option>
+              <option value="police">Police car</option>
+            </select>
+            <button type="submit" class="secondary">Propose dispatch</button>
+          </fieldset>
+        </form>
+        <form id="dispatch-review" class="dispatch-form" aria-labelledby="dispatch-review-title" hidden>
+          <h2 id="dispatch-review-title">Review proposed dispatch</h2>
+          <p id="review-report" dir="auto"></p>
+          <fieldset id="review-fields" disabled>
+            <label for="dispatch-unit">Vehicle · estimated drive time</label>
+            <select id="dispatch-unit" required></select>
+            <button type="submit" class="primary">Approve dispatch</button>
+          </fieldset>
+        </form>
+        <p id="dispatch-feedback" class="route-status" role="status"></p>
+      </section>
 
       <section aria-labelledby="scenario-title">
         <h2 id="scenario-title">Rescue route</h2>
@@ -57,14 +99,6 @@
 
       <section aria-labelledby="controls-title">
         <h2 id="controls-title">Simulation controls</h2>
-        <form class="presenter-access" id="presenter-access" hidden>
-          <label for="presenter-token">Presenter access</label>
-          <div>
-            <input id="presenter-token" type="password" autocomplete="off" required>
-            <button type="submit" class="secondary">Unlock</button>
-          </div>
-          <p id="presenter-status" role="status">Public viewers can follow the shared simulation.</p>
-        </form>
         <div class="control-row">
           <button id="play" type="button" class="primary" disabled><span aria-hidden="true">▶</span><span id="play-text">Start simulation</span></button>
           <button id="reset" type="button" class="secondary" disabled>Reset</button>

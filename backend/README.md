@@ -52,6 +52,33 @@ the HTTP checks and 100-pair comparison with Dijkstra.
 
 ## Desktop simulator
 
+### Tel Aviv dispatch rehearsal
+
+Open [Tel Aviv dispatch](http://127.0.0.1:8000/simulator/tel-aviv/dispatch).
+Before writing the report, the fleet panel shows each simulated vehicle, its
+Tel Aviv base, and whether it is available. The base markers appear on the map.
+The shared public demo requires the presenter code to propose or approve a dispatch.
+
+1. Enter a simulated report, such as **אירוע רפואי בדרך יפו. נדרש אמבולנס.**
+2. Choose **Jaffa Road · דרך יפו** as the location and **Ambulance** as the
+   response. Click **Propose dispatch** to compare the available units and their
+   modeled drive times.
+3. Review the report and vehicle, then click **Approve dispatch**. The vehicle
+   leaves its listed base and the map follows the trip. Its status changes to
+   **Dispatched**, then **Available** when it reaches the incident.
+4. Once it arrives, approve another report or click **Reset** to restart the rehearsal.
+
+This workflow uses a synthetic fleet and the dispatcher's location and response
+choices. It runs on the simulator itself with one active trip at a time. The
+simulated fleet resets at server restart. The signed-in report workflow is
+documented in [ClearPath dispatch](../docs/dispatch.md).
+
+On a disposable local instance, the browser check can run the full sequence:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.check_tel_aviv_browser --channel chrome --dispatch
+```
+
 ### Tel Aviv rehearsal
 
 Open the [Tel Aviv simulator](http://127.0.0.1:8000/simulator/tel-aviv), or click

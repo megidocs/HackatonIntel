@@ -11,6 +11,8 @@ auto-deploy switch off.
 The public page shows the shared simulation. The presenter enters the value
 of `CLEARPATH_CONTROL_TOKEN` from the Render environment to unlock controls.
 Store the code only in Render and share it privately with presenters.
+The [Tel Aviv dispatch rehearsal](../backend/README.md#tel-aviv-dispatch-rehearsal)
+uses the same presenter access and a simulated fleet.
 
 Run the public HTTPS smoke check with the Render service's base URL after
 the deploy finishes. Include the expected Git SHA to verify the release.

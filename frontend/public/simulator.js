@@ -1,10 +1,13 @@
 import { Map as MapLibreMap, Marker, NavigationControl } from "/sim/vendor/maplibre-gl.mjs";
+import { setupDispatchPanel } from "./tel-aviv-dispatch.js";
 
 const $ = (selector) => document.querySelector(selector);
-const telAviv = location.pathname === "/simulator/tel-aviv";
+const dispatchDemo = location.pathname === "/simulator/tel-aviv/dispatch";
+const city = dispatchDemo ? "tel-aviv-dispatch" : location.pathname === "/simulator/tel-aviv" ? "tel-aviv" : "";
 const incidentForm = $("#incident-setup");
 const incidentSelect = $("#incident-location");
 let scenario;
+let dispatchPanel;
 const map = new MapLibreMap({
   container: "map",
   center: [-73.978, 40.761],
@@ -34,7 +37,7 @@ if (frameMeter) {
   document.addEventListener("visibilitychange", clearFrameMeasurement);
 }
 const controls = [...document.querySelectorAll(".sidebar button, .sidebar input, .sidebar select")]
-  .filter((control) => !control.closest("#presenter-access"));
+  .filter((control) => !control.closest("#presenter-access, #dispatch-workflow"));
 let presenterToken = "";
 let pollTimer;
 let polling = false;
@@ -65,14 +68,20 @@ function addLayers(data) {
   $("#map").setAttribute("aria-label", `${scenario.name} street map`);
   $(".map-area").setAttribute("aria-label", `Interactive ${scenario.name} road map`);
   document.title = `ClearPath AI — ${scenario.name} Traffic Simulator`;
-  if (telAviv) {
+  if (city) {
     $('.city-links [aria-current]').removeAttribute("aria-current");
-    $('.city-links a[href="/simulator/tel-aviv"]').setAttribute("aria-current", "page");
+    $(`.city-links a[href="${location.pathname}"]`).setAttribute("aria-current", "page");
   }
   for (const place of scenario.incidents) {
     incidentSelect.add(new Option(`${place.name} · ${place.hebrew}`, place.name));
   }
-  incidentForm.hidden = !scenario.incidents.length;
+  incidentForm.hidden = dispatchDemo || !scenario.incidents.length;
+  if (dispatchDemo) {
+    document.body.classList.add("tel-aviv-dispatch");
+    document.title = "ClearPath AI — Tel Aviv Dispatch";
+    $("#simulator-title").textContent = "dispatch demo";
+    dispatchPanel = setupDispatchPanel(map, data.report_locations, request, refresh);
+  }
   if (scenario.bounds) {
     map.fitBounds(scenario.bounds, { padding: 40, duration: 0 });
   }
@@ -170,7 +179,7 @@ async function request(path, payload, token = presenterToken) {
   if (token && (path === "/simulation/access" || (payload !== undefined && path.startsWith("/simulation/")))) {
     options.headers["X-ClearPath-Control-Token"] = token;
   }
-  const url = telAviv && path !== "/simulation/access" ? path.replace("/simulation/", "/simulation/tel-aviv/") : path;
+  const url = city && path !== "/simulation/access" ? path.replace("/simulation/", `/simulation/${city}/`) : path;
   const response = await fetch(url, options);
   if (!response.ok) {
     const { detail } = await response.json().catch(() => ({}));
@@ -206,8 +215,10 @@ function showState(next) {
   frameVehicles = next.vehicles;
   frameStart = now;
   state = next;
+  dispatchPanel?.show(next);
 
-  $("#demo-type").textContent = next.dispatch_mode ? "Dispatch-driven demo" : "Traffic simulator demo";
+  $("#demo-type").textContent = dispatchDemo ? "Simulated rescue fleet" :
+    next.dispatch_mode ? "Dispatch-driven demo" : "Traffic simulator demo";
   $(".endpoints").hidden = Boolean(next.dispatch_mode);
   const key = JSON.stringify([next.origin, next.destination, next.route, next.dispatch_destination]);
   if (key !== routeKey) {
@@ -228,7 +239,7 @@ function showState(next) {
       const [otherX, otherY] = next.destination;
       map.fitBounds(
         [[Math.min(x, otherX), Math.min(y, otherY)], [Math.max(x, otherX), Math.max(y, otherY)]],
-        { padding: 76, maxZoom: 13.45, duration: 0 },
+        { padding: 76, maxZoom: dispatchDemo ? 15 : 13.45, duration: 0 },
       );
     }
   }
@@ -435,6 +446,7 @@ map.on("load", async () => {
     if (!reconnecting) setMode();
     $("#presenter-access").hidden = !access.restricted;
     for (const control of controls) control.disabled = !access.allowed;
+    dispatchPanel?.setAllowed(access.allowed);
     requestAnimationFrame(drawVehicles);
   } catch (error) {
     $("#map-message").textContent = error.message;
@@ -477,6 +489,7 @@ $("#presenter-access").addEventListener("submit", async (event) => {
     field.value = "";
     $("#presenter-status").textContent = "Presenter controls unlocked for this tab.";
     for (const control of controls) control.disabled = false;
+    dispatchPanel?.setAllowed(true);
   } catch (error) {
     $("#presenter-status").textContent = error.message;
   }

@@ -18,6 +18,7 @@ from .mobile import mobile_router
 from .routing import DEFAULT_GRAPH_PATH, ManhattanRouter, PointOutsideGraph
 from .scenarios import TEL_AVIV, TEL_AVIV_BUNDLE
 from .simulation import Simulation
+from .tel_aviv_dispatch import DemoApproval, DemoReport, TelAvivDispatch
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 MAPLIBRE_FILES = {
@@ -77,9 +78,12 @@ async def lifespan(app: FastAPI):
         app.state.router, dispatch_mode=os.environ.get("CLEARPATH_DISPATCH_SIMULATION") == "1",
     )
     tel_aviv_path = Path(os.environ.get("CLEARPATH_TEL_AVIV_GRAPH_PATH", TEL_AVIV_BUNDLE))
+    tel_aviv_router = ManhattanRouter(tel_aviv_path)
+    app.state.tel_aviv_dispatch = TelAvivDispatch(tel_aviv_router)
     app.state.simulations = {
         "manhattan": app.state.simulation,
-        "tel-aviv": Simulation(ManhattanRouter(tel_aviv_path), scenario=TEL_AVIV),
+        "tel-aviv": Simulation(tel_aviv_router, scenario=TEL_AVIV),
+        "tel-aviv-dispatch": app.state.tel_aviv_dispatch,
     }
     app.state.simulation_maps = {
         city: JSONResponse(simulation.map_data).body
@@ -146,6 +150,7 @@ def home():
 
 @app.get("/simulator", include_in_schema=False)
 @app.get("/simulator/tel-aviv", include_in_schema=False)
+@app.get("/simulator/tel-aviv/dispatch", include_in_schema=False)
 def simulator_page():
     return FileResponse(FRONTEND / "public" / "index.html")
 
@@ -210,6 +215,22 @@ def simulation_access(request: Request):
         {"restricted": request.app.state.restricted_controls, "allowed": control_allowed(request)},
         headers={"Cache-Control": "no-store"},
     )
+
+
+@app.post("/simulation/tel-aviv-dispatch/propose", include_in_schema=False)
+def propose_tel_aviv_dispatch(payload: DemoReport, request: Request):
+    require_control(request)
+    simulation = request.app.state.tel_aviv_dispatch
+    with simulation.lock:
+        return {"version": simulation.dispatch_version, "candidates": simulation.candidates(payload)}
+
+
+@app.post("/simulation/tel-aviv-dispatch/approve", include_in_schema=False)
+def approve_tel_aviv_dispatch(payload: DemoApproval, request: Request):
+    require_control(request)
+    simulation = request.app.state.tel_aviv_dispatch
+    with simulation.lock:
+        return simulation.approve(payload)
 
 
 @app.post("/simulation/control")
