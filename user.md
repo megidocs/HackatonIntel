@@ -10,21 +10,30 @@
 | Backend checks | [FastAPI docs](http://127.0.0.1:8000/docs) and [health](http://127.0.0.1:8000/health) on that same machine |
 | Public Supabase project URL | [https://uodbkiyevjwgmjnofcpj.supabase.co](https://uodbkiyevjwgmjnofcpj.supabase.co). This is Hackathon-supa’s hosted API base URL. |
 | Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
-| Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), and [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md) |
+| Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md), and [public deployment log](logbooks/2026-11-24-hackatonintel-public-hosting.md) |
 
-## Run and present
+## Run locally on Windows
 
-1. Clone `https://github.com/megidocs/HackatonIntel` or sync an existing checkout to `main`. Follow the [Windows setup](backend/README.md) for Python, Node, the Manhattan graph, and the FastAPI startup command.
-2. Open the simulator in a desktop browser. Start with Bellevue Hospital to Times Square. Show the route, start traffic, and close a road on the highlighted route. Reopen it and explain the route change using the location and one-way constraints in the road graph.
-3. Use the deck to explain the learning goals and T model. Use the logbook and routing check to show how the team verified the result. Public viewers can follow the shared scenario. The presenter can unlock controls with the code from the Render service’s Environment page. Supabase is on Free with automatic production deployment off. [Hosting setup and checks](deploy/README.md)
+Install Python 3.13 and Node.js with npm. Clone the repo or sync your copy to `main`, then run these commands from the repository root in PowerShell.
 
-## Executive test summary
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r backend/requirements.txt
+npm.cmd ci --prefix frontend
+$env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
+.\.venv\Scripts\python.exe -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+```
 
-| Test | Expected evidence |
-| --- | --- |
-| Startup | `/health` returns `ok` and graph counts. The simulator shows Manhattan, both route endpoints, and the default route. |
-| Routing | Bellevue → Times Square is about 3.16 km and 4.7 modeled minutes with the demo graph. `backend.check_routing` compares A* with Dijkstra on 100 pairs. |
-| Traffic and signals | **Start simulation** moves vehicles and advances the clock. Cars wait at red, proceed on green, and stop updating on **Pause**. Try 500 vehicles. |
-| Closures and recovery | Close a segment on the highlighted route, see it marked closed, and verify the rescue route changes. Reopen the segment and use **Reset** to restore the scenario. `backend.check_simulation` exercises these controls. |
-| Green wave and alerts | Reset and run once with **Green wave and alerts** off and once with it on at the same density. Watch signal priority, the moving corridor, and gold yielding vehicles. Compare the simulated arrival times with `backend.check_priority`. |
-| Presentation access | Open the deck with the presenter’s account or use an offline export. Confirm that each partner who will run the demo can access the GitHub repo. |
+Keep that terminal open and visit the [local simulator](http://127.0.0.1:8000/simulator). The bundled graph is the same snapshot used on Render. Local controls are available immediately and the demo can run offline once setup is complete. For a fresh OpenStreetMap snapshot, use the [graph import instructions](backend/README.md).
+
+## Brief test plan before presenting
+
+| Where | What to test | What you should see |
+| --- | --- | --- |
+| Public, in a private browser window | Open the Render URL and check the map, route and controls. Allow about a minute if the service is waking up. | Manhattan loads with Bellevue Hospital → Times Square at about 3.16 km and 4.7 modeled minutes. **Start simulation** is disabled for viewers. |
+| Public, with a presenter | In a second window, unlock **Presenter access** with the code from the Render service’s Environment page. Start, pause and reset while the first window stays open. | The presenter can control the scenario. The viewer sees the same traffic and clock changes. **Reset** restores the paused default route. |
+| Local, routing and signals | Start traffic, try 500 vehicles, close a street on the highlighted route, then reopen it and reset. | Vehicles respond to red and green signals. The closure is marked and the rescue route changes when a detour is available. |
+| Local, green wave | Run the same scenario twice at the same traffic density, with **Green wave and alerts** off and on. | With priority enabled, look for the moving corridor, changes to upcoming signals and gold yielding vehicles. Compare modeled arrival times. |
+| Presentation rehearsal | Open the slides and the simulator on the demo laptop. Rehearse switching to the local page after starting the local server. | The presenter can show the same route and traffic scenario on either page. |
+
+For automated results, see the [local routing, simulation and priority checks](backend/README.md) and [public HTTPS smoke check](deploy/README.md).

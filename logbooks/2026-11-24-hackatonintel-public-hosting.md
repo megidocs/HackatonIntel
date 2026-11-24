@@ -67,6 +67,29 @@
 
 - The [public simulator](https://clearpath-hackatonintel.onrender.com/simulator) is live. [The partner guide](../user.md) and [spec](../docs/specification.md) record the URL and presentation access. The initial access blocker cleared once the repository appeared in Render. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Record the successful deployment and update the partner test brief
+
+> seems like render deploy worked and is here https://clearpath-hackatonintel.onrender.com/simulator
+> document this success, add the url to the user.md, and indicate how to run the project locally too.
+> write there **an updated brief of what we should test** now.
+> commit-push
+
+### Decisions
+
+- Use the bundled Manhattan graph for the local quick start so partners can rehearse against the same road data as Render. Include a public two-browser rehearsal and local tests for routing, closures, signal timing and priority. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Updated [user.md](../user.md) with the public URL, PowerShell setup and startup commands, the test brief, and links to the detailed checks and hosting log. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Started a separate local FastAPI instance with `CLEARPATH_GRAPH_PATH` pointing to the bundled compressed graph. The simulator, map asset reference, simulation state and health check responded with 4,671 nodes and 9,962 directed edges. [GitHub Actions](https://github.com/megidocs/HackatonIntel/actions/runs/45401112767) passed for `fc605e5`. Render’s deploy history showed an automatic deploy, and the public HTTPS smoke check verified `fc605e5`, compressed responses and anonymous write protection. The Supabase dashboard still displayed Free, `megidocs/HackatonIntel` and production auto-deploy off. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The public URL and local steps are ready for partners. The two-browser rehearsal in the test brief is the presenter’s manual check. The deployed revision and anonymous viewer behavior have been verified. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Confirm who signs in when connecting Render
 
 > you said Amit should open the [Render GitHub App installer](https://github.com/apps/render/installations/new) while signed in as `megidocs`, choose **Only select repositories**, select **HackatonIntel**, and install or save.
