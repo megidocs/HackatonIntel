@@ -15,6 +15,7 @@ from psycopg.types.json import Jsonb
 
 from .app import app
 from .dispatch import DispatchServices
+from .report_extraction import ReportDraft
 
 
 def main() -> None:
@@ -153,6 +154,39 @@ def main() -> None:
             assert call("POST", f"copilot/drafts/{draft_id}/review", "dispatcher", review) == accepted
             assert client.get("/simulation/state").json()["route_status"] == "awaiting_dispatch"
 
+            # A Hebrew report uses the selected city's graph and existing signed-in fleet.
+            tel_aviv_report = {"city": "tel-aviv", "report": "אירוע רפואי בדרך יפו. נדרש אמבולנס."}
+            extracted = ReportDraft(
+                incident_type="medical", severity=3, location_phrase="דרך יפו", required_units=["medical"],
+            )
+            with (
+                patch.dict(os.environ, {"CLEARPATH_MODEL_URL": "http://127.0.0.1:8011"}),
+                patch("backend.copilot.extract_report", return_value=extracted),
+                patch("backend.copilot.choose_tool", side_effect=lambda _, __, options, ___, ____: options[0]),
+                patch("backend.dispatch.extract_report", return_value=extracted),
+            ):
+                suggest = call("POST", "report-suggestions", "dispatcher", tel_aviv_report)
+                assert suggest["map_location"]["label"] == "Jaffa Road"
+                wrong_city = call("POST", "copilot/drafts", "dispatcher", {"report": tel_aviv_report["report"]})
+                assert wrong_city["status"] == "needs_clarification"
+                draft = call("POST", "copilot/drafts", "dispatcher", tel_aviv_report)
+
+            assert draft["status"] == "pending" and draft["map_url"] == "/simulator/tel-aviv/reports"
+            assert draft["proposal"]["candidates"][0]["station"] == "Nahmani"
+            signed_map = "/simulation/tel-aviv-reports/state"
+            assert client.get(signed_map).json()["route_status"] == "awaiting_dispatch"
+            assert client.get("/simulator/tel-aviv/reports").status_code == 200
+            assert client.get("/simulation/tel-aviv-dispatch/state").json()["route_status"] == "awaiting_dispatch"
+            tel_aviv_dispatch = call("POST", f"copilot/drafts/{draft['draft_id']}/review", "dispatcher", review)
+            signed_scene = client.get(signed_map).json()
+            assert signed_scene["running"] and signed_scene["dispatch_destination"] == "Jaffa Road"
+            assert len(signed_scene["route"]) > 1 and any(car["id"] == 0 for car in signed_scene["vehicles"])
+            assert 34 < signed_scene["origin"][0] < 35
+            assert client.get("/simulation/state").json()["route_status"] == "awaiting_dispatch"
+            assert client.get("/simulation/tel-aviv-dispatch/state").json()["route_status"] == "awaiting_dispatch"
+            call("POST", f"assignments/{tel_aviv_dispatch['assignments'][0]['dispatch_id']}/arrive", "rescue")
+            call("POST", f"incidents/{tel_aviv_dispatch['incident_id']}/close", "dispatcher")
+
             now = int(time() * 1000)
             sample = {"nonce": str(uuid4()), "lat": 40.7391, "lon": -73.9760, "time_ms": now}
             call("POST", "position", "citizen", dict(sample, time_ms=now - 3000), 409)
@@ -169,7 +203,7 @@ def main() -> None:
             assert call("POST", "position", "citizen", fresh)["accepted"]
 
         assert owner.execute("select count(*) from clearpath.preemption_log").fetchone() == (1,)
-        print("Verified PostgreSQL persistence, assignment concurrency, role enforcement and Redis replay/TTL checks.")
+        print("Verified Manhattan and Tel Aviv dispatch, persistence, concurrency, roles and Redis replay/TTL.")
 
 
 if __name__ == "__main__":

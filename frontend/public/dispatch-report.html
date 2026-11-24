@@ -9,10 +9,10 @@
     body { max-width: 43rem; padding: 2rem 1rem; margin: auto; }
     h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); margin: .8rem 0; }
     a, #status { color: #8ee5d1; }
-    label, input, textarea { display: block; box-sizing: border-box; width: 100%; }
+    label, input, select, textarea { display: block; box-sizing: border-box; width: 100%; }
     label { margin-top: 1.2rem; }
-    input, textarea, button { font: inherit; border: 1px solid #52716e; border-radius: .45rem; padding: .65rem; }
-    input, textarea { background: #182426; color: inherit; margin-top: .35rem; }
+    input, select, textarea, button { font: inherit; border: 1px solid #52716e; border-radius: .45rem; padding: .65rem; }
+    input, select, textarea { background: #182426; color: inherit; margin-top: .35rem; }
     textarea { min-height: 9rem; resize: vertical; }
     button { margin-top: 1rem; background: #8ee5d1; color: #102724; font-weight: 650; cursor: pointer; }
     button:disabled { opacity: .65; cursor: wait; }
@@ -50,8 +50,13 @@
     </section>
     <form id="report-form" hidden>
       <input id="token" type="hidden">
+      <label for="report-city">Report city</label>
+      <select id="report-city">
+        <option value="manhattan">Manhattan</option>
+        <option value="tel-aviv">Tel Aviv</option>
+      </select>
       <label for="report">Incident report</label>
-      <textarea id="report" maxlength="1200" required></textarea>
+      <textarea id="report" dir="auto" maxlength="1200" required></textarea>
       <div class="actions">
         <button type="submit" value="extract">Draft report</button>
         <button type="submit" value="copilot">Propose dispatch</button>
@@ -76,6 +81,7 @@
         <button id="reject-dispatch" type="button">Reject draft</button>
       </div>
       <p id="dispatch-status" role="status"></p>
+      <a id="approved-dispatch-map" target="_blank" rel="noopener" hidden>Open the approved dispatch map</a>
     </section>
     <p><a href="/docs#tag/dispatch">Manual dispatch API</a></p>
   </main>

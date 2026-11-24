@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 IncidentKind = Literal["accident", "fire", "medical", "roadblock"]
 UnitKind = Literal["medical", "fire", "police"]
+LocationCatalog = dict[str, tuple[float, float, tuple[str, ...]]]
 
 LOCATIONS = {
     "Fifth Avenue and 34th Street": (40.74845, -73.98565, ("5th Ave near 34th St", "Fifth and 34th")),
@@ -48,25 +49,39 @@ def normalized(value: str) -> str:
     return " ".join(re.findall(r"[\w]+", value.casefold()))
 
 
-def catalog_matches(text: str) -> set[str]:
+def mentions(words: str, name: str) -> bool:
+    if not name:
+        return False
+    if f" {name} " in words:
+        return True
+    # Hebrew prepositions may be attached to the first word of a place name.
+    return "א" <= name[0] <= "ת" and any(f" {prefix}{name} " in words for prefix in "בלמ")
+
+
+def catalog_matches(text: str, locations: LocationCatalog = LOCATIONS) -> set[str]:
     words = f" {normalized(text)} "
     return {
-        label for label, (_, _, aliases) in LOCATIONS.items()
-        if any(f" {normalized(name)} " in words for name in (label, *aliases))
+        label for label, (_, _, aliases) in locations.items()
+        if any(mentions(words, normalized(name)) for name in (label, *aliases))
     }
 
 
-def verified_location(report: str, draft: ReportDraft, router) -> dict | None:
-    if draft.location_phrase is None:
+def verified_location(
+    report: str, draft: ReportDraft, router, locations: LocationCatalog = LOCATIONS,
+    *, allow_catalog_fallback: bool = False,
+) -> dict | None:
+    report_matches = catalog_matches(report, locations)
+    if len(report_matches) != 1:
         return None
-    phrase = normalized(draft.location_phrase)
-    if not phrase or f" {phrase} " not in f" {normalized(report)} ":
-        return None
-    report_matches = catalog_matches(report)
-    if len(report_matches) != 1 or catalog_matches(draft.location_phrase) != report_matches:
-        return None
+    if not allow_catalog_fallback:
+        phrase = draft.location_phrase or ""
+        if (
+            not mentions(f" {normalized(report)} ", normalized(phrase))
+            or catalog_matches(phrase, locations) != report_matches
+        ):
+            return None
     label = next(iter(report_matches))
-    latitude, longitude, _ = LOCATIONS[label]
+    latitude, longitude, _ = locations[label]
     node = router.nearest_node(latitude, longitude)
     graph_point = router.graph.nodes[node]
     return {"label": label, "osm_node_id": node, "lat": graph_point["y"], "lon": graph_point["x"]}

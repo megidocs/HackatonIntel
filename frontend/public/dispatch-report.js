@@ -6,6 +6,8 @@ const dispatchReview = get('dispatch-review');
 const draftButtons = [...form.querySelectorAll('button')];
 const approve = get('approve-dispatch');
 const reject = get('reject-dispatch');
+const city = get('report-city');
+const mapLink = get('approved-dispatch-map');
 let pendingDraft;
 
 class DispatchError extends Error {
@@ -47,7 +49,7 @@ function showDispatch(result) {
     status.textContent = result.question ?? result.reason ?? 'Review this incident manually.';
     return;
   }
-  pendingDraft = result.draft_id;
+  pendingDraft = { id: result.draft_id, mapUrl: result.map_url };
   const { incident, candidates, recommended_unit_ids: recommended, alternative_unit_ids: alternatives } = result.proposal;
   get('dispatch-summary').textContent =
     `${incident.incident_type} · severity ${incident.severity} · ${incident.location_label}. ${result.proposal.rationale}`;
@@ -73,18 +75,28 @@ function showDispatch(result) {
   status.textContent = '';
 }
 
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
+function clearReview() {
   pendingDraft = null;
   review.hidden = true;
   dispatchReview.hidden = true;
+  mapLink.hidden = true;
+  status.textContent = '';
+}
+
+city.addEventListener('change', clearReview);
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  clearReview();
   draftButtons.forEach((button) => { button.disabled = true; });
+  city.disabled = true;
   const token = get('token').value;
   const copilot = event.submitter?.value === 'copilot';
   status.textContent = copilot ? 'Checking dispatch options…' : 'Preparing draft…';
   try {
     const data = await post(copilot ? '/dispatch/copilot/drafts' : '/dispatch/report-suggestions', {
       report: get('report').value,
+      city: city.value,
     }, copilot ? AbortSignal.timeout(10000) : undefined);
     if (get('token').value !== token) return;
     if (copilot) {
@@ -101,6 +113,7 @@ form.addEventListener('submit', async (event) => {
   } catch (error) {
     if (get('token').value === token) status.textContent = message(error);
   } finally {
+    city.disabled = false;
     draftButtons.forEach((button) => { button.disabled = false; });
   }
 });
@@ -117,20 +130,27 @@ async function reviewDispatch(decision) {
   }
   approve.disabled = true;
   reject.disabled = true;
+  city.disabled = true;
   draftButtons.forEach((button) => { button.disabled = true; });
   const token = get('token').value;
+  const draft = pendingDraft;
   try {
-    const result = await post(`/dispatch/copilot/drafts/${pendingDraft}/review`, { decision, unit_ids: unitIds });
+    const result = await post(`/dispatch/copilot/drafts/${draft.id}/review`, { decision, unit_ids: unitIds });
     if (get('token').value !== token) return;
     output.textContent = result.status === 'approved'
       ? `Approved ${result.assignments.length} assignment(s) for incident ${result.incident_id}.`
       : 'Draft rejected.';
+    if (result.status === 'approved' && draft.mapUrl) {
+      mapLink.href = draft.mapUrl;
+      mapLink.hidden = false;
+    }
     pendingDraft = null;
   } catch (error) {
     if (get('token').value === token) output.textContent = message(error);
     approve.disabled = false;
     reject.disabled = false;
   } finally {
+    city.disabled = false;
     draftButtons.forEach((button) => { button.disabled = false; });
   }
 }

@@ -16,8 +16,9 @@ from psycopg_pool import ConnectionPool, PoolClosed, PoolTimeout
 from pydantic import BaseModel, Field
 from redis import Redis, RedisError
 
-from .copilot import DEFAULT_STATIONS, plan_dispatch
-from .report_extraction import LOCATIONS, extract_report, verified_location
+from .copilot import plan_dispatch
+from .dispatch_regions import REPORT_REGIONS, region_for_point
+from .report_extraction import extract_report, verified_location
 from .routing import PointOutsideGraph
 
 router = APIRouter(prefix="/dispatch", tags=["Dispatch"])
@@ -173,6 +174,7 @@ class PriorityRequest(BaseModel):
 
 class FreeTextReport(BaseModel):
     report: str = Field(min_length=1, max_length=1200)
+    city: Literal["manhattan", "tel-aviv"] = "manhattan"
 
 
 class DraftReview(BaseModel):
@@ -198,6 +200,11 @@ def board(actor: SignedIn, dispatch: Services):
     return dispatch.query("select clearpath.dispatch_board(%s)", (actor.user_id,))[0]
 
 
+def report_simulation(request: Request, city: str):
+    key = "tel-aviv-reports" if city == "tel-aviv" else "manhattan"
+    return request.app.state.simulations[key]
+
+
 @router.post("/report-suggestions")
 def report_suggestion(payload: FreeTextReport, actor: SignedIn, request: Request):
     if actor.role != "dispatcher":
@@ -214,7 +221,11 @@ def report_suggestion(payload: FreeTextReport, actor: SignedIn, request: Request
     except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError) as error:
         raise HTTPException(502, "The report model did not return a valid draft.") from error
     try:
-        location = verified_location(report, draft, request.app.state.router)
+        region = REPORT_REGIONS[payload.city]
+        location = verified_location(
+            report, draft, report_simulation(request, payload.city).router,
+            region.locations, allow_catalog_fallback=region.allow_catalog_fallback,
+        )
     except PointOutsideGraph:
         location = None
     return {"proposal": draft, "map_location": location, "requires_review": True}
@@ -229,7 +240,7 @@ def draft_dispatch(payload: FreeTextReport, actor: SignedIn, dispatch: Services,
         return {"status": "manual", "reason": "The local model is disabled.", "trace": []}
     if not payload.report.strip():
         raise HTTPException(422, "Enter an incident report.")
-    simulation = request.app.state.simulation
+    simulation = report_simulation(request, payload.city)
     with simulation.lock:
         blocked = frozenset(edge for edge, road in simulation.roads.items() if road.segment in simulation.closed)
 
@@ -238,13 +249,17 @@ def draft_dispatch(payload: FreeTextReport, actor: SignedIn, dispatch: Services,
 
     try:
         with httpx.Client(timeout=10, trust_env=False) as client:
-            result = plan_dispatch(payload.report.strip(), client, model_url, simulation.router, board, blocked)
+            result = plan_dispatch(
+                payload.report.strip(), client, model_url, simulation.router, board, blocked,
+                region=REPORT_REGIONS[payload.city],
+            )
         if result["status"] == "pending":
             draft_id = uuid4()
             dispatch.query("select clearpath.save_dispatch_draft(%s,%s,%s,%s)", (
                 actor.user_id, draft_id, Jsonb(result["proposal"]), Jsonb(result["trace"]),
             ))
             result["draft_id"] = draft_id
+            result["map_url"] = REPORT_REGIONS[payload.city].map_url
         return result
     except HTTPException as error:
         if error.status_code != 503:
@@ -259,24 +274,33 @@ def review_dispatch(draft_id: UUID, payload: DraftReview, actor: SignedIn, dispa
     result = dispatch.query("select clearpath.review_dispatch_draft(%s,%s,%s,%s::uuid[])", (
         actor.user_id, draft_id, payload.decision, sorted(payload.unit_ids),
     ))[0]
-    simulation = request.app.state.simulation
-    if simulation.dispatch_mode and result["status"] == "approved":
+    if result["status"] == "approved":
         current = dispatch.query("select clearpath.dispatch_board(%s)", (actor.user_id,))[0]
         incident = next((item for item in current["incidents"] if item["incident_id"] == result["incident_id"]), None)
         approved = {assignment["dispatch_id"]: assignment for assignment in result["assignments"]}
         active = [unit for unit in current["units"] if unit["dispatch_id"] in approved]
         if incident and active:
+            city = region_for_point(incident["latitude"], incident["longitude"])
+            simulation = report_simulation(request, city)
+            if not simulation.dispatch_mode:
+                return result
+            region = REPORT_REGIONS[city]
             # The rehearsal map represents one rescue vehicle. Show the ambulance first when present.
             unit = min(active, key=lambda item: (item["unit_type"] != "medical", item["unit_id"]))
-            station = DEFAULT_STATIONS[unit["unit_type"]]
-            origin = simulation.router.nearest_node(*LOCATIONS[station][:2])
+            station = region.station(unit["unit_type"], unit.get("station"))
+            if station not in region.locations:
+                station = region.station(unit["unit_type"])
+            origin = simulation.router.nearest_node(*region.locations[station][:2])
             destination = simulation.router.nearest_node(incident["latitude"], incident["longitude"])
-            label = next((name for name, point in LOCATIONS.items()
+            label = next((name for name, point in region.locations.items()
                           if simulation.router.nearest_node(*point[:2]) == destination), None)
             dispatch_id = unit["dispatch_id"]
             dispatched_at = datetime.fromisoformat(approved[dispatch_id]["dispatched_at"])
             with simulation.lock:
+                new_trip = simulation.last_dispatch is None or (dispatched_at, dispatch_id) > simulation.last_dispatch
                 simulation.launch_dispatch((dispatched_at, dispatch_id), origin, destination, label)
+                if new_trip and city == "tel-aviv":
+                    simulation.running = True
     return result
 
 

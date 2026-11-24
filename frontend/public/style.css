@@ -65,6 +65,7 @@ button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px s
 h1 { font-size: 31px; margin: 0; letter-spacing: -.045em; line-height: 1.08; font-weight: 660; }
 h2 { font-size: 13px; margin: 0 0 10px; font-weight: 650; }
 .city-links { display: flex; gap: 7px; margin-top: 12px; }
+.city-links[hidden] { display: none; }
 .city-links a { color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: 7px; padding: 5px 10px; font-size: 12px; }
 .city-links a[aria-current], .city-links a:hover { border-color: var(--teal); color: var(--teal); }
 .tel-aviv-dispatch .workspace { grid-template-columns: 356px minmax(0, 1fr); }

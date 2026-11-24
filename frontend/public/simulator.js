@@ -3,7 +3,12 @@ import { setupDispatchPanel } from "./tel-aviv-dispatch.js";
 
 const $ = (selector) => document.querySelector(selector);
 const dispatchDemo = location.pathname === "/simulator/tel-aviv/dispatch";
-const city = dispatchDemo ? "tel-aviv-dispatch" : location.pathname === "/simulator/tel-aviv" ? "tel-aviv" : "";
+const reportScene = location.pathname === "/simulator/tel-aviv/reports";
+const city = {
+  "/simulator/tel-aviv": "tel-aviv",
+  "/simulator/tel-aviv/dispatch": "tel-aviv-dispatch",
+  "/simulator/tel-aviv/reports": "tel-aviv-reports",
+}[location.pathname];
 const incidentForm = $("#incident-setup");
 const incidentSelect = $("#incident-location");
 let scenario;
@@ -70,17 +75,24 @@ function addLayers(data) {
   document.title = `ClearPath AI — ${scenario.name} Traffic Simulator`;
   if (city) {
     $('.city-links [aria-current]').removeAttribute("aria-current");
-    $(`.city-links a[href="${location.pathname}"]`).setAttribute("aria-current", "page");
+    const current = $(`.city-links a[href="${location.pathname}"]`);
+    current.setAttribute("aria-current", "page");
+    current.hidden = false;
   }
   for (const place of scenario.incidents) {
     incidentSelect.add(new Option(`${place.name} · ${place.hebrew}`, place.name));
   }
-  incidentForm.hidden = dispatchDemo || !scenario.incidents.length;
+  incidentForm.hidden = dispatchDemo || reportScene || !scenario.incidents.length;
   if (dispatchDemo) {
     document.body.classList.add("tel-aviv-dispatch");
     document.title = "ClearPath AI — Tel Aviv Dispatch";
     $("#simulator-title").textContent = "dispatch demo";
     dispatchPanel = setupDispatchPanel(map, data.report_locations, request, refresh);
+  }
+  if (reportScene) {
+    document.title = "ClearPath AI — Tel Aviv Approved Dispatch";
+    $("#simulator-title").textContent = "approved dispatch";
+    $("#report-app-link").hidden = false;
   }
   if (scenario.bounds) {
     map.fitBounds(scenario.bounds, { padding: 40, duration: 0 });
@@ -218,7 +230,7 @@ function showState(next) {
   dispatchPanel?.show(next);
 
   $("#demo-type").textContent = dispatchDemo ? "Simulated rescue fleet" :
-    next.dispatch_mode ? "Dispatch-driven demo" : "Traffic simulator demo";
+    reportScene ? "Signed-in report rehearsal" : next.dispatch_mode ? "Dispatch-driven demo" : "Traffic simulator demo";
   $(".endpoints").hidden = Boolean(next.dispatch_mode);
   const key = JSON.stringify([next.origin, next.destination, next.route, next.dispatch_destination]);
   if (key !== routeKey) {
@@ -239,7 +251,7 @@ function showState(next) {
       const [otherX, otherY] = next.destination;
       map.fitBounds(
         [[Math.min(x, otherX), Math.min(y, otherY)], [Math.max(x, otherX), Math.max(y, otherY)]],
-        { padding: 76, maxZoom: dispatchDemo ? 15 : 13.45, duration: 0 },
+        { padding: 76, maxZoom: city ? 15 : 13.45, duration: 0 },
       );
     }
   }

@@ -18,6 +18,7 @@
 | Model development for presenters | [Technical brief for the slide team](docs/model-development-brief.md) with the training method, benchmark, and demo example. |
 | Rehearsal and measurements | [Performance report and demo sequence](docs/rehearsal.md), including browser frame timing and the authenticated dispatch check. |
 | Dispatcher copilot | [Final rehearsal, approval flow and benchmark](docs/copilot.md). |
+| Signed-in Tel Aviv dispatch | [Local report app](http://127.0.0.1:8003/dispatch/reports) and [approved dispatch map](http://127.0.0.1:8003/simulator/tel-aviv/reports) on the same configured server. Choose **Tel Aviv** under **Report city**. |
 | Dispatch-driven simulator | [Lenovo traffic map](http://127.0.0.1:8004/simulator) and [dispatch approval](http://127.0.0.1:8004/dispatch/reports). Start civilian traffic before approving a report. |
 | Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
 | Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md), and [public deployment log](logbooks/2026-11-24-hackatonintel-public-hosting.md) |
@@ -43,7 +44,7 @@ Open the demo on a desktop or laptop before presenting. Render may take about a 
 | Police car 1 | Ben Yehuda · בן יהודה |
 | Police car 2 | Sportek · ספורטק |
 
-The Tel Aviv dispatch demo uses the location and response type you select. For the signed-in Copilot, stored assignments, or Android Rescue, use the [Lenovo Manhattan rehearsal](#dispatch-rehearsal-reports).
+The Render demo uses the location and response type you select. For a signed-in report and stored assignment, use the [local Tel Aviv rehearsal](#signed-in-tel-aviv-dispatch). For Android Rescue, use the [Manhattan rehearsal](#dispatch-rehearsal-reports).
 
 ### Show a route and a road closure
 
@@ -71,12 +72,13 @@ The port identifies which server process you're opening. On a current checkout, 
 | --- | --- |
 | `/simulator/tel-aviv/dispatch` | Tel Aviv fleet, incident report, approval, and route on one page. |
 | `/simulator/tel-aviv` | Tel Aviv traffic simulation with manual incident placement. |
-| `/dispatch/reports` | Signed-in Manhattan Copilot, usually on Lenovo port **8003** or **8004**. The message **Which single supported Manhattan location should this report use?** comes from this workflow. |
+| `/dispatch/reports` | Signed-in report app, usually on Lenovo port **8003** or **8004**. Choose **Manhattan** or **Tel Aviv** under **Report city**. |
+| `/simulator/tel-aviv/reports` | Map for Tel Aviv approvals from the signed-in report app. Use the same port as the report app. |
 | `/simulator` | Manhattan traffic map. With `CLEARPATH_DISPATCH_SIMULATION=1`, the map waits for an approved Manhattan dispatch. |
 
 Tel Aviv dispatch opens by path with the normal simulator startup command. If `/simulator/tel-aviv/dispatch` returns 404, sync to current `main` and restart the simulator or launch a fresh process on a free port. Use that port in the link. For example, with `--port 8005` open [local Tel Aviv dispatch on port 8005](http://127.0.0.1:8005/simulator/tel-aviv/dispatch).
 
-The signed-in event-creation app at `/dispatch/reports` supports Manhattan only. Changing ports or setting `CLEARPATH_DISPATCH_SIMULATION=1` does not change its report catalog. To create a Tel Aviv demo event, use the report form inside **Tel Aviv dispatch**. That event drives the simulated Tel Aviv fleet on the same page.
+If the signed-in report app has no **Report city** selector, sync to current `main` and restart the configured local dispatch server. The **Report city** selection determines which place catalog Copilot uses.
 
 For the signed-in dispatch rehearsal on Lenovo, the private configuration and demo credentials are in `C:\Users\3stra\AndroidStudioProjects\HackatonIntel\.env.dispatch.local`. Git ignores this file. Use the [dispatch startup instructions](docs/dispatch.md#start-with-the-private-local-file).
 
@@ -96,7 +98,16 @@ For automated results, see the [local routing, simulation and priority checks](b
 
 ## Dispatch rehearsal reports
 
-In [ClearPath Dispatch on Lenovo](http://127.0.0.1:8003/dispatch/reports), sign in as dispatcher, paste either example into **Incident report**, and click **Propose dispatch**.
+### Signed-in Tel Aviv dispatch
+
+1. Start the local report model and [configured dispatch server](docs/dispatch.md#start-with-the-private-local-file). Open [localhost:8003/dispatch/reports](http://127.0.0.1:8003/dispatch/reports), or use the port your dispatch server is running on.
+2. Sign in as dispatcher and choose **Tel Aviv** under **Report city**. Enter `Medical emergency at Jaffa Road. One adult has collapsed. Ambulance needed.` (or `אירוע רפואי בדרך יפו. נדרש אמבולנס.`).
+3. Click **Propose dispatch**. Check the matched Jaffa Road location, the available registered ambulance, and the ETA from its modeled Nahmani base. Click **Approve selected units**.
+4. Click **Open the approved dispatch map**. The ambulance starts moving automatically on the Tel Aviv map served by that process. After the rehearsal, record arrival and close the incident through the [local dispatch API](http://127.0.0.1:8003/docs#tag/dispatch) to free the registered ambulance and clear the open incident.
+
+### Signed-in Manhattan dispatch
+
+In [ClearPath Dispatch on Lenovo](http://127.0.0.1:8003/dispatch/reports), sign in as dispatcher, choose **Manhattan**, paste either example into **Incident report**, and click **Propose dispatch**.
 
 **Bellevue Hospital**
 

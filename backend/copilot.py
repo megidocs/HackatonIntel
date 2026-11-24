@@ -12,13 +12,13 @@ import httpx
 import networkx as nx
 from pydantic import BaseModel, ConfigDict, TypeAdapter
 
-from .report_extraction import LOCATIONS, ReportDraft, UnitKind, extract_report, verified_location
+from .dispatch_regions import MANHATTAN_REPORTS, DispatchRegion
+from .report_extraction import ReportDraft, UnitKind, extract_report, verified_location
 from .routing import ManhattanRouter, PointOutsideGraph
 
 TOOL_LIMIT = 8
-DEFAULT_STATIONS = {"medical": "Bellevue Hospital", "fire": "Union Square", "police": "Times Square"}
 TOOL_HELP = {
-    "geocode": "Resolve the reported place against the local Manhattan catalog.",
+    "geocode": "Resolve the reported place against the selected city's catalog.",
     "get_recent_incidents": "Check for a matching open incident near the destination.",
     "find_available_units": "Find available units of the required types.",
     "get_eta": "Route the available units to the destination.",
@@ -110,26 +110,31 @@ def distance_m(alat, alon, blat, blon):
     return hypot(north, east)
 
 
-def available_units(board: dict, kinds: list[str], destination: dict) -> list[dict]:
+def available_units(
+    board: dict, kinds: list[str], destination: dict, region: DispatchRegion = MANHATTAN_REPORTS,
+) -> list[dict]:
     units = []
     for unit in TypeAdapter(list[BoardUnit]).validate_python(board["units"]):
         if unit.dispatch_id is not None or unit.unit_type not in kinds:
             continue
-        station = unit.station or DEFAULT_STATIONS[unit.unit_type]
-        if station not in LOCATIONS:
+        station = region.station(unit.unit_type, unit.station)
+        if station not in region.locations:
             continue
-        lat, lon, _ = LOCATIONS[station]
+        lat, lon, _ = region.locations[station]
         if distance_m(lat, lon, destination["lat"], destination["lon"]) <= 8000:
             units.append({"unit_id": str(unit.unit_id), "unit_type": unit.unit_type, "station": station})
     # Limit work and retain a deterministic ordering for the current depot model.
     return [unit for kind in kinds for unit in [row for row in units if row["unit_type"] == kind][:4]]
 
 
-def unit_etas(router: ManhattanRouter, destination: dict, units: list[dict], blocked: frozenset) -> list[dict]:
+def unit_etas(
+    router: ManhattanRouter, destination: dict, units: list[dict], blocked: frozenset,
+    region: DispatchRegion = MANHATTAN_REPORTS,
+) -> list[dict]:
     graph = nx.subgraph_view(router.graph, filter_edge=lambda u, v, key: (u, v, key) not in blocked)
 
     def eta(unit):
-        lat, lon, _ = LOCATIONS[unit["station"]]
+        lat, lon, _ = region.locations[unit["station"]]
         try:
             source = router.nearest_node(lat, lon)
             _, edges = router.path(source, destination["osm_node_id"], graph=graph)
@@ -146,6 +151,7 @@ def unit_etas(router: ManhattanRouter, destination: dict, units: list[dict], blo
 def plan_dispatch(
     report: str, client: httpx.Client, model_url: str, router: ManhattanRouter,
     board_loader: Callable[[], dict], blocked: frozenset = frozenset(), deadline_seconds: float = 10,
+    *, region: DispatchRegion = MANHATTAN_REPORTS,
 ) -> dict:
     started = perf_counter()
     budget = PlannerBudget(started + deadline_seconds, [])
@@ -186,10 +192,12 @@ def plan_dispatch(
             tool = choose_tool(client, model_url, options, {"incident": incident_kind, "unit_types": kinds}, budget)
 
             if tool == "geocode":
-                location = verified_location(report, draft, router)
+                location = verified_location(
+                    report, draft, router, region.locations, allow_catalog_fallback=region.allow_catalog_fallback,
+                )
                 budget.add(tool, {"location_phrase": draft.location_phrase}, location)
                 if location is None:
-                    return clarify("Which single supported Manhattan location should this report use?")
+                    return clarify(f"Which single supported {region.name} location should this report use?")
                 if board is None:
                     board = board_loader()
             elif tool == "get_recent_incidents":
@@ -203,10 +211,10 @@ def plan_dispatch(
                 if recent:
                     return clarify("A similar incident is already open nearby. Is this a separate event?")
             elif tool == "find_available_units":
-                available = available_units(board, kinds, location)
+                available = available_units(board, kinds, location, region)
                 budget.add(tool, {"unit_types": kinds, "location": location["label"], "radius_m": 8000}, available)
             elif tool == "get_eta":
-                candidates = unit_etas(router, location, available, blocked)
+                candidates = unit_etas(router, location, available, blocked, region)
                 budget.add(tool, {"unit_ids": [unit["unit_id"] for unit in available],
                                   "destination_osm_node_id": location["osm_node_id"]}, candidates)
             elif tool == "draft_dispatch":

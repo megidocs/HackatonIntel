@@ -85,6 +85,9 @@ async def lifespan(app: FastAPI):
         "tel-aviv": Simulation(tel_aviv_router, scenario=TEL_AVIV),
         "tel-aviv-dispatch": app.state.tel_aviv_dispatch,
     }
+    app.state.dispatch = DispatchServices.from_environment()
+    if app.state.dispatch is not None:
+        app.state.simulations["tel-aviv-reports"] = Simulation(tel_aviv_router, dispatch_mode=True, scenario=TEL_AVIV)
     app.state.simulation_maps = {
         city: JSONResponse(simulation.map_data).body
         for city, simulation in app.state.simulations.items()
@@ -95,7 +98,6 @@ async def lifespan(app: FastAPI):
         or os.environ.get("CLEARPATH_PUBLIC_DEMO") == "1"
         or os.environ.get("RENDER") == "true"
     )
-    app.state.dispatch = DispatchServices.from_environment()
     timer = asyncio.create_task(advance_simulations(tuple(app.state.simulations.values())))
     try:
         yield
@@ -153,6 +155,13 @@ def home():
 @app.get("/simulator/tel-aviv/dispatch", include_in_schema=False)
 def simulator_page():
     return FileResponse(FRONTEND / "public" / "index.html")
+
+
+@app.get("/simulator/tel-aviv/reports", include_in_schema=False)
+def report_simulator_page(request: Request):
+    if request.app.state.dispatch is None:
+        raise HTTPException(status_code=404)
+    return simulator_page()
 
 
 @app.get("/dispatch/reports", include_in_schema=False)
