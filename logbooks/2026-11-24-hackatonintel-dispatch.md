@@ -57,3 +57,28 @@
 ### Session result
 
 - Presenter authorization can be rehearsed from Android against Render today. Testing a vehicle user's JWT and active assignment requires provisioning the restricted database login and enrolling demo accounts. The local FastAPI setup can verify real Supabase identities without enabling dispatch on the public demo. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Provision demo accounts and keep the local environment private
+
+> you can create a few demo accounts. leave that env file out of repo (updated .gitignore) but tell us where it is locally in user.md
+> commit-push and continue to next phase.
+>
+> tell me the login command and I'll sign-in to the cli. if cli is not installed install it.
+>
+> we are now logged it.
+
+### Decisions
+
+- The user approved demo-account creation and signed in with `npx.cmd --yes supabase login`. The agent targeted only Hackathon-supa and provisioned dispatcher, rescue, and citizen identities. The signed-in rehearsal uses FastAPI on the laptop. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Enrolled the three accounts, added one rescue unit, enabled the restricted database login, and saved only the demo credentials and runtime settings in the ignored `.env.dispatch.local` file. The [partner guide](../user.md) records its path without credentials, and the [dispatch guide](../docs/dispatch.md) documents the emulator and laptop setup. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Verified a TLS-checked login to PostgreSQL as `clearpath_app` and obtained real Supabase JWTs for each demo account. The dispatcher opened and assigned a synthetic incident, the assigned rescue request was accepted, the citizen and arrived rescue requests returned `403`, and the event was closed. Confirmed Git ignores `.env.dispatch.local`. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The hosted authentication and dispatch checks now pass from the demo laptop using Supabase Free. Render continues to serve the public simulator. Milestone 6 proceeds in the report-models workspace. [Rubric criterion 4](../docs/rubric.html#c4)

@@ -28,6 +28,8 @@ $env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
 
 Keep that terminal open and visit the [local simulator](http://127.0.0.1:8000/simulator). The bundled graph is the same snapshot used on Render. Local controls are available immediately and the demo can run offline once setup is complete. For a fresh OpenStreetMap snapshot, use the [graph import instructions](backend/README.md).
 
+For the signed-in dispatch rehearsal on Lenovo, the private configuration and demo credentials are in `C:\Users\3stra\AndroidStudioProjects\HackatonIntel\.env.dispatch.local`. Git ignores this file. Use the [dispatch startup instructions](docs/dispatch.md#start-with-the-private-local-file).
+
 ## Brief test plan before presenting
 
 | Where | What to test | What you should see |
