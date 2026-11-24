@@ -1,14 +1,16 @@
 # Dispatcher copilot and final rehearsal
 
-The copilot runs on the demo laptop with the local Qwen model and authenticated FastAPI. It turns a report into a pending proposal and lets a dispatcher approve the recommended units, substitute an offered alternative, or reject it. The mobile Rescue view can display the resulting assignment when signed in through the browser. [Sign-in and accounts](rescue-accounts.md)
+The copilot runs on the demo laptop with the local Qwen model and authenticated FastAPI. It turns a report into a pending proposal and lets a dispatcher approve the recommended units, substitute an offered alternative, or reject it. On the laptop's dispatch page, the signed-in Rescue account can refresh to see its unit change from **Available** to **Active assignment**. The Android app's **Rescue** mode follows the simulator feed without a login. The Render simulator runs its own scenario independently of dispatch approvals on Lenovo. [Sign-in and accounts](rescue-accounts.md)
 
 ## Run the demo
 
 1. Start Redis, the [local model](../models/README.md#run-the-laptop-demo), and [FastAPI with dispatch enabled](dispatch.md#start-with-the-private-local-file). Set `CLEARPATH_MODEL_URL=http://127.0.0.1:8011` in the FastAPI terminal.
 2. Open [ClearPath dispatch](http://127.0.0.1:8003/dispatch/reports) and sign in as the demo dispatcher with the values from Lenovo’s private configuration file. Open a separate browser window for the Rescue account.
-3. Enter “Medical emergency at Bellevue Hospital. One adult is having a seizure. Ambulance needed.” Select **Propose dispatch**. Review the matched place, proposed priority, modeled ETA and available choices. The shared demo currently has one medical unit, so alternate units appear only when the fleet has other reachable matches.
+3. Enter “Medical emergency at Times Square. One adult is having a seizure. Ambulance needed.” Select **Propose dispatch**. Review the matched place, proposed priority, modeled ETA and available choices. The shared demo currently has one medical unit, based at Bellevue Hospital. Times Square gives the proposal a modeled route from Bellevue and a nonzero ETA. Alternate units appear only when the fleet has other reachable matches.
 4. Select **Approve selected units** to create the incident and assignments together in PostgreSQL. Alternatively choose **Reject draft**. In the Rescue window, select **Refresh assignment** to view the change. After the rehearsal, use the arrival and close endpoints in the [manual dispatch API](http://127.0.0.1:8003/docs#tag/dispatch).
 5. Try a report with two locations or repeat a report while a matching incident is open. Read the question and continue with the manual workflow if the report cannot be resolved. The browser offers the manual workflow after its ten-second proposal timeout.
+
+To rerun an approved scenario with the same text, mark the assignment as arrived from the Rescue account with `POST /dispatch/assignments/{dispatch_id}/arrive`, then close the incident from the dispatcher account with `POST /dispatch/incidents/{incident_id}/close`. This frees the demo ambulance and removes the open incident from the duplicate check. The report form stops on a possible duplicate and currently has no override control.
 
 ## Planning and approval
 

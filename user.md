@@ -47,3 +47,23 @@ For the signed-in dispatch rehearsal on Lenovo, the private configuration and de
 | Presentation rehearsal | Open the slides and the simulator on the demo laptop. Rehearse switching to the local page after starting the local server. | The presenter can show the same route and traffic scenario on either page. |
 
 For automated results, see the [local routing, simulation and priority checks](backend/README.md) and [public HTTPS smoke check](deploy/README.md).
+
+## Dispatch rehearsal reports
+
+In [ClearPath Dispatch on Lenovo](http://127.0.0.1:8003/dispatch/reports), sign in as dispatcher, paste either example into **Incident report**, and click **Propose dispatch**.
+
+**Bellevue Hospital**
+
+```text
+Medical emergency at Bellevue Hospital. One adult is having a seizure. Ambulance needed.
+```
+
+Use this to rehearse approval and the Rescue assignment. The modeled ETA is zero because the demo ambulance is based at Bellevue.
+
+**Bryant Park**
+
+```text
+Medical emergency at Bryant Park. One adult has collapsed and is unresponsive. Send an ambulance.
+```
+
+The modeled route from Bellevue crosses 14 traffic-signal points and takes about 3 minutes 49 seconds before traffic delays. To show the lights changing, manually set the simulator destination to Bryant Park and start playback with **Green wave and alerts** enabled. After dispatch approval, click **Refresh assignment** in the signed-in Rescue browser. See the [copilot guide](docs/copilot.md#run-the-demo) for how to close a rehearsal before repeating it.
