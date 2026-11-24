@@ -437,6 +437,47 @@ The user then asked for this correction to be included in the record.
 
 - This checkpoint captures the implementation and first browser checks. The final route, signal, and 500-vehicle regression checks are still in progress. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Finish and verify milestone 2
+
+> then proceed to next milestone and notify if you need me to verify anything.
+
+### Decisions
+
+- Finish the desktop simulator on the demo laptop and leave the default route ready to start. Fixed-cycle signal simulation belongs to this milestone. The emergency green wave and civilian geofencing belong to milestone 3. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Refined map framing to show both route markers, chose the closest road when closures are clicked near intersections, and added feedback naming the road that was closed or reopened. The implementation checkpoint is commit 1eee3e3. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The final desktop browser view framed Bellevue and Times Square. Clicking East 42nd Street changed the displayed rescue route and modeled time from 4.7 to 4.8 minutes. Reopening it restored 4.7 minutes. Browser checks covered playback, pause, reset, the 500-vehicle control, and the browser error log. [Rubric criterion 3](../docs/rubric.html#c3)
+- The [simulator check](../backend/check_simulation.py) verified 8,254 mapped road segments, 2,752 signal nodes, a vehicle stopping at red and proceeding at green, route changes and restoration, endpoint selection, and motion with 500 civilian vehicles. The [routing regression](../backend/check_routing.py) still matched Dijkstra on all 100 pairs. Browser frame rate remains a milestone 7 measurement. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Milestone 2 is available on the demo laptop at [the simulator](http://127.0.0.1:8000/simulator), reset and paused at the default route. The [runbook](../backend/README.md) documents setup and verification. A final Git check found the implementation checkpoint already on GitHub's main branch, following a separate merge that included the milestone 1 checkpoint. This follow-up records the verified simulator before syncing its final changes. The simulator does not require Supabase or an external map tile service. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Commit and sync
+
+> commit sync
+
+### Decisions
+
+- Verify the simulator checkpoint on GitHub and commit this sync record in the project logbook. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Checked local Git status and queried GitHub's main branch directly. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- The working tree was clean, and local and remote main both pointed to ada0eba before this logbook update. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The routing and desktop simulator were already synced. This commit adds the sync request and verification to the project record. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Teacher and student guidance
 
 > part of our product must be TeacherAndStudentguidance in C:\Users\LENOVO\Documents\Jupiter Notebooks\HackatonIntel\TeacherAndStudentguidance
