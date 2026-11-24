@@ -915,3 +915,29 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The six-slide deck is published to claude.ai, and the architecture slide, presentation mode and this record are pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · What A* means, and who writes it
+
+> בשקף 3 ("מדריך פדגוגי למורה")  מה פירוש ה A*  ב "שרת, מפה וניתוב A*"
+
+> למה לא לשנות את A*  ל "אלגוריתם של התלמיד דמויי Dijkstra" ?
+
+> החלטנו: "התלמיד ישתמש בספרייה, ומעדכנים את המדריך כך שהתלמיד יסביר את A* ויכתוב את היוריסטיקה, אבל לא את האלגוריתם."
+
+### Decisions
+
+- **User decision:** students use the library's `A*` (`nx.astar_path` from networkx). They write the heuristic and explain the algorithm, but do not implement it. [Rubric criterion 1](../docs/rubric.html#c1)
+- The slide keeps the name A\*. Claude advised against renaming it "the student's Dijkstra-like algorithm": the heuristic is the core concept that sets A\* apart from Dijkstra, judges recognise the standard name, and the algorithm itself comes from networkx. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude explained A\* and the admissible heuristic. While answering, it checked `backend/routing.py` and found that routing calls networkx, while the teacher guide described students running "their own A\*". It offered two ways to close the gap, and the user chose the library option. [Rubric criterion 3](../docs/rubric.html#c3)
+- Claude updated phase 1 of the [teacher guide](../TeacherAndStudentguidance/teacher-guide.md) with what the student writes and what they don't, a checkpoint and a no-AI question about the heuristic, and a new common mistake: using the library without knowing what it computes. It also updated the phase table in the [student guide](../TeacherAndStudentguidance/student-guide.md) and the example log entry in the [templates](../TeacherAndStudentguidance/templates.md). The [algorithms skill](../.claude/skills/assess-algorithms/SKILL.md) gained a question on what `nx.astar_path` receives and returns. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Confirmed in `backend/routing.py` that routing calls `nx.astar_path` with the project's heuristic and `travel_time` weights. Searched the guidance, skills and slides for every A\* reference: the slides only name the algorithm, so they needed no change. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The guidance and the algorithms skill now match the decision. Committed locally; not yet pushed. [Rubric criterion 4](../docs/rubric.html#c4)
