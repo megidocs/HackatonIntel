@@ -584,3 +584,28 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The merge commit joins the guidance work with milestone 1. It has not been pushed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Run the project and install missing infrastructure
+
+> run what's available, install missing infra if needed
+
+### Decisions
+
+- The user asked to run everything available and install whatever was missing. [Rubric criterion 4](../docs/rubric.html#c4)
+- Claude chose Python 3.13 because the only interpreter on this laptop was Python 3.10, and the pinned numpy 2.5 and networkx 3.7 need 3.11 or newer. An earlier session's entry also records 3.13. Claude chose Node.js LTS for the simulator's `npm ci` step. Both were installed with winget. [Rubric criterion 2](../docs/rubric.html#c2)
+- Claude followed the [backend runbook](../backend/README.md) as written, including the BBBike New York extract. It added a local `.claude/launch.json` so the app's preview pane can start the FastAPI server. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude installed Python 3.13.17 and Node.js 26.13.1, created `.venv`, installed `backend/requirements.txt`, and ran `npm ci --prefix frontend` (0 vulnerabilities reported). It downloaded the New York extract (about 154 MB) and built `backend/data/manhattan.graphml` with 4,671 nodes and 9,962 directed edges. [Rubric criterion 2](../docs/rubric.html#c2)
+- The simulator commit `1eee3e3` landed during setup and added `shapely` and the frontend. Claude reinstalled the requirements and ran the simulator checks too. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- `/health` returned 4,671 nodes and 9,962 directed edges. `backend.check_routing` passed the health check, the demo route (Bellevue to Times Square, 3.16 km, 4.7 min, 25 nodes), the same-point route and both invalid-input cases. A* matched Dijkstra for 100 pairs, with mean 13.3 ms and p95 34.0 ms for local routing. That is slower than the 6.2 ms mean and 16.8 ms p95 recorded earlier. Other work was running on the laptop during this measurement. [Rubric criterion 3](../docs/rubric.html#c3)
+- `backend.check_simulation` passed on 8,254 road segments and 2,752 signal nodes. It verified red-light stops, green-light passage, route changes and reopening, endpoint selection, 500 moving civilian vehicles, playback and pause. [Rubric criterion 3](../docs/rubric.html#c3)
+- Claude opened `/simulator` in the in-app browser and started playback. The Bellevue to Times Square route rendered, the clock advanced, civilian vehicles moved, and the console showed no errors. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The backend, routing API and desktop simulator run on this laptop at `http://127.0.0.1:8000`. The virtual environment, OSM cache, GraphML and `frontend/node_modules` are generated locally and are not committed. [Rubric criterion 4](../docs/rubric.html#c4)
