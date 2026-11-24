@@ -700,3 +700,25 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The synced backend and simulator run and pass their checks on this laptop. The simulator is still running at `http://127.0.0.1:8000`. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Sync partner guide
+
+> sync project. There were changes in the repo
+
+### Decisions
+
+- The user asked to sync. The first request found nothing new on GitHub, so Claude pushed the local rerun entry. When the user asked again, Claude fetched Guy's two commits, which add the [partner and demo guide](../user.md) and a logbook entry, and fast-forwarded `main`. [Rubric criterion 4](../docs/rubric.html#c4)
+- The incoming commits changed no code or dependencies. Claude kept the running server and did not reinstall anything or rerun the routing and simulation checks. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### AI contribution
+
+- Claude fetched, compared incoming and outgoing commits, pulled with `--ff-only`, read the new guide, and recorded this entry. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Every local file the partner guide links to exists in the checkout: the guidance index, specification, rubric, T-model PDF, logbook and backend runbook. `/health` on the running server still returned 4,671 nodes and 9,962 directed edges. [Rubric criterion 3](../docs/rubric.html#c3)
+- Claude did not check the guide's external links (GitHub, Supabase, the deck artifact). [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Local `main` matches GitHub at the time of this sync, with the partner guide included. [Rubric criterion 4](../docs/rubric.html#c4)
