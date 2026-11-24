@@ -24,7 +24,7 @@ The local HTTP and WebSocket connection is available in debug builds. Use an HTT
 
 1. In the desktop simulator, reset to Bellevue Hospital → Times Square and leave playback paused. In the app, select **Rescue** and connect. Check that the route preview and clock match the desktop.
 2. On the second phone select **Citizen**, keep **Vehicle 1**, and connect to the same server. In the initial scenario, Vehicle 1 starts in range. Leave the app visible and turn up media volume for the spoken alert.
-3. In Rescue, enter the presenter code for Render and toggle **Green wave and alerts** off and on. The desktop switch follows, and the citizen alert clears and returns. The standard local setup has open presenter controls.
+3. For the shared public demo, unlock **Presenter access** in the desktop browser and toggle **Green wave and alerts** off and on there. Neither Android viewer needs the code to follow the scenario. The citizen alert clears and returns. If the demo specifically shows Android changing priority, enter the Render presenter code in Rescue and use its switch. The standard local setup has open presenter controls.
 4. Close a road on the desktop route and verify that the phone shows the updated route. Reopen the road. Start and pause playback and verify the same simulation clock on both phones.
 
 FastAPI streams position and route updates to Rescue and alert state to Citizen. The Android app speaks new alerts while in the foreground. Android location permissions and background push are outside this rehearsal.

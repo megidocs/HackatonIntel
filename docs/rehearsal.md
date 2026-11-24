@@ -49,6 +49,8 @@ flowchart LR
 
 The Render and laptop simulators are separate instances. Open both Android roles and the desktop view against the same base URL when showing a shared scenario.
 
+In the device rehearsal, the emulator showed the Rescue route and the physical Samsung received Citizen vehicle 1’s alert over cellular. The public HTTPS state and the Rescue WSS frame reported the same paused clock and 3,158 m route. The Citizen payload contained alert status and excluded route and position data. A Samsung audio log recorded a Google text-to-speech media track and delivery of 72,729 audio frames when the alert appeared. The rehearsal did not measure audibility at the venue.
+
 ## Rehearsal sequence
 
 ```mermaid
@@ -102,8 +104,8 @@ Before the fix, a fresh position could return `409` because the age check ran af
    ```
 
 3. Open the [local frame meter](http://127.0.0.1:8014/simulator?measureFrames=1) in a foreground desktop-sized window. Set 1× playback and 500 civilian vehicles, then wait ten seconds. Read the interval and FPS from the top bar. A background tab can be throttled and is unsuitable for this check.
-4. On the presentation network, open the public simulator and connect Rescue and Citizen on two phones or a phone and emulator. Set Citizen to Vehicle 1. In the paused default scenario, toggle green-wave priority off and wait for the alert to clear, then turn it on and wait for the visual and spoken alert. Start and pause playback and confirm that the route and clock agree across displays. [Android instructions](../mobile/README.md)
+4. On the presentation network, open the public simulator and connect Rescue and Citizen on two phones or a phone and emulator. Set Citizen to Vehicle 1. Use the presenter code in the desktop browser to toggle green-wave priority off and on. Wait for the phones to show each change. Start and pause playback and confirm that the route and clock agree across displays. The phones need a presenter code only if Rescue itself will change priority. [Android instructions](../mobile/README.md)
 
 ## Remaining physical checks
 
-Rehearse on the presentation phones with media volume on, record the citizen audio, and measure a phone-originated location reaching the desktop. The Android public demo uses synthetic positions and presenter access. Its live feed is distinct from the authenticated audit workflow, which stores priority requests without changing the simulated signals.
+Rehearse with the venue’s media volume and presentation network. The phone-to-screen location latency and a controlled Wi-Fi versus cellular timing comparison remain unmeasured. The Android public demo uses synthetic positions. Its live feed is distinct from the authenticated audit workflow, which stores priority requests without changing the simulated signals.

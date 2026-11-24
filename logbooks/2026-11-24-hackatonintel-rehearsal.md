@@ -59,3 +59,25 @@
 ### Session result
 
 - The laptop rehearsal and measurement write-up are ready to review. The physical Android check and final sync follow this checkpoint. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-ups · Clarify Android presenter access and Computer Use
+
+> I'm not sure what's going with the connected android but  cannot even paste the token for presenter. not sure we need this.
+>
+> why is [@Computer](plugin://computer-use@openai-bundled) being used now? ?
+
+### Decisions
+
+- Use the desktop presenter window to control the shared public scenario. Both Android roles can connect and watch without a presenter code. Keep the phone-controlled priority demo optional. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Used Computer Use to verify the app displays in the Windows Android mirrors. Explained that the UI checks were complete and updated the [partner guide](../user.md), [Android instructions](../mobile/README.md), and [rehearsal report](../docs/rehearsal.md) so a phone token is unnecessary for the default presentation. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The Android emulator showed the public Render Rescue route. The Samsung showed the Citizen alert over cellular and Android recorded the speech media track delivering audio frames. Public HTTPS and WSS reported the same paused clock, with identical 3,158 m route distances in the desktop and Rescue snapshots. Both the [dispatch regression](https://github.com/megidocs/HackatonIntel/actions/runs/45415033460) and [simulator CI](https://github.com/megidocs/HackatonIntel/actions/runs/45415033856) passed. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The rehearsal evidence covers the public simulator, one physical Android and one emulator, signed-in dispatch, and the measured performance benchmarks. The report records the unmeasured phone-to-screen and Wi-Fi versus cellular timing targets. [Rubric criterion 4](../docs/rubric.html#c4)
