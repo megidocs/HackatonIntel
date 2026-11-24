@@ -24,3 +24,23 @@
 ### Session result
 
 The full [Tel Aviv dispatch rehearsal](../backend/README.md#tel-aviv-dispatch-rehearsal) passed locally, and [Tel Aviv dispatch](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) is live on Render. The hosted check used viewer access. A presenter can unlock the report and approval controls to run the rehearsal.
+
+## User follow-up · Keep the team demo guide current
+
+> keep adding user relevant info to user.md so that all  the team can demo and use the product.
+
+### Decisions
+
+- The user designated `user.md` as the ongoing guide for product use and demos. Codex placed the presenters' Tel Aviv steps before local setup and kept the signed-in Manhattan and Android rehearsal links.
+
+### AI contribution
+
+- Added the live and local Tel Aviv entry points, viewer and presenter instructions, the fleet bases, the Hebrew Jaffa Road report, expected statuses, reset instructions, and a quick standalone road-closure walkthrough. [Team demo guide](../user.md#demo-tel-aviv-on-render)
+
+### Independent checks
+
+- Verified the deployed release, both city maps, fleet listing, and viewer permissions through the hosted smoke check. Checked that the guide's repository-relative links resolve and that Git reports clean diff whitespace. [Judging checkpoint](../docs/rubric.html#c3)
+
+### Session result
+
+The team's [user guide](../user.md) now includes both Tel Aviv rehearsals and the pre-demo checks.

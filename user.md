@@ -6,6 +6,8 @@
 | --- | --- |
 | Source code | [megidocs/HackatonIntel](https://github.com/megidocs/HackatonIntel), branch `main` |
 | Public simulator | [ClearPath Manhattan simulator](https://clearpath-hackatonintel.onrender.com/simulator). Open it before presenting so the Free service has time to wake up. |
+| Public Tel Aviv map | [Tel Aviv traffic simulator](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv) for manually placing an incident and testing traffic and closures. |
+| Public Tel Aviv dispatch | [Tel Aviv dispatch demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) for checking the fleet, approving a report, and following the response. |
 | Desktop demo | [Manhattan simulator](http://127.0.0.1:8000/simulator) on the demo laptop or a partner’s own running checkout |
 | Android demo | [Build and connect the rescue and citizen app](mobile/README.md) to the same simulator as the desktop browser. |
 | Backend checks | [FastAPI docs](http://127.0.0.1:8000/docs) and [health](http://127.0.0.1:8000/health) on that same machine |
@@ -20,6 +22,33 @@
 | Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
 | Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md), and [public deployment log](logbooks/2026-11-24-hackatonintel-public-hosting.md) |
 
+## Demo Tel Aviv on Render
+
+Open the demo on a desktop or laptop before presenting. Render may take about a minute to wake up. Anyone with the link can watch. To operate the shared scene, enter the presenter code under **Presenter access** and click **Unlock**. Ask the team member who manages Render for the code privately.
+
+### Show the fleet and dispatch a vehicle
+
+1. Open the [Tel Aviv dispatch demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch). Before entering a report, point out the vehicles marked **Available** and their Hebrew base labels on the map.
+2. In **What happened?**, enter `אירוע רפואי בדרך יפו. נדרש אמבולנס.` Set **Incident location** to **Jaffa Road · דרך יפו** and **Response needed** to **Ambulance**.
+3. Click **Propose dispatch**. Review the report and the available ambulances with their estimated drive times. For this example, choose **Ambulance 2 · Nahmani** if it is available.
+4. Click **Approve dispatch**. Traffic starts, the selected vehicle is marked **Dispatched**, and the highlighted route runs from its base to the incident. The vehicle becomes **Available** on arrival.
+5. After arrival, try another report or click **Reset** under **Simulation controls** to clear the shared trip. The demo handles one active trip at a time, so coordinate resets and approvals with anyone else presenting.
+
+| Vehicle | Simulated base |
+| --- | --- |
+| Ambulance 1 | Pinkas · פנקס |
+| Ambulance 2 | Nahmani · נחמני |
+| Fire engine 1 | Jabotinsky · ז׳בוטינסקי |
+| Fire engine 2 | Jaffa Road · דרך יפו |
+| Police car 1 | Ben Yehuda · בן יהודה |
+| Police car 2 | Sportek · ספורטק |
+
+The Tel Aviv dispatch demo uses the location and response type you select. For the signed-in Copilot, stored assignments, or Android Rescue, use the [Lenovo Manhattan rehearsal](#dispatch-rehearsal-reports).
+
+### Show a route and a road closure
+
+Open the [Tel Aviv traffic simulator](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv). **Reset** restores **Ichilov Hospital → Rabin Square**. Choose **Habima Square · כיכר הבימה** under **Simulated incident location** and click **Set incident** to redraw the route. Click **Toggle road closure** and click a street on the teal route to test rerouting. Click that street again to reopen it, then press **Escape** to exit closure mode. Use **Start simulation** and **Pause** to control playback.
+
 ## Run locally on Windows
 
 Install Python 3.13 and Node.js with npm. Clone the repo or sync your copy to `main`, then run these commands from the repository root in PowerShell.
@@ -32,7 +61,7 @@ $env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
 .\.venv\Scripts\python.exe -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
 ```
 
-Keep that terminal open and visit the [local simulator](http://127.0.0.1:8000/simulator). The bundled graph is the same snapshot used on Render. Local controls are available immediately and the demo can run offline once setup is complete. For a fresh OpenStreetMap snapshot, use the [graph import instructions](backend/README.md).
+Keep that terminal open and choose [Manhattan](http://127.0.0.1:8000/simulator), the [Tel Aviv traffic simulator](http://127.0.0.1:8000/simulator/tel-aviv), or [Tel Aviv dispatch](http://127.0.0.1:8000/simulator/tel-aviv/dispatch). The bundled graphs are the same snapshots used on Render. Local desktop demos can run offline once setup is complete. For a fresh OpenStreetMap snapshot, use the [graph import instructions](backend/README.md).
 
 For the signed-in dispatch rehearsal on Lenovo, the private configuration and demo credentials are in `C:\Users\3stra\AndroidStudioProjects\HackatonIntel\.env.dispatch.local`. Git ignores this file. Use the [dispatch startup instructions](docs/dispatch.md#start-with-the-private-local-file).
 
@@ -42,6 +71,7 @@ For the signed-in dispatch rehearsal on Lenovo, the private configuration and de
 | --- | --- | --- |
 | Public, in a private browser window | Open the Render URL and check the map, route and controls. Allow about a minute if the service is waking up. | Manhattan loads with Bellevue Hospital → Times Square at about 3.16 km and 4.7 modeled minutes. **Start simulation** is disabled for viewers. |
 | Public, with a presenter | In a second window, unlock **Presenter access** with the code from the Render service’s Environment page. Start, pause and reset while the first window stays open. | The presenter can control the scenario. The viewer sees the same traffic and clock changes. **Reset** restores the paused default route. |
+| Public, Tel Aviv dispatch | Open the dispatch demo in presenter and viewer windows. Propose and approve the Jaffa Road ambulance example. | Both windows show the fleet and route. The presenter can approve the trip. The selected ambulance changes from **Available** to **Dispatched** and back on arrival. |
 | Local, routing and signals | Start traffic, try 500 vehicles, close a street on the highlighted route, then reopen it and reset. | Vehicles respond to red and green signals. The closure is marked and the rescue route changes when a detour is available. |
 | Local, green wave | Run the same scenario twice at the same traffic density, with **Green wave and alerts** off and on. | With priority enabled, look for the moving corridor, changes to upcoming signals and gold yielding vehicles. Compare modeled arrival times. |
 | Android, rescue and citizen | Reset and pause the desktop scenario. Connect both phones to the same server. Keep the presenter code on the desktop and toggle priority there. | Rescue follows the route. Citizen vehicle 1 clears its alert and then shows and reads it aloud when priority returns. The phone needs a presenter code only for the optional demo of Android changing priority. |
