@@ -37,3 +37,23 @@
 ### Session result
 
 - The private schema is in place on Supabase Free with production auto-deploy off. The public simulator remains available. A hosted end-to-end dispatch rehearsal still requires the database credential and enrolled demo Auth accounts. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Test vehicle authentication from the emulator
+
+> is there a way to test security vehicle user's auth from the Emulator, towards the production simulator? or do you need to [@Computer](plugin://computer-use@openai-bundled) to implement additional setup?
+
+### Decisions
+
+- Distinguish the existing public presenter authorization check from a Supabase rescue-account test. Use an emulator browser against the configured FastAPI dispatch API before adding a native Android sign-in screen. Keep the public simulator available for the presentation. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Inspected the Android rescue client, the dispatch API, and the signed-in Supabase Auth dashboard using Computer Use. Identified the required database login and demo roles, and the additional runtime configuration required if the test targets the public Render service itself. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Render returned `200` for health with release `8705fc2`, `403` for an anonymous empty presenter command, and `503` for `/dispatch/me` with dispatch storage disabled. The Auth dashboard displayed no signed-up users. The Android client currently sends the presenter header and has no Supabase sign-in flow. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Presenter authorization can be rehearsed from Android against Render today. Testing a vehicle user's JWT and active assignment requires provisioning the restricted database login and enrolling demo accounts. The local FastAPI setup can verify real Supabase identities without enabling dispatch on the public demo. [Rubric criterion 4](../docs/rubric.html#c4)
