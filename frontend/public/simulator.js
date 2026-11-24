@@ -97,7 +97,7 @@ function addLayers(data) {
   });
 
   for (const [name, coordinates] of [
-    ["HUDSON RIVER", [-74.011, 40.757]],
+    ["HUDSON RIVER", [-74.006, 40.757]],
     ["EAST RIVER", [-73.961, 40.751]],
     ["CENTRAL PARK", [-73.9689, 40.7822]],
   ]) {
@@ -279,6 +279,32 @@ function setMode(next) {
   $("#map-message").textContent = instructions[next] ?? "";
 }
 
+function closestRoad(pixel) {
+  let nearest;
+  let distanceSquared = Infinity;
+  for (const street of map.queryRenderedFeatures(pixel, { layers: ["street-hit"] })) {
+    const geometry = street.geometry;
+    const lines = geometry.type === "LineString" ? [geometry.coordinates] : geometry.coordinates;
+    for (const line of lines) {
+      const points = line.map((coordinate) => map.project(coordinate));
+      for (let index = 1; index < points.length; index++) {
+        const a = points[index - 1];
+        const b = points[index];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const projection = ((pixel.x - a.x) * dx + (pixel.y - a.y) * dy) / (dx * dx + dy * dy || 1);
+        const factor = Math.max(0, Math.min(1, projection));
+        const distance = (pixel.x - a.x - factor * dx) ** 2 + (pixel.y - a.y - factor * dy) ** 2;
+        if (distance < distanceSquared) {
+          distanceSquared = distance;
+          nearest = street;
+        }
+      }
+    }
+  }
+  return nearest;
+}
+
 map.on("load", async () => {
   try {
     addLayers(await request("/simulation/map"));
@@ -304,7 +330,7 @@ for (const button of document.querySelectorAll("[data-mode]")) {
 }
 map.on("click", async ({ point: pixel, lngLat }) => {
   if (mode === "closure") {
-    const [street] = map.queryRenderedFeatures(pixel, { layers: ["street-hit"] });
+    const street = closestRoad(pixel);
     if (!street) {
       $("#map-message").textContent = "Click a drivable road to toggle its closure.";
       return;
