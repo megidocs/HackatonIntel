@@ -13,7 +13,12 @@ aside { display: none }
 h1 { font-size: 96px; font-weight: 600 }
 h2 { font-size: 64px; font-weight: 600 }
 h3 { font-size: 44px; font-weight: 600 }
-@media (max-width: 1960px) { body { zoom: 0.5 } }
+@media (max-width: 1960px) { body:not(.present) { zoom: 0.5 } }
+body.present { background: #0B1222; display: block; padding: 0; height: 100vh; overflow: hidden; cursor: pointer; }
+body.present > section { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--s, 0.5)); }
+body.present > section:not(.active) { display: none !important; }
+#counter { position: fixed; left: 16px; bottom: 12px; font: 600 16px/1 Heebo, Arial, sans-serif; color: #C9D3E3; background: rgba(11, 18, 34, .7); padding: 6px 12px; border-radius: 999px; direction: ltr; }
+body:not(.present) #counter { display: none; }
 </style>
 <style>
 :root {
@@ -365,5 +370,32 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <p class="foot">&#8235;<b>שקיפות · 10%:</b> יומן AI ודיאלוגים מלאים בתיקייה ai-dialogues/. הבוחן קורא את היומן לפני הבחינה ושואל על נקודה אחת ממנו.&#8236;</p>
 <aside>מודל ה-T, שהציע אבי סלמון מאינטל, מסדר את פרויקט הגמר סביב עמוד ליבה ושתי זרועות. העמוד, A, הוא ידע מדעי המחשב שעליו נשען ClearPath AI: אלגוריתמים וגרפים, תקשורת, בסיסי נתונים, אבטחה, מבנה המחשב וביצועים. הוא נבדק בלי AI ומהווה תנאי סף. הזרוע הימנית, B, היא מה שה-AI מאפשר בתוך התחום: סימולטור תנועה של מנהטן, אפליקציית רכב חירום שמבקשת גל ירוק בזמן אמת, ומודל שפה וסוכן שעוזרים למוקדן. התלמיד מאמת כל אחד מהם במדידה או בהשוואה. הזרוע השמאלית, C, מכניסה תחומים אחרים שמשפרים את הפתרון: הנדסת תנועה, רפואת חירום ופיזיקה של GPS. ה-X הוא רכיב אחד שכל תלמיד חוקר לעומק מארבעה כיוונים. בדוגמה של הגל הירוק: הטכנולוגיה, המדע של התזמון, השאלה האתית מי מקבל עדיפות, וההיסטוריה של מערכות קדימות לרכבי חירום. המשקלות לקוחים מהמחוון המוצע במסמך המודל, והם הצעה לדיון.</aside>
 </section>
+<div id="counter"></div>
+<script>
+(() => {
+  const slides = [...document.querySelectorAll('body > section')];
+  const counter = document.getElementById('counter');
+  let i = Math.min(Math.max(parseInt((location.hash.match(/slide-(\d+)/) || [])[1] || '1', 10) - 1, 0), slides.length - 1);
+  const fit = () => document.body.style.setProperty('--s', Math.min(innerWidth / 1920, innerHeight / 1080));
+  const show = n => {
+    i = Math.min(Math.max(n, 0), slides.length - 1);
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    counter.textContent = `${i + 1} / ${slides.length}`;
+    history.replaceState(null, '', `#slide-${i + 1}`);
+  };
+  document.body.classList.add('present');
+  fit(); show(i);
+  addEventListener('resize', fit);
+  addEventListener('keydown', e => {
+    if (['ArrowLeft', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowRight', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+    else if (e.key === 'g' || e.key === 'G') { document.body.classList.toggle('present'); }
+  });
+  addEventListener('click', () => { if (document.body.classList.contains('present')) show(i + 1); });
+})();
+</script>
 </body>
 </html>

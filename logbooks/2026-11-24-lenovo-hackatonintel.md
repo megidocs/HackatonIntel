@@ -851,3 +851,26 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The architecture slide is committed in `docs/slides/pedagogy-deck`. It is not yet published to claude.ai or pushed to GitHub. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Review the deck in presentation mode, then publish
+
+> LET ME SEE IN PRESENTATION MODE THE SLIDES.  THEN I'll decide if to publish and push
+
+> Publish and push
+
+### Decisions
+
+- The user reviewed the six slides in presentation mode before deciding, then approved publishing to the shared claude.ai deck and pushing to GitHub. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude added a presentation mode to the standalone deck's [build script](../docs/slides/pedagogy-deck/build_standalone.py). `deck.html` now shows one slide at a time, scaled to the window. Left arrow, Space or a click moves forward, because the deck reads right to left. Right arrow moves back, F toggles full screen, and G switches to a scrolling view. Claude rebuilt `deck.html`, served it locally and opened it in the browser pane. [Rubric criterion 2](../docs/rubric.html#c2)
+- After approval, Claude published the deck from the repository files as claude.ai version 9, adding the architecture slide and the renumbered slides. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- In the browser pane, presentation mode opened on slide 1, scaled to the window, and the left arrow moved to the architecture slide with the counter at 2 / 6. The publish succeeded and listed the architecture slide among the deck's files. The claude.ai page itself was not viewed, because the built-in browser requires a sign-in. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The six-slide deck is published to claude.ai, and the architecture slide, presentation mode and this record are pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
