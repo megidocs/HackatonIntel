@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .routing import DEFAULT_GRAPH_PATH, ManhattanRouter, PointOutsideGraph
+from .mobile import mobile_router
 from .simulation import Simulation
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
@@ -88,6 +89,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="ClearPath AI", version="0.1.0", lifespan=lifespan)
 app.add_middleware(GZipMiddleware, minimum_size=700, compresslevel=3)
+app.include_router(mobile_router)
 app.mount("/sim/assets", StaticFiles(directory=FRONTEND / "public"), name="simulation-assets")
 
 

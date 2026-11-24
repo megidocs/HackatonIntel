@@ -47,6 +47,7 @@ jobs:
           docker exec clearpath python -m backend.check_routing
           docker exec clearpath python -m backend.check_simulation
           docker exec clearpath python -m backend.check_priority
+          docker exec clearpath python -m backend.check_mobile
           docker stats --no-stream clearpath
       - name: Print server logs on failure
         if: failure()
