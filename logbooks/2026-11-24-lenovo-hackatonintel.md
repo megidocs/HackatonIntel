@@ -829,3 +829,25 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The deck commit and its merge with milestone 3 are pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Architecture slide
+
+> ADD additional slide with graphical representation of the system architecture
+
+### Decisions
+
+- The user asked for an architecture slide. Claude placed it second, after the project cover, and renumbered the deck to six slides. The diagram follows specification section 4: clients on the right, the demo laptop running FastAPI in the centre, and the cloud on the left. Connectors are labelled with their protocols. [Rubric criterion 2](../docs/rubric.html#c2)
+- Every component is labelled built or planned, based on the code. Built (milestones 1–3): FastAPI, `A*` routing on the OSM graph, traffic simulation, the green wave, civilian alerts, and the MapLibre browser simulator. Planned: WebSocket updates, Redis, Supabase, the Android and citizen apps, and the language model. The browser currently polls the server over REST. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude drew the slide in the repository copy of the deck ([slides/arch.html](../docs/slides/pedagogy-deck/slides/arch.html)), with arrows as inline SVG so they also render in the standalone `deck.html`. It added the styles and speaker notes and rebuilt `deck.html`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- In the standalone deck served locally, measured all six slides. The first version of the architecture slide ended 5 px below the margin; after the module list was stacked and the spacing tightened, every slide ends inside it. No text overflows its box. [Rubric criterion 3](../docs/rubric.html#c3)
+- Publishing to the shared claude.ai deck was blocked by the permission check and waits for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Session result
+
+- The architecture slide is committed in `docs/slides/pedagogy-deck`. It is not yet published to claude.ai or pushed to GitHub. [Rubric criterion 4](../docs/rubric.html#c4)

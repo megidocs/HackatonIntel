@@ -93,6 +93,33 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 .hero { animation: coverIn 700ms ease-out both; }
 .cover-text { animation: coverIn 700ms ease-out 200ms both; }
 
+/* architecture: cloud (left), demo laptop (centre), clients (right) */
+.arch { display: flex; gap: 12px; align-items: stretch; }
+.acol { width: 360px; display: flex; flex-direction: column; gap: 14px; }
+.azone { font-family: 'Rubik', Arial, sans-serif; font-size: 30px; font-weight: 700; color: var(--accent); }
+.azone.dark { flex: 1; color: #F7F5EF; }
+.anode { background: #FBFAF6; border: 2px solid var(--line); border-radius: 14px; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; }
+.anode.cloud { border-color: #8FB3D9; background: #EEF3F9; }
+.ahead { display: flex; gap: 10px; align-items: center; }
+.ahead h3 { flex: 1; font-size: 28px; }
+.adesc { font-size: 24px; line-height: 1.35; color: var(--soft); }
+.adesc.light { color: #C9D3E3; }
+.tag { font-size: 24px; font-weight: 600; border-radius: 999px; padding: 2px 14px; white-space: nowrap; }
+.tag.live { background: #2E6E62; color: #F7F5EF; }
+.tag.plan { background: #FBFAF6; color: #6B4A12; border: 2px dashed #B7832F; }
+.alinks { width: 130px; display: flex; flex-direction: column; justify-content: space-around; }
+.alink { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.proto { font-size: 24px; font-weight: 600; color: var(--accent); text-align: center; white-space: nowrap; }
+.proto.small { font-weight: 400; color: var(--soft); }
+.laptop { flex: 1; background: var(--ink); border-radius: 18px; padding: 16px 22px; display: flex; flex-direction: column; gap: 10px; }
+.api { background: #24345A; border-radius: 12px; padding: 12px 18px; display: flex; flex-direction: column; gap: 4px; }
+.api h3 { color: #F7F5EF; font-size: 30px; }
+.mods { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.mod { background: #1B2A4C; border: 2px solid #34477A; border-radius: 12px; padding: 6px 14px; display: flex; gap: 10px; align-items: center; }
+.mname { flex: 1; font-size: 24px; color: #F7F5EF; }
+.laptop .tag.plan { background: #1B2A4C; color: #F2C77E; border-color: #F2C77E; }
+.anode, .laptop { animation: rise 500ms ease-out both; }
+
 /* slide 4: T model (B right, A centre, C left, X under A) */
 .tgrid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 20px; }
 .tbox { border-radius: 16px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px; }
@@ -200,8 +227,46 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 </div>
 <aside>ClearPath AI היא מערכת שמקצרת את זמן ההגעה של רכבי חירום. היא מחשבת מסלול שעוקף פקקים ותאונות, מחליפה לירוק את הרמזורים לאורך המסלול לפני שהרכב מגיע אליהם, ומתריעה לנהגים שבדרכו לפנות את הנתיב. התלמידים בונים סימולטור תנועה של מנהטן, אפליקציית Android לרכב החירום ששולטת ברמזורים, שרת זמן אמת ומרכז שליטה עם עוזר AI למוקדן. בתסריט ההדגמה המערכת מציגה חיסכון של 35% עד 45% בזמן ההגעה לעומת נסיעה בלעדיה. האיור מראה את הרעיון: אמבולנס יוצא מבית החולים, הרמזורים לפניו בירוק בתוך מסדרון ההתרעה, והרמזורים ברחובות האחרים נשארים באדום ובצהוב.</aside>
 </section>
+<section id="arch" class="alt" data-transition="fade">
+<p class="eyebrow">&#8235;ClearPath AI · 2 / 6&#8236;</p>
+<h2>&#8235;ארכיטקטורת המערכת&#8236;</h2>
+<div class="arch">
+<div class="acol">
+<p class="azone">&#8235;ענן&#8236;</p>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;PostgreSQL&#8236;</h3></div><p class="adesc">&#8235;Supabase Free · משתמשים, אירועים, שיוכים ותיעוד הגל הירוק&#8236;</p></div>
+<div class="anode cloud"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;מודל שפה&#8236;</h3></div><p class="adesc">&#8235;חילוץ דיווח ל-JSON, ועוזר מוקדן שרק מציע&#8236;</p></div>
+</div>
+<div class="alinks">
+<div class="alink"><p class="proto">&#8235;SQL · TLS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+<div class="alink"><p class="proto">&#8235;HTTPS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3" stroke-dasharray="7 6"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg></div>
+</div>
+<div class="laptop">
+<div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><p class="azone dark">&#8235;מחשב ההדגמה&#8236;</p></div>
+<div class="api"><h3>&#8235;FastAPI · Python&#8236;</h3><p class="adesc light">&#8235;REST לפעולות, WebSocket לעדכון כל 200 ms&#8236;</p></div>
+<div class="mods">
+<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;סימולציית תנועה&#8236;</p></div>
+<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;ניתוב A*&#8236;</p></div>
+<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;Geofencing והתרעות&#8236;</p></div>
+<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גל ירוק לרמזורים&#8236;</p></div>
+<div class="mod"><p class="tag plan">&#8235;מתוכנן&#8236;</p><p class="mname">&#8235;Redis · מצב זמני&#8236;</p></div>
+<div class="mod"><p class="tag live">&#8235;פועל&#8236;</p><p class="mname">&#8235;גרף מנהטן · OSM&#8236;</p></div>
+</div>
+</div>
+<div class="alinks">
+<div class="alink"><p class="proto">&#8235;HTTPS · WSS&#8236;</p><svg width="120" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="10" x2="108" y2="10" stroke="#2E6E62" stroke-width="3"/><path d="M2 10 L14 3 L14 17 Z" fill="#2E6E62"/><path d="M118 10 L106 3 L106 17 Z" fill="#2E6E62"/></svg><p class="proto small">&#8235;רשת מקומית&#8236;</p></div>
+</div>
+<div class="acol">
+<p class="azone">&#8235;לקוחות&#8236;</p>
+<div class="anode"><div class="ahead"><p class="tag live">&#8235;פועל&#8236;</p><h3>&#8235;סימולטור ומרכז שליטה&#8236;</h3></div><p class="adesc">&#8235;דפדפן במחשב · MapLibre, מפת מנהטן חיה&#8236;</p></div>
+<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית רכב חירום&#8236;</h3></div><p class="adesc">&#8235;Android · מיקום, מסלול ובקשת עדיפות&#8236;</p></div>
+<div class="anode"><div class="ahead"><p class="tag plan">&#8235;מתוכנן&#8236;</p><h3>&#8235;אפליקציית אזרח&#8236;</h3></div><p class="adesc">&#8235;התרעה לפנות את הנתיב&#8236;</p></div>
+</div>
+</div>
+<p class="foot">&#8235;<b>פועל:</b> אבני דרך 1–3. <b>מתוכנן:</b> 4–8. ה-AI מציע בלבד, והרמזורים נשלטים בקוד דטרמיניסטי.&#8236;</p>
+<aside>הארכיטקטורה לפי סעיף 4 באפיון. במרכז מחשב ההדגמה, שמריץ את שרת FastAPI בפייתון. השרת מחזיק את שעון הסימולציה, מחשב מסלולים ב-A* על גרף הרחובות של מנהטן מ-OpenStreetMap, מתזמן את הגל הירוק ברמזורים ומתריע לאזרחים בדרך. מימין הלקוחות: הסימולטור ומרכז השליטה בדפדפן, אפליקציית Android לרכב החירום ואפליקציית האזרח. הם מתחברים לשרת ברשת המקומית ב-HTTPS וב-WebSocket מאובטח. משמאל הענן: מסד PostgreSQL בפרויקט Supabase החינמי לנתונים מתמשכים, ומודל שפה לחילוץ דיווחים ולעוזר המוקדן. התגיות מראות מה כבר פועל: אבני הדרך 1 עד 3, כלומר הניתוב, הסימולטור והגל הירוק. כרגע הדפדפן מושך את המצב מהשרת ב-REST, ועדכוני WebSocket, Redis, Supabase, האפליקציות ורכיבי ה-AI מתוכננים לאבני הדרך הבאות. עיקרון הבטיחות: ה-AI רק מציע, ופקודות לרמזורים ושיוך רכבים עוברים בקוד דטרמיניסטי.</aside>
+</section>
 <section id="teacher" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 2 / 5&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 3 / 6&#8236;</p>
 <h2>&#8235;מדריך פדגוגי למורה&#8236;</h2>
 <p class="lead">&#8235;המוצר הוא המערכת. המטרה היא התלמיד שבנה אותה, ויודע להסביר, לבדוק ולהגן על כל חלק בה.&#8236;</p>
 <div class="phases">
@@ -230,7 +295,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>המדריך עוקב אחרי שמונת שלבי הפיתוח בפרק 7 באפיון, ומוסיף שלב פתיחה ושלב הגנה. לכל שלב מוגדרים מושגי הליבה, מה ה-AI מאפשר מעבר לחיסכון בזמן, נקודת בקרה שבה הפלט נבדק מול מדידה, חישוב או ניסוי, שאלה לשיחת בדיקה בלי מחשב, וטעויות שהמורה מחפש. שיחת הבדיקה נמשכת 5 עד 10 דקות לתלמיד, והמשוב בה איכותני. במאגר יש גם כישורי Claude Code שמנהלים שיחת בדיקה בשמונה נושאי ליבה, במצב תרגול או הערכה.</aside>
 </section>
 <section id="profile" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 3 / 5&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 4 / 6&#8236;</p>
 <h2>&#8235;פרופיל הבוגר ומחוון המגמה&#8236;</h2>
 <div class="cols">
 <div class="rubric">
@@ -256,7 +321,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>מחוון המגמה בנוי לפי מודל ה-T: עמוד הליבה A, שתי הזרועות B ו-C, הצלילה לעומק X ושקיפות. המשקלות לקוחים ממסמך המודל והם הצעה לדיון. הסולם הוא ארבע רמות: מצוין, טוב, בסיסי ולא עומד. יש שני תנאי סף: הדיאלוגים המלאים עם ה-AI מצורפים לפרויקט, וציון 1 ברכיב A פוסל את הפרויקט כולו. כל רכיב בפרופיל הבוגר נבדק ברכיב של המחוון ומודגם בפרויקט, ומחוון השיפוט של ההאקתון בודק בדיוק את ההלימה הזו. המשוב לאורך התהליך איכותני, והדירוג ניתן בבחינה.</aside>
 </section>
 <section id="templates" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 4 / 5&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 5 / 6&#8236;</p>
 <h2>&#8235;תבניות עבודה&#8236;</h2>
 <p class="lead">&#8235;קצרות בכוונה: רשומה טובה לוקחת כמה דקות. התלמיד ממלא, והמורה קורא ומגיב.&#8236;</p>
 <div class="cards">
@@ -270,7 +335,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 <aside>ארבע תבניות ומבנה קבצים אחד. הרשומות החשובות ביותר ביומן הן אלה שבהן התלמיד תפס טעות של ה-AI. הדיאלוגים נשמרים בתיקייה ai-dialogues/ לפי תלמיד, בשם קובץ של תאריך, רכיב ונושא. מותר להסתיר רק סיסמאות, מפתחות API ומידע אישי, ושום דבר אחר לא נערך.</aside>
 </section>
 <section id="tmodel" class="alt" data-transition="fade">
-<p class="eyebrow">&#8235;ClearPath AI · 5 / 5&#8236;</p>
+<p class="eyebrow">&#8235;ClearPath AI · 6 / 6&#8236;</p>
 <h2>&#8235;מודל ה-T בפרויקט ClearPath AI&#8236;</h2>
 <div class="tgrid">
 <div class="tbox arm armc" style="--i:2">
