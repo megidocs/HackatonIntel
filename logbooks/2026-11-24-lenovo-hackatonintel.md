@@ -458,6 +458,26 @@ The user then asked for this correction to be included in the record.
 
 - Milestone 2 is available on the demo laptop at [the simulator](http://127.0.0.1:8000/simulator), reset and paused at the default route. The [runbook](../backend/README.md) documents setup and verification. A final Git check found the implementation checkpoint already on GitHub's main branch, following a separate merge that included the milestone 1 checkpoint. This follow-up records the verified simulator before syncing its final changes. The simulator does not require Supabase or an external map tile service. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Commit and sync
+
+> commit sync
+
+### Decisions
+
+- Verify the simulator checkpoint on GitHub and commit this sync record in the project logbook. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Checked local Git status and queried GitHub's main branch directly. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- The working tree was clean, and local and remote main both pointed to ada0eba before this logbook update. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The routing and desktop simulator were already synced. This commit adds the sync request and verification to the project record. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Teacher and student guidance
 
 > part of our product must be TeacherAndStudentguidance in C:\Users\LENOVO\Documents\Jupiter Notebooks\HackatonIntel\TeacherAndStudentguidance
