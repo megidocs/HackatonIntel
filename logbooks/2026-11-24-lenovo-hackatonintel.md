@@ -333,3 +333,86 @@ The user then asked for this correction to be included in the record.
 ### Session result
 
 - The documentation commit records the two contributions, the verified connection, and the deployment setting. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Milestone 1, FastAPI and Manhattan routing
+
+> let's start milestone 1: set up FastAPI on the demo laptop, load the Manhattan road graph, and test basic A\* routing. keep Supabase on the free tier with auto-deploy off, and log the work.
+
+### Decisions
+
+- The user selected milestone 1 and kept the Supabase Free and auto-deploy settings in force. Codex bound the first FastAPI instance to laptop loopback and selected estimated free-flow travel time as the A* cost. The heuristic divides straight-line distance by the highest graph edge speed. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Set up Python 3.13 and FastAPI in a project virtual environment, built the importer and routing API, and wrote the [setup and test runbook](../backend/README.md). Two Overpass endpoints stalled or timed out. Imported the [BBBike New York OpenStreetMap extract](https://download.bbbike.org/osm/bbbike/NewYork/) instead, with source timestamp 21 November 2026 UTC. OSMnx clipped it to the Manhattan boundary from Nominatim, retained the largest weakly connected driving component, preserved one-way streets, and saved a local GraphML file. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- FastAPI loaded 4,671 nodes and 9,962 directed edges from disk. Bellevue to Times Square returned 3.16 km, 4.7 minutes of modeled free-flow travel time, and 25 graph nodes. Verified snapped endpoints and GeoJSON direction, a zero-cost same-point route, 422 for invalid and out-of-coverage inputs, and 404 for an unreachable direction. The graph had 6,520 directed arcs with no reverse arc. [Routing checks](../backend/check_routing.py) · [Rubric criterion 3](../docs/rubric.html#c3)
+- A* matched Dijkstra on 100 reproducibly sampled pairs from the graph's largest strongly connected component. Local routing averaged 6.2 ms with p95 of 16.8 ms, excluding HTTP and snapping. Python compilation and the dependency check passed. These measurements describe static routing on this laptop. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Milestone 1 is running on Lenovo at [the local API docs](http://127.0.0.1:8000/docs). The saved graph loads without a map download. The routing API runs entirely locally. Supabase retains its previously verified Free plan and automatic production deploys are off. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Pre-commit review of the map and Android app
+
+> 1. before commiting describe briefly the capabilities you got. is it normal that there no nice UI showing a google map with all location (something presentable)? is this for  later or is it not yet planned.
+>
+> 2. What about the android app?
+
+### Decisions
+
+- Review the milestone 1 deliverable before committing. The spec assigns the desktop map and simulator to milestone 2 and synchronized mobile clients to milestone 4. The Android framework decision is still open. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Explained that the milestone 1 API returns the snapped route, modeled time and distance, and GeoJSON for drawing the route. The planned desktop simulator uses MapLibre GL and Deck.gl with OpenStreetMap data. The Android vehicle client will exchange location and route updates with FastAPI, which owns simulated traffic-light state. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Confirmed that the local health endpoint reports 4,671 nodes and 9,962 directed edges and that Swagger UI returns HTTP 200. Cross-checked the desktop and mobile scope against §§3.4, 4, and 7 of the [spec](../docs/specification.md) and inspected the checkout for simulator and Android source files. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The routing backend is ready for the milestone 1 review. The map and Android client remain planned implementation work. This turn recorded the review before the milestone is committed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Recheck the Supabase GitHub connection
+
+> I don't get this issue with the empty github connection. for me it's connected. check again.
+
+### Decisions
+
+- Read the GitHub repository field in the live Supabase settings as the source of truth for the integration. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Compared the user's screenshot with a fresh browser view and clarified that the earlier empty GitHub field was observed before Amit granted access and Codex connected the repository. The separate Connections section still reads “No connections yet.” [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- In [Hackathon-supa’s Integrations settings](https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj/settings/integrations), verified that the GitHub repository field displays megidocs/HackatonIntel and “Change the connected repository.” The organization still displays Free and Deploy to production is off. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The saved GitHub link is active and matches the screenshot. This was a read-only recheck. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Publish milestone 1 and start milestone 2
+
+> document our progress in the logbook, commit and sync, then proceed to next milestone and notify if you need me to verify anything.
+
+### Decisions
+
+- Publish the completed milestone 1 checkpoint before implementing the desktop simulator in milestone 2. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Reviewed the backend changes, setup instructions, and earlier project log. The milestone includes the importable directed road graph, A* routing API, and reproducible checks against Dijkstra. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Reran the live API checks and the 100-pair A* comparison. All pairs matched Dijkstra. The route from Bellevue to Times Square was 3.16 km and 4.7 modeled minutes. The mean and p95 for local routing were 6.4 ms and 18.6 ms. [Routing checks](../backend/check_routing.py) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The milestone 1 checkpoint contains the backend, runbook, checks, and logbook. The virtual environment, OSM source cache, GraphML, and server logs are generated on the demo laptop. [Rubric criterion 4](../docs/rubric.html#c4)
