@@ -762,3 +762,23 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - The [partner guide](../user.md) was published on GitHub before implementation. The green-wave code, updated tests, and guide additions are checkpointed locally. [Open the demo](http://127.0.0.1:8000/simulator) on Lenovo. The slide deck owner still needs to arrange access or an export for presenters. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Locate the public simulator frontend
+
+> if we are without a public frontend than something is wrong with our ci/cd. I don't get it. where is our public frontend of the simulator?
+
+### Decisions
+
+- Check the local deployment and GitHub's publish status against the current spec, which puts FastAPI on the demo laptop and leaves public hosting as a separate decision. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Clarified that Supabase is the hosted database and that FastAPI serves the current frontend and the live simulator API together. A public deployment needs a reachable FastAPI service or a browser-only simulation. [GitHub Pages hosting](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) · [Supabase GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration#deploying-changes-to-production) · [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The local simulator returned HTTP 200. GitHub reported a public repo with Pages disabled, zero Actions workflows, zero deployments, and no homepage. The local checkout had no deployment workflow, and remote main matched the local milestone 3 commit at the time of the check. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The current working URL is [the simulator on the demo laptop](http://127.0.0.1:8000/simulator). No public simulator frontend is configured. The GitHub check found no deployment pipeline for the simulator to fail. [Rubric criterion 4](../docs/rubric.html#c4)
