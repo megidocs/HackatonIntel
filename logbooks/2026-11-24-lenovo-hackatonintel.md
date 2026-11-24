@@ -1096,4 +1096,4 @@ The user added this requirement while the guidance was being written:
 
 ### Session result
 
-- Committed locally. Publishing to claude.ai and pushing to GitHub wait for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)
+- At the user's request (“Publish and push”), the milestone slide was published as claude.ai version 14, directly after version 13, and the work was pushed to `origin/main`. [Rubric criterion 4](../docs/rubric.html#c4)
