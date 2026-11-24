@@ -21,7 +21,11 @@ TIMES_SQUARE = {"lat": 40.7580, "lon": -73.9855}
 
 def get_json(base_url: str, path: str, payload: dict | None = None, status: int = 200) -> dict:
     data = json.dumps(payload).encode() if payload is not None else None
-    request = Request(base_url + path, data=data, headers={"Content-Type": "application/json"})
+    headers = {"Content-Type": "application/json"}
+    token = os.environ.get("CLEARPATH_CONTROL_TOKEN")
+    if token and payload is not None and path.startswith("/simulation/"):
+        headers["X-ClearPath-Control-Token"] = token
+    request = Request(base_url + path, data=data, headers=headers)
     try:
         response = urlopen(request, timeout=10)
     except HTTPError as error:
@@ -41,6 +45,7 @@ def main() -> None:
     router = ManhattanRouter(Path(os.environ.get("CLEARPATH_GRAPH_PATH", DEFAULT_GRAPH_PATH)))
     graph = router.graph
     health = get_json(base_url, "/health")
+    health.pop("release", None)
     assert health == {"status": "ok", "nodes": len(graph), "directed_edges": graph.number_of_edges()}
 
     demo = get_json(base_url, "/route", {"origin": BELLEVUE, "destination": TIMES_SQUARE})

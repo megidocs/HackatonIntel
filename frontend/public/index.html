@@ -45,6 +45,14 @@
 
       <section aria-labelledby="controls-title">
         <h2 id="controls-title">Simulation controls</h2>
+        <form class="presenter-access" id="presenter-access" hidden>
+          <label for="presenter-token">Presenter access</label>
+          <div>
+            <input id="presenter-token" type="password" autocomplete="off" required>
+            <button type="submit" class="secondary">Unlock</button>
+          </div>
+          <p id="presenter-status" role="status">Public viewers can follow the shared simulation.</p>
+        </form>
         <div class="control-row">
           <button id="play" type="button" class="primary" disabled><span aria-hidden="true">▶</span><span id="play-text">Start simulation</span></button>
           <button id="reset" type="button" class="secondary" disabled>Reset</button>

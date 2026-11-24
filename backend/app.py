@@ -1,13 +1,15 @@
 import asyncio
 import os
 from contextlib import asynccontextmanager, suppress
+from hmac import compare_digest
 from pathlib import Path
 from time import monotonic
 from typing import Literal
 
 import networkx as nx
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -68,7 +70,13 @@ async def lifespan(app: FastAPI):
     path = Path(os.environ.get("CLEARPATH_GRAPH_PATH", DEFAULT_GRAPH_PATH))
     app.state.router = ManhattanRouter(path)
     app.state.simulation = Simulation(app.state.router)
-    app.state.simulation_map = JSONResponse(app.state.simulation.map_data)
+    app.state.simulation_map = JSONResponse(app.state.simulation.map_data).body
+    app.state.control_token = os.environ.get("CLEARPATH_CONTROL_TOKEN", "")
+    app.state.restricted_controls = (
+        bool(app.state.control_token)
+        or os.environ.get("CLEARPATH_PUBLIC_DEMO") == "1"
+        or os.environ.get("RENDER") == "true"
+    )
     timer = asyncio.create_task(advance_simulation(app.state.simulation))
     try:
         yield
@@ -79,13 +87,18 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="ClearPath AI", version="0.1.0", lifespan=lifespan)
+app.add_middleware(GZipMiddleware, minimum_size=700, compresslevel=3)
 app.mount("/sim/assets", StaticFiles(directory=FRONTEND / "public"), name="simulation-assets")
 
 
 @app.get("/health")
 def health(request: Request):
     graph = request.app.state.router.graph
-    return {"status": "ok", "nodes": len(graph), "directed_edges": graph.number_of_edges()}
+    result = {"status": "ok", "nodes": len(graph), "directed_edges": graph.number_of_edges()}
+    commit = os.environ.get("RENDER_GIT_COMMIT") or os.environ.get("CLEARPATH_RELEASE")
+    if commit:
+        result["release"] = commit
+    return result
 
 
 @app.post("/route", response_model=RouteResponse)
@@ -107,6 +120,11 @@ def route(payload: RouteRequest, request: Request) -> RouteResponse:
     )
 
 
+@app.get("/", include_in_schema=False)
+def home():
+    return RedirectResponse("/simulator")
+
+
 @app.get("/simulator", include_in_schema=False)
 def simulator_page():
     return FileResponse(FRONTEND / "public" / "index.html")
@@ -125,7 +143,7 @@ def maplibre_file(filename: str):
 
 @app.get("/simulation/map")
 def simulation_map(request: Request):
-    return request.app.state.simulation_map
+    return Response(request.app.state.simulation_map, media_type="application/json")
 
 
 @app.get("/simulation/state")
@@ -135,8 +153,30 @@ def simulation_state(request: Request):
         return simulation.snapshot()
 
 
+def control_allowed(request: Request) -> bool:
+    if not request.app.state.restricted_controls:
+        return True
+    expected = request.app.state.control_token
+    supplied = request.headers.get("X-ClearPath-Control-Token", "")
+    return bool(expected) and compare_digest(expected.encode(), supplied.encode())
+
+
+def require_control(request: Request) -> None:
+    if not control_allowed(request):
+        raise HTTPException(status_code=403, detail="Presenter access is required.")
+
+
+@app.get("/simulation/access", include_in_schema=False)
+def simulation_access(request: Request):
+    return JSONResponse(
+        {"restricted": request.app.state.restricted_controls, "allowed": control_allowed(request)},
+        headers={"Cache-Control": "no-store"},
+    )
+
+
 @app.post("/simulation/control")
 def simulation_control(payload: SimulationControl, request: Request):
+    require_control(request)
     simulation = request.app.state.simulation
     with simulation.lock:
         if payload.reset:
@@ -155,6 +195,7 @@ def simulation_control(payload: SimulationControl, request: Request):
 
 @app.post("/simulation/closure/{segment}")
 def simulation_closure(segment: int, request: Request):
+    require_control(request)
     simulation = request.app.state.simulation
     if not 0 <= segment < len(simulation.street_features):
         raise HTTPException(status_code=404, detail="Road segment not found.")
@@ -165,6 +206,7 @@ def simulation_closure(segment: int, request: Request):
 
 @app.post("/simulation/point")
 def simulation_point(payload: SimulationPoint, request: Request):
+    require_control(request)
     simulation = request.app.state.simulation
     try:
         node = simulation.router.nearest_node(payload.lat, payload.lon)

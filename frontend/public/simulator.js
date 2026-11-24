@@ -19,7 +19,11 @@ map.addControl(new NavigationControl({ showCompass: false }), "top-right");
 
 const canvas = $("#vehicles");
 const context = canvas.getContext("2d");
-const controls = [...document.querySelectorAll(".sidebar button, .sidebar input, .sidebar select")];
+const controls = [...document.querySelectorAll(".sidebar button, .sidebar input, .sidebar select")]
+  .filter((control) => !control.closest("#presenter-access"));
+let presenterToken = "";
+let pollTimer;
+let polling = false;
 let state;
 let mode;
 let previousVehicles = new Map();
@@ -127,12 +131,16 @@ function addLayers(data) {
   }
 }
 
-async function request(path, payload) {
-  const options = payload === undefined ? {} : {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  };
+async function request(path, payload, token = presenterToken) {
+  const options = { headers: {} };
+  if (payload !== undefined) {
+    options.method = "POST";
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(payload);
+  }
+  if (token && (path === "/simulation/access" || (payload !== undefined && path.startsWith("/simulation/")))) {
+    options.headers["X-ClearPath-Control-Token"] = token;
+  }
   const response = await fetch(path, options);
   if (!response.ok) {
     const { detail } = await response.json().catch(() => ({}));
@@ -351,20 +359,56 @@ function closestRoad(pixel) {
 map.on("load", async () => {
   try {
     addLayers(await request("/simulation/map"));
+    const access = await request("/simulation/access");
     await refresh("/simulation/state");
     if (!reconnecting) setMode();
-    for (const control of controls) control.disabled = false;
+    $("#presenter-access").hidden = !access.restricted;
+    for (const control of controls) control.disabled = !access.allowed;
     requestAnimationFrame(drawVehicles);
   } catch (error) {
     $("#map-message").textContent = error.message;
     return;
   }
 
-  async function poll() {
+  schedulePoll();
+});
+
+function schedulePoll() {
+  if (!document.hidden) pollTimer = setTimeout(poll, state?.running ? 200 : 1500);
+}
+
+async function poll() {
+  if (document.hidden || polling) return;
+  polling = true;
+  try {
     await refresh("/simulation/state");
-    setTimeout(poll, 200);
+  } finally {
+    polling = false;
+    schedulePoll();
   }
-  setTimeout(poll, 200);
+}
+
+document.addEventListener("visibilitychange", () => {
+  clearTimeout(pollTimer);
+  if (!document.hidden && state) poll();
+});
+
+$("#presenter-access").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const field = $("#presenter-token");
+  try {
+    const access = await request("/simulation/access", undefined, field.value);
+    if (!access.allowed) {
+      $("#presenter-status").textContent = "That presenter code did not match.";
+      return;
+    }
+    presenterToken = field.value;
+    field.value = "";
+    $("#presenter-status").textContent = "Presenter controls unlocked for this tab.";
+    for (const control of controls) control.disabled = false;
+  } catch (error) {
+    $("#presenter-status").textContent = error.message;
+  }
 });
 
 for (const button of document.querySelectorAll("[data-mode]")) {

@@ -1,0 +1,53 @@
+name: ClearPath preview
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "deploy/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "render.yaml"
+      - ".github/workflows/clearpath.yml"
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "deploy/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "render.yaml"
+      - ".github/workflows/clearpath.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build the Render image
+        run: docker build -t clearpath-preview .
+      - name: Start with Render Free resource limits
+        run: |
+          docker run -d --name clearpath --memory 512m --cpus 0.1 \
+            -p 127.0.0.1:8000:8000 \
+            -e CLEARPATH_PUBLIC_DEMO=1 -e CLEARPATH_CONTROL_TOKEN=ci-presenter \
+            -e "CLEARPATH_RELEASE=$GITHUB_SHA" clearpath-preview
+      - name: Check the API, browser assets, and presenter access
+        run: python3 -m backend.check_hosted http://127.0.0.1:8000 --release "$GITHUB_SHA" --wait 180
+      - name: Run routing, simulation and priority regressions
+        run: |
+          docker exec clearpath python -m backend.check_routing
+          docker exec clearpath python -m backend.check_simulation
+          docker exec clearpath python -m backend.check_priority
+          docker stats --no-stream clearpath
+      - name: Print server logs on failure
+        if: failure()
+        run: docker logs clearpath

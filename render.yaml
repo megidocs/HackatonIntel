@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: clearpath-hackatonintel
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: checksPass
+    healthCheckPath: /health
+    envVars:
+      - key: CLEARPATH_PUBLIC_DEMO
+        value: "1"
+      - key: CLEARPATH_CONTROL_TOKEN
+        generateValue: true

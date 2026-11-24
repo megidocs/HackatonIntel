@@ -5,17 +5,18 @@
 | What | Where |
 | --- | --- |
 | Source code | [megidocs/HackatonIntel](https://github.com/megidocs/HackatonIntel), branch `main` |
+| Public simulator | Render Free setup in progress. Use the local demo until the public HTTPS link is verified. |
 | Desktop demo | [Manhattan simulator](http://127.0.0.1:8000/simulator) on the demo laptop or a partner’s own running checkout |
 | Backend checks | [FastAPI docs](http://127.0.0.1:8000/docs) and [health](http://127.0.0.1:8000/health) on that same machine |
-| Public Supabase project URL | [https://uodbkiyevjwgmjnofcpj.supabase.co](https://uodbkiyevjwgmjnofcpj.supabase.co). This is Hackathon-supa’s hosted API base URL. FastAPI and the simulator run on the laptop. |
-| Presentation | [Four-slide Hebrew deck](https://claude.ai/artifact/3L7NETeH58eRGv3aj2tF8r). Ask the deck owner for access or an export before presenting. Use the [guidance index](TeacherAndStudentguidance/README.md) if the deck is unavailable. |
+| Public Supabase project URL | [https://uodbkiyevjwgmjnofcpj.supabase.co](https://uodbkiyevjwgmjnofcpj.supabase.co). This is Hackathon-supa’s hosted API base URL. |
+| Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
 | Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), and [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md) |
 
 ## Run and present
 
 1. Clone `https://github.com/megidocs/HackatonIntel` or sync an existing checkout to `main`. Follow the [Windows setup](backend/README.md) for Python, Node, the Manhattan graph, and the FastAPI startup command.
 2. Open the simulator in a desktop browser. Start with Bellevue Hospital to Times Square. Show the route, start traffic, and close a road on the highlighted route. Reopen it and explain the route change using the location and one-way constraints in the road graph.
-3. Use the deck to explain the learning goals and T model. Use the logbook and routing check to show how the team verified the result. The simulator and its road data are served locally. Supabase is on Free with automatic production deployment off.
+3. Use the deck to explain the learning goals and T model. Use the logbook and routing check to show how the team verified the result. Once the Render preview is live, viewers can follow the shared scenario and the presenter can unlock controls with the presenter code. Supabase is on Free with automatic production deployment off. [Hosting setup and checks](deploy/README.md)
 
 ## Executive test summary
 
