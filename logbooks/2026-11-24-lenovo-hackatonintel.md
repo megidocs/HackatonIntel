@@ -229,3 +229,107 @@ The user then asked for this correction to be included in the record.
 ### Session result
 
 - The documentation commit captures the WSL rehearsal findings, the available free slot, the Free-plan requirement, and the updated logging instructions. The selected backend is a dedicated ClearPath Supabase Free project with FastAPI on the demo laptop. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Connect the existing Supabase project to GitHub
+
+> I was not specific  enough this is the supabase: [https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj/settings/general](https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj/settings/general) we stay on that project, use @Computer to connect it to our git. I'll approve where needed.
+>
+> we can disconnect from the other (Maagar) repo, so stay connected only to our repo.
+
+### Decisions
+
+- Use the existing Hackathon-supa project on the Free plan. The only intended GitHub repository for this project is megidocs/HackatonIntel. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Opened the specified project in Computer Use and checked the repository picker and the GitHub App installation flow. Updated the deployment specification to name the existing project and target repository. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Checked `origin` in HackatonIntel. Supabase showed the repository picker with Maagar-supa available, and the GitHub repository field was empty. GitHub showed that the signed-in account could configure its personal Supabase installation but did not offer the account that owns megidocs/HackatonIntel as an installation target. HackatonIntel repository settings also reported that the signed-in account lacked access to repository options. [GitHub App installation permissions](https://docs.github.com/en/apps/using-github-apps/installing-a-github-app-from-a-third-party) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The project is ready for the repository owner or another authorized GitHub administrator to grant the Supabase App access to megidocs/HackatonIntel. The project-level repository connection is pending. There was no Maagar connection to remove from this Supabase project. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Verify the repository URL
+
+> what's the repos  URL?
+
+### Decisions
+
+- Use the URL configured as HackatonIntel's Git origin when identifying the repository for the Supabase integration. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Looked up the configured origin and supplied the clickable repository link. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Ran git remote get-url origin in the HackatonIntel checkout and verified the owner and repository name. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The repository is [megidocs/HackatonIntel](https://github.com/megidocs/HackatonIntel). [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Confirm collaborator permissions
+
+> not sure I can select it since I'm just a colaborator.
+
+### Decisions
+
+- Ask the GitHub repository owner to grant the Supabase App access specifically to HackatonIntel. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Clarified who can grant app access and supplied the installer link. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- The earlier GitHub browser check showed that the current account lacked access to repository options and that megidocs was absent from the Supabase App installation targets. [GitHub App installation permissions](https://docs.github.com/en/apps/using-github-apps/installing-a-github-app-from-a-third-party) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The Supabase connection is pending repository-owner approval in GitHub. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Verify access and connect HackatonIntel
+
+> Amit this this now. check again using computer
+
+> the update Amit did was on Github side. I didn't do anything on my supabase
+
+### Decisions
+
+- Use Amit's GitHub-side access grant to connect megidocs/HackatonIntel to the existing Free Hackathon-supa project. Keep automatic production deploys off for the repository connection. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Refreshed the Supabase picker using Computer Use. Selected HackatonIntel, set the working directory to the repository root, turned off automatic production deploys, and enabled the integration on the Supabase side. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Verified that HackatonIntel was available after Amit's GitHub change. Reloaded [Supabase integration settings](https://supabase.com/dashboard/project/uodbkiyevjwgmjnofcpj/settings/integrations) after saving and confirmed that megidocs/HackatonIntel was the connected repository, production deploys were off, automatic branching was disabled, and the organization still showed the Free plan. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- Amit granted access on GitHub. Codex completed the link on Supabase. HackatonIntel is the only connected repository for this project. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Commit and push the Supabase integration record
+
+> commit-push. make sure the logbook records that Amit granted access on GitHub and you connected HackatonIntel in Supabase, with auto-deploy off.
+
+### Decisions
+
+- Publish the specification and logbook updates together in HackatonIntel. The GitHub integration stays connected with automatic production deploys off. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Confirmed the logbook credits Amit for granting the Supabase App access on GitHub and Codex for connecting megidocs/HackatonIntel to Hackathon-supa in Supabase. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### Independent checks
+
+- Checked the preceding integration record against the saved Supabase settings observed after a reload. Reviewed the pending diff for the project name, repository, Free plan, and disabled auto-deploy setting. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The documentation commit records the two contributions, the verified connection, and the deployment setting. [Rubric criterion 4](../docs/rubric.html#c4)
