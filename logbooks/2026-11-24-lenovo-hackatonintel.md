@@ -478,6 +478,32 @@ The user then asked for this correction to be included in the record.
 
 - The routing and desktop simulator were already synced. This commit adds the sync request and verification to the project record. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Prepare a partner guide and test summary
+
+> write a small user.md that instructs us with the repo URL, the server simulator, the slideware location etc so that all partners can use the project and present effectively. commit push
+>
+> issue there an exec summary of what we should test.
+>
+> after the commit push you may start next phase,
+
+> the user.md should indicate what's the public url we got on supabase
+
+### Decisions
+
+- Put the partner entry points, presentation run order, and executive test summary in root [user.md](../user.md). Publish the guide before changing the simulator for milestone 3. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Documented the repository, demo and API URLs, the public Supabase project URL, the slide deck, and the presentation references. The checklist pairs startup, routing, traffic and closure actions with expected evidence. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Verified the Git origin, local FastAPI health and the public Supabase URL in the project dashboard. The saved deck URL led to a sign-in page in the in-app browser and a page-not-found message in the signed-in test account. Partner access to the deck remains unverified. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The partner guide points to the deck and repository guidance as a presentation fallback. The deck owner still needs to share the slides with presenters or provide an offline export. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Teacher and student guidance
 
 > part of our product must be TeacherAndStudentguidance in C:\Users\LENOVO\Documents\Jupiter Notebooks\HackatonIntel\TeacherAndStudentguidance
