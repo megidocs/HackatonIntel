@@ -964,4 +964,4 @@ The user added this requirement while the guidance was being written:
 
 ### Session result
 
-- The updated deck is committed locally. Publishing to the shared claude.ai deck and pushing to GitHub wait for the user's review and approval. [Rubric criterion 4](../docs/rubric.html#c4)
+- The user reviewed the deck and approved publishing and pushing (“Publish and push”). The permission check blocked the publish because the deck is public and updates live. Claude read the live deck and found it byte-identical to the published version 9, so it held no one else's edits. The commit is pushed to `origin/main`. Publishing waits for the user to confirm again. [Rubric criterion 4](../docs/rubric.html#c4)
