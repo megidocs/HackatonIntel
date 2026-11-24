@@ -44,3 +44,28 @@ The full [Tel Aviv dispatch rehearsal](../backend/README.md#tel-aviv-dispatch-re
 ### Session result
 
 The team's [user guide](../user.md) now includes both Tel Aviv rehearsals and the pre-demo checks.
+
+## User follow-up · Local URLs and a full hosted rehearsal
+
+> 1. On my client - running to localhost:8003 (maybe it's old?) [`http://127.0.0.1:8003/dispatch/reports`](http://127.0.0.1:8003/dispatch/reports) I get "Which single supported Manhattan location should this report use". is there a different url for TLV?
+> 2. can you run the whole Tel Aviv dispatch demo on Render with Playwright, from unlocking presenter access to the ambulance arriving, and update user.md if any steps are missing?
+>
+> I'm not sure a get it - the launch switches on the dispatch localhost determine if it's TLV or new-york? (while on simulator is by URL termination) ? ? ??
+
+### Decisions
+
+- The user asked how the URL and startup configuration relate and requested an authorized hosted rehearsal. Codex used the Jaffa Road ambulance example at the running demo defaults and paused the hosted scene on arrival.
+
+### AI contribution
+
+- Traced the Manhattan Copilot, Manhattan dispatch-mode switch, and dedicated Tel Aviv paths. Started an additional loopback-only process on port 8005 for the current Tel Aviv page.
+- Added a local URL reference, the clean starting state, the arrival indicator, and the pause and reset choices. [Team guide](../user.md) · [Judging checkpoint](../docs/rubric.html#c3)
+
+### Independent checks
+
+- The existing process on port 8003 returned 404 for the Tel Aviv dispatch page. The fresh process on port 8005 returned 200 and reported six available vehicles and local controls.
+- Playwright unlocked the deployed presenter UI, selected the Hebrew Jaffa Road report, and reviewed both ambulance choices. Ambulance 2 at Nahmani showed an 84-second modeled drive estimate. Approval showed the running trip, one dispatched ambulance, and five available units. Arrival was displayed at 1 minute 31 seconds of simulated time, and the panel returned to six available units.
+
+### Session result
+
+The [Render demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) was paused on the completed Jaffa Road dispatch. The [updated guide](../user.md#which-local-url-should-i-use) explains how to open the Tel Aviv workflow locally.

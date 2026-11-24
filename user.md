@@ -28,11 +28,11 @@ Open the demo on a desktop or laptop before presenting. Render may take about a 
 
 ### Show the fleet and dispatch a vehicle
 
-1. Open the [Tel Aviv dispatch demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch). Before entering a report, point out the vehicles marked **Available** and their Hebrew base labels on the map.
+1. Open the [Tel Aviv dispatch demo](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) and unlock **Presenter access**. For a clean run, check that the fleet shows **6 available** and the route status says **Waiting for an approved dispatch**. If a previous trip is on screen and the team is done with it, click **Reset** under **Simulation controls**.
 2. In **What happened?**, enter `אירוע רפואי בדרך יפו. נדרש אמבולנס.` Set **Incident location** to **Jaffa Road · דרך יפו** and **Response needed** to **Ambulance**.
 3. Click **Propose dispatch**. Review the report and the available ambulances with their estimated drive times. For this example, choose **Ambulance 2 · Nahmani** if it is available.
-4. Click **Approve dispatch**. Traffic starts, the selected vehicle is marked **Dispatched**, and the highlighted route runs from its base to the incident. The vehicle becomes **Available** on arrival.
-5. After arrival, try another report or click **Reset** under **Simulation controls** to clear the shared trip. The demo handles one active trip at a time, so coordinate resets and approvals with anyone else presenting.
+4. Click **Approve dispatch**. Traffic starts automatically, the vehicle is marked **Dispatched**, and the route runs from its base to the incident. Keep the map open until the fleet panel says **Ambulance 2 reached Jaffa Road and is available again**. In the verified Render rehearsal, the estimated drive time was 84 seconds and arrival took 1 minute 31 seconds of simulated time with traffic.
+5. Traffic continues after arrival. Click **Pause** to show the result, or click **Reset** to clear the shared trip. The demo handles one active trip at a time, so coordinate resets and approvals with anyone else presenting.
 
 | Vehicle | Simulated base |
 | --- | --- |
@@ -62,6 +62,19 @@ $env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
 ```
 
 Keep that terminal open and choose [Manhattan](http://127.0.0.1:8000/simulator), the [Tel Aviv traffic simulator](http://127.0.0.1:8000/simulator/tel-aviv), or [Tel Aviv dispatch](http://127.0.0.1:8000/simulator/tel-aviv/dispatch). The bundled graphs are the same snapshots used on Render. Local desktop demos can run offline once setup is complete. For a fresh OpenStreetMap snapshot, use the [graph import instructions](backend/README.md).
+
+### Which local URL should I use?
+
+The port identifies which server process you're opening. On a current checkout, the URL path selects the city or dispatch workflow.
+
+| URL path | What opens |
+| --- | --- |
+| `/simulator/tel-aviv/dispatch` | Tel Aviv fleet, incident report, approval, and route on one page. |
+| `/simulator/tel-aviv` | Tel Aviv traffic simulation with manual incident placement. |
+| `/dispatch/reports` | Signed-in Manhattan Copilot, usually on Lenovo port **8003** or **8004**. The message **Which single supported Manhattan location should this report use?** comes from this workflow. |
+| `/simulator` | Manhattan traffic map. With `CLEARPATH_DISPATCH_SIMULATION=1`, the map waits for an approved Manhattan dispatch. |
+
+Tel Aviv dispatch opens by path with the normal simulator startup command. If `/simulator/tel-aviv/dispatch` returns 404, sync to current `main` and restart the simulator or launch a fresh process on a free port. Use that port in the link. For example, with `--port 8005` open [local Tel Aviv dispatch on port 8005](http://127.0.0.1:8005/simulator/tel-aviv/dispatch).
 
 For the signed-in dispatch rehearsal on Lenovo, the private configuration and demo credentials are in `C:\Users\3stra\AndroidStudioProjects\HackatonIntel\.env.dispatch.local`. Git ignores this file. Use the [dispatch startup instructions](docs/dispatch.md#start-with-the-private-local-file).
 
