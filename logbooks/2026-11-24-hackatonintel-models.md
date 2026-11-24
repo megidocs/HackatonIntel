@@ -19,3 +19,23 @@
 ### Session result
 
 - Report drafting and the classifier comparison are reproducible using the [model guide](../models/README.md). The current scores use AI-authored synthetic examples and measure incident category. Student-authored evaluation and separate checks for severity, unit suggestions and location are still needed. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Explain model development for the presentation team
+
+> LLM training and dev, as was done merits a side doc explaining in some details, so that the guys generating the slides to present give it some time and focus
+
+### Decisions
+
+- Write a standalone briefing for the slide team. Explain the actual classifier training and LLM development, and include the benchmark's scope and an example presenters can rehearse. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Wrote the [model development brief](../docs/model-development-brief.md) and linked it from the partner guide. It covers training data, inference, validation, comparison, a severity failure and correction, and a suggested presentation sequence. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Cross-checked the report counts, category errors, timing, and macro F1 against the [benchmark JSON](../models/benchmark-result.json), and checked the workflow against the source and the actual dispatcher and citizen rehearsals. The documented PowerShell sign-in returned a real demo access token. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The slide team has a dedicated source for the comparison, one reproducible demo, and limitations to explain. [Rubric criterion 4](../docs/rubric.html#c4)
