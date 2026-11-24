@@ -39,3 +39,23 @@
 ### Session result
 
 - Milestone 4’s Android demo is live against the Render simulator. The physical phone returned `INSTALL_FAILED_USER_RESTRICTED` during USB installation. The emulator verified the app and visual alerts. Checking spoken audio and rehearsing with two physical phones remain manual presentation checks. The APK defaults to the live service, and the [Android guide](../mobile/README.md) gives the local USB commands. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Deploy to the connected Xiaomi
+
+> deploy to the xiaomi that's connected I'll approve first install.
+
+### Decisions
+
+- Install the existing Render-configured debug APK on the connected Xiaomi by USB. The user offered to approve the first-install prompt on the phone. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Selected the connected Xiaomi, installed the APK with ADB, and launched ClearPath AI on the device. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- ADB reported a successful install and cold launch. Android reported `com.clearpath.clearpath_mobile` version `1.0.0` in the foreground. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- ClearPath AI is installed and open on the physical Xiaomi. Its default server is the [public Render simulator](https://clearpath-hackatonintel.onrender.com/simulator). The on-device connection and spoken-alert rehearsal are still to be checked. [Rubric criterion 4](../docs/rubric.html#c4)
