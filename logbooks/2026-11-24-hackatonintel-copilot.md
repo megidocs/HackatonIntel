@@ -450,3 +450,21 @@
 ### Session result
 
 - The release commit contains the simulator modes, regression coverage, and presentation steps. GitHub and Render verification results follow in the release checkpoint. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## Release checkpoint · Verify the Render deploy
+
+### Decisions
+
+- Use the public health endpoint to match the live application to the pushed Git commit, then run the viewer smoke check. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Pushed application commit `3d7b204` to GitHub `main` and waited for Render to serve it. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The [dispatch regression](https://github.com/megidocs/HackatonIntel/actions/runs/45433715489) and [Render preview](https://github.com/megidocs/HackatonIntel/actions/runs/45433715680) passed. The [live health endpoint](https://clearpath-hackatonintel.onrender.com/health) reported release `3d7b204af7c4ae9c41c399f99aaed8b4620efd92`. The hosted smoke check passed for map assets and viewer access. Lenovo port 8004 still reported dispatch-driven mode and the Bryant Park route. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The updated [standalone traffic simulator](https://clearpath-hackatonintel.onrender.com/simulator) is live on Render. The [Lenovo simulator](http://127.0.0.1:8004/simulator) serves the dispatch-driven rehearsal. [Rubric criterion 4](../docs/rubric.html#c4)
