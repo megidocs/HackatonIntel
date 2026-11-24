@@ -19,7 +19,8 @@
 - Checked routes from each unit type to all six requested bases and to Habima Square. Chrome Playwright verified the fleet before entry, a Hebrew report for Jaffa Road, selected Ambulance 2 at Nahmani, watched the route run, and saw the ambulance become available on arrival. A screenshot confirmed the six fleet rows and base markers on the map.
 - Local API checks rejected anonymous proposals and approvals, an incompatible unit, and simultaneous approval attempts. They confirmed that preview leaves availability intact, reset frees the fleet, and the two Tel Aviv modes have independent state.
 - The standalone Tel Aviv Playwright check, hosted-style smoke check, Manhattan routing and simulation regressions, JavaScript syntax, and diff whitespace check passed locally. [Critical checking checkpoint](../docs/rubric.html#c3)
+- The [container preview](https://github.com/megidocs/HackatonIntel/actions/runs/45450321197) and [dispatch regression](https://github.com/megidocs/HackatonIntel/actions/runs/45450321066) passed. Render served release `7ab68c6e79847d30799b92ae7f464a81d2c35ebc`. Chrome confirmed six fleet rows and map markers and verified the public viewer's disabled report controls.
 
 ### Session result
 
-The full [Tel Aviv dispatch rehearsal](../backend/README.md#tel-aviv-dispatch-rehearsal) passed locally. The feature is ready for the Render rollout and hosted verification.
+The full [Tel Aviv dispatch rehearsal](../backend/README.md#tel-aviv-dispatch-rehearsal) passed locally, and [Tel Aviv dispatch](https://clearpath-hackatonintel.onrender.com/simulator/tel-aviv/dispatch) is live on Render. The hosted check used viewer access. A presenter can unlock the report and approval controls to run the rehearsal.
