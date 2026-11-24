@@ -742,3 +742,23 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - This checkpoint contains the milestone 3 implementation and passing backend tests. The end-to-end browser check and demo-laptop restart are the next checks. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Verify the new phase on the demo laptop
+
+> after the commit push you may start next phase,
+
+### Decisions
+
+- Keep the simulator local on the demo laptop and leave the updated demo paused at Bellevue after verification. The 27.0% timing difference is evidence from one seeded simulation run. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Restarted FastAPI on port 8000 with milestone 3 from local commit d7f83e9. Rechecked the controls and overlay in the browser. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- In the browser, disabling green wave reduced the priority and alert counts to zero. Enabling it and starting playback showed the corridor and prioritized signals moving along the route. Reset restored the initial four simulated yield alerts. The browser error log was empty. The priority and simulator checks passed again on port 8000. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The [partner guide](../user.md) was published on GitHub before implementation. The green-wave code, updated tests, and guide additions are checkpointed locally. [Open the demo](http://127.0.0.1:8000/simulator) on Lenovo. The slide deck owner still needs to arrange access or an export for presenters. [Rubric criterion 4](../docs/rubric.html#c4)
