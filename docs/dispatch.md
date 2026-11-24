@@ -35,6 +35,26 @@ $env:CLEARPATH_GRAPH_PATH = (Resolve-Path 'deploy/manhattan.graphml.gz').Path
 
 The emulator can open these API docs at `http://10.0.2.2:8003/docs`. For the protected calls, use the access token from a demo account's [Supabase password sign-in](https://supabase.com/docs/reference/javascript/auth-signinwithpassword) in **Authorize**. Keep the service bound to loopback for this rehearsal.
 
+From the repository root, run the following to sign in for a rehearsal. Change `$role` to `RESCUE` or `CITIZEN` to test that role. The last command copies the short-lived access token so you can paste it into Swagger **Authorize** or the [local report review](http://127.0.0.1:8003/dispatch/reports) form.
+
+```powershell
+$settings = @{}
+Get-Content -LiteralPath .env.dispatch.local | ForEach-Object {
+    $name, $value = $_ -split '=', 2
+    $settings[$name] = $value
+}
+$role = 'DISPATCHER'
+$body = @{
+    email = $settings["CLEARPATH_DEMO_${role}_EMAIL"]
+    password = $settings["CLEARPATH_DEMO_${role}_PASSWORD"]
+} | ConvertTo-Json -Compress
+$auth = Invoke-RestMethod -Method Post `
+    -Uri "$($settings.CLEARPATH_SUPABASE_URL)/auth/v1/token?grant_type=password" `
+    -Headers @{ apikey = $settings.CLEARPATH_SUPABASE_PUBLISHABLE_KEY } `
+    -ContentType 'application/json' -Body $body
+$auth.access_token | Set-Clipboard
+```
+
 ## Rehearse dispatch and authorization
 
 1. Dispatcher opens a simulated incident, checks available units on `GET /dispatch/board`, and posts an assignment. Repeat the same request ID and verify it returns the same record. Try assigning the same unit to a second incident while the first assignment is active and expect `409`.

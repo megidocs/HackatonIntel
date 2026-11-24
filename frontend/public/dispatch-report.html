@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Report review · ClearPath AI</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.55 system-ui, sans-serif; background: #101719; color: #edf7f5; }
+    body { max-width: 43rem; padding: 2rem 1rem; margin: auto; }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); margin: .8rem 0; }
+    a, #status { color: #8ee5d1; }
+    label, input, textarea { display: block; box-sizing: border-box; width: 100%; }
+    label { margin-top: 1.2rem; }
+    input, textarea, button { font: inherit; border: 1px solid #52716e; border-radius: .45rem; padding: .65rem; }
+    input, textarea { background: #182426; color: inherit; margin-top: .35rem; }
+    textarea { min-height: 9rem; resize: vertical; }
+    button { margin-top: 1rem; background: #8ee5d1; color: #102724; font-weight: 650; cursor: pointer; }
+    button:disabled { opacity: .65; cursor: wait; }
+    section { background: #182426; border: 1px solid #52716e; border-radius: .7rem; padding: 1rem 1.3rem; }
+    section h2 { margin-top: 0; }
+    dl { display: grid; grid-template-columns: minmax(6rem, 1fr) 2fr; gap: .65rem; }
+    dt { font-weight: 650; }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    :focus-visible { outline: 2px solid #8ee5d1; outline-offset: 3px; }
+  </style>
+  <script type="module" src="/sim/assets/dispatch-report.js"></script>
+</head>
+<body>
+  <main>
+    <a href="/simulator">ClearPath simulator</a>
+    <h1>Review an incident report</h1>
+    <p>Use a dispatcher access token. The local model prepares a draft for your review.</p>
+    <form id="report-form">
+      <label for="token">Dispatcher access token</label>
+      <input id="token" type="password" autocomplete="off" spellcheck="false" required>
+      <label for="report">Incident report</label>
+      <textarea id="report" maxlength="1200" required></textarea>
+      <button id="suggest" type="submit">Draft report</button>
+    </form>
+    <p id="status" role="status"></p>
+    <section id="review" hidden>
+      <h2>Draft for review</h2>
+      <dl>
+        <dt>Incident type</dt><dd id="kind"></dd>
+        <dt>Severity</dt><dd id="severity"></dd>
+        <dt>Map location</dt><dd id="location"></dd>
+        <dt>Units to consider</dt><dd id="units"></dd>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>

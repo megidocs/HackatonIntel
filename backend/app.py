@@ -137,6 +137,13 @@ def simulator_page():
     return FileResponse(FRONTEND / "public" / "index.html")
 
 
+@app.get("/dispatch/reports", include_in_schema=False)
+def report_page(request: Request):
+    if request.app.state.dispatch is None or not os.getenv("CLEARPATH_MODEL_URL"):
+        raise HTTPException(status_code=404)
+    return FileResponse(FRONTEND / "public" / "dispatch-report.html", headers={"Cache-Control": "no-store"})
+
+
 @app.get("/sim/vendor/{filename}", include_in_schema=False)
 def maplibre_file(filename: str):
     if filename not in MAPLIBRE_FILES:

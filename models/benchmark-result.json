@@ -1,0 +1,105 @@
+{
+  "training_reports": 256,
+  "test_reports": 32,
+  "tfidf_logistic_regression": {
+    "accuracy": 0.7812,
+    "macro_f1": 0.7793,
+    "median_ms": 0.37,
+    "labels": [
+      "accident",
+      "fire",
+      "medical",
+      "roadblock",
+      "unresolved"
+    ],
+    "matrix": [
+      [
+        7,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        2,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        7,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1,
+        5,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "unresolved": 0
+  },
+  "zero_shot_llm": {
+    "accuracy": 0.8438,
+    "macro_f1": 0.8524,
+    "median_ms": 906.08,
+    "labels": [
+      "accident",
+      "fire",
+      "medical",
+      "roadblock",
+      "unresolved"
+    ],
+    "matrix": [
+      [
+        8,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        6,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        7,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "unresolved": 0,
+    "invalid_responses": 0
+  }
+}
