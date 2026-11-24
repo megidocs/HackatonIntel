@@ -195,16 +195,16 @@ ClearPath AI היא מערכת זמן אמת. לכן כל דרישת ביצוע�
 
 ### 6.4 בסיס נתונים (Database)
 
-PostgreSQL בפרויקט Supabase הייעודי ל-ClearPath שומר נתונים מתמשכים, ובהם משתמשים, אירועים, שיוכים ותיעוד תעדוף. FastAPI מבצע את השאילתות והטרנזקציות מול המסד. Redis המקומי מחזיק מצב זמני של רכבים ורמזורים, כולל מיקומי אזרחים שפוקעים אחרי דקה.
+PostgreSQL בפרויקט Supabase הייעודי ל-ClearPath שומר תפקידי משתמשים, אירועים, שיוכים ותיעוד בקשות תעדוף. FastAPI מאמת את אסימון הגישה מול Supabase Auth ומבצע שאילתות וטרנזקציות באמצעות תפקיד מסד מוגבל. Redis המקומי מחזיק דגימות מיקום ו-nonce שפוקעים אחרי דקה. שעון הסימולציה ומחזורי הרמזורים מנוהלים בזיכרון של FastAPI. [הגדרה ובדיקות לשלב 5](dispatch.md)
 
 | **טבלה** | **שדות עיקריים** | **תפקיד** |
 | ---: | ---: | ---: |
-| Users | user\_id (PK), role, name, password\_hash | משתמשים ותפקידים: מוקדן, נהג הצלה, אזרח |
+| Users | user\_id (PK/FK ל-Supabase Auth), role, display\_name | משתמשים ותפקידים: מוקדן, נהג הצלה, אזרח |
 | Units | unit\_id (PK), unit\_type, user\_id (FK) | רכבי ההצלה |
 | Incidents | incident\_id (PK), type, severity, lat, lon, status, created\_at | אירועי החירום |
 | Dispatches | dispatch\_id (PK), incident\_id (FK), unit\_id (FK), dispatched\_at, arrived\_at | שיוך רכב לאירוע וזמני ההגעה |
 | Intersections | intersection\_id (PK), osm\_node\_id, lat, lon | הצמתים המרומזרים |
-| PreemptionLog | log\_id (PK), dispatch\_id (FK), intersection\_id (FK), green\_at, reset\_at | תיעוד כל "גל ירוק" |
+| PreemptionLog | request\_id (PK), dispatch\_id (FK), user\_id (FK), osm\_node\_id (FK), requested\_at | תיעוד בקשת עדיפות שאושרה לפי תפקיד ושיוך |
 
 - **מפתחות וקשרים:** מפתח ראשי (PK) ומפתח זר (FK), ותרשים ERD של הקשרים. למשל: לאירוע אחד יכולים להיות כמה שיוכים של רכבים.
 - **נרמול:** כל נתון נשמר במקום אחד. למשל, סוג הרכב נשמר בטבלת Units ולא בכל שיוך מחדש.

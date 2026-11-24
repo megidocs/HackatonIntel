@@ -13,8 +13,9 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from .routing import DEFAULT_GRAPH_PATH, ManhattanRouter, PointOutsideGraph
+from .dispatch import DispatchServices, router as dispatch_router
 from .mobile import mobile_router
+from .routing import DEFAULT_GRAPH_PATH, ManhattanRouter, PointOutsideGraph
 from .simulation import Simulation
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
@@ -78,6 +79,7 @@ async def lifespan(app: FastAPI):
         or os.environ.get("CLEARPATH_PUBLIC_DEMO") == "1"
         or os.environ.get("RENDER") == "true"
     )
+    app.state.dispatch = DispatchServices.from_environment()
     timer = asyncio.create_task(advance_simulation(app.state.simulation))
     try:
         yield
@@ -85,11 +87,14 @@ async def lifespan(app: FastAPI):
         timer.cancel()
         with suppress(asyncio.CancelledError):
             await timer
+        if app.state.dispatch:
+            app.state.dispatch.close()
 
 
 app = FastAPI(title="ClearPath AI", version="0.1.0", lifespan=lifespan)
 app.add_middleware(GZipMiddleware, minimum_size=700, compresslevel=3)
 app.include_router(mobile_router)
+app.include_router(dispatch_router)
 app.mount("/sim/assets", StaticFiles(directory=FRONTEND / "public"), name="simulation-assets")
 
 
