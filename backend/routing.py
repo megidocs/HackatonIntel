@@ -46,27 +46,38 @@ class ManhattanRouter:
         meters = ox.distance.great_circle(start["y"], start["x"], end["y"], end["x"])
         return float(meters) / self.max_speed_mps
 
-    def route(self, source: int, destination: int) -> tuple[list[int], float, float, list[list[float]]]:
+    def path(self, source: int, destination: int, graph: nx.MultiDiGraph | None = None):
+        graph = self.graph if graph is None else graph
         nodes = nx.astar_path(
-            self.graph, source, destination, heuristic=self.estimate_seconds, weight="travel_time"
+            graph, source, destination, heuristic=self.estimate_seconds, weight="travel_time"
         )
+        edges = [
+            (u, v, min(graph[u][v], key=lambda key: graph[u][v][key]["travel_time"]))
+            for u, v in zip(nodes, nodes[1:])
+        ]
+        return nodes, edges
+
+    def edge_coordinates(self, u: int, v: int, key: int) -> list[tuple[float, float]]:
+        start, end = self.graph.nodes[u], self.graph.nodes[v]
+        origin = (start["x"], start["y"])
+        geometry = self.graph[u][v][key].get("geometry")
+        if geometry is None:
+            return [origin, (end["x"], end["y"])]
+        points = list(geometry.coords)
+        if points[-1] == origin:
+            points.reverse()
+        return points
+
+    def route(self, source: int, destination: int) -> tuple[list[int], float, float, list[list[float]]]:
+        nodes, edges = self.path(source, destination)
         start = self.graph.nodes[source]
         coordinates = [[start["x"], start["y"]]]
         distance_m = travel_time_s = 0.0
-        for u, v in zip(nodes, nodes[1:]):
-            edge = min(self.graph[u][v].values(), key=lambda edge: edge["travel_time"])
+        for u, v, key in edges:
+            edge = self.graph[u][v][key]
             distance_m += edge["length"]
             travel_time_s += edge["travel_time"]
-            end = self.graph.nodes[v]
-            geometry = edge.get("geometry")
-            if geometry is None:
-                coordinates.append([end["x"], end["y"]])
-            else:
-                # OSM ways can be stored in reverse order for the return edge.
-                points = list(geometry.coords)
-                if points[-1] == tuple(coordinates[-1]):
-                    points.reverse()
-                coordinates.extend([lon, lat] for lon, lat in points[1:])
+            coordinates.extend([lon, lat] for lon, lat in self.edge_coordinates(u, v, key)[1:])
 
         if len(nodes) == 1:
             coordinates.append(coordinates[0].copy())

@@ -1,10 +1,11 @@
-# ClearPath AI · Milestone 1
+# ClearPath AI · Local demo
 
 Run these commands from the repository root in PowerShell on the demo laptop.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r backend/requirements.txt
+npm ci --prefix frontend
 if (-not (Test-Path -LiteralPath 'backend/data/manhattan.graphml')) {
     New-Item -ItemType Directory -Force backend/data/osm-cache | Out-Null
     curl.exe --fail --location --output backend/data/osm-cache/NewYork.osm.pbf https://download.bbbike.org/osm/bbbike/NewYork/NewYork.osm.pbf
@@ -22,6 +23,8 @@ The laptop import used the [BBBike New York OSM extract](https://download.bbbike
 OSMnx clips the PBF to the Manhattan boundary from Nominatim or its local cache.
 When Overpass is available, `python -m backend.prepare_graph` from the project
 virtual environment can download just the Manhattan network.
+
+## Routing API
 
 Open the [interactive API docs](http://127.0.0.1:8000/docs) or check
 [server health](http://127.0.0.1:8000/health). Try a route from Bellevue to Times Square.
@@ -47,8 +50,31 @@ the HTTP checks and 100-pair comparison with Dijkstra.
 .\.venv\Scripts\python.exe -m backend.check_routing
 ```
 
-Milestone 1 runs on laptop loopback. Supabase, Redis, and phone connectivity
-are later integration work.
+## Desktop simulator
+
+Open the [Manhattan simulator](http://127.0.0.1:8000/simulator). Start playback, set
+the civilian vehicle count or playback speed, and use the origin and destination
+buttons to choose new points on the map. To reroute the rescue vehicle, select
+**Toggle road closure** and click a street on its route. Click the same street
+again to reopen it. **Reset** restores Bellevue to Times Square and pauses playback.
+
+FastAPI owns the simulation clock, positions, fixed-cycle simulated signals, and
+closures. A closure applies to the physical segment in both mapped directions.
+The browser renders the saved OpenStreetMap streets with local MapLibre assets
+and interpolates vehicle positions between updates. The land outline is derived
+from the road-node geometry. The map and simulation run on laptop loopback without
+map tile requests or cloud services.
+
+This milestone models signal cycles, traffic queues, and route changes. The
+emergency green wave, civilian alerts, and Android synchronization are later
+milestones. Use a single FastAPI worker because the demo state is in process memory.
+
+Verify the simulator once the server is running. This check resets the local
+scenario and covers vehicle motion, route changes, and signal behavior.
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.check_simulation
+```
 
 Road data © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright).
 The graph and data download cache are generated locally.

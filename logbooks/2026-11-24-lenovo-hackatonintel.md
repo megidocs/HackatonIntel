@@ -417,6 +417,26 @@ The user then asked for this correction to be included in the record.
 
 - The milestone 1 checkpoint contains the backend, runbook, checks, and logbook. The virtual environment, OSM source cache, GraphML, and server logs are generated on the demo laptop. [Rubric criterion 4](../docs/rubric.html#c4)
 
+## User prompt · Commit the simulator during implementation
+
+> don't forget frequent commits, even on mid progress.
+
+### Decisions
+
+- Keep a separate simulator implementation checkpoint after verified milestone 1 commit ed78bd0 on origin/main. FastAPI owns the simulation, and MapLibre renders the local OSM graph with no map tile service. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Built the Manhattan desktop screen, playback and density controls, and the local simulation of vehicles, signal cycles, road closures, and rescue routes. Added a simulator check command to the runbook. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Saw the first simulator render in the in-app browser, toggled a closure by clicking the map, and confirmed the clock advanced during playback and paused on command. Python compilation and JavaScript syntax checks passed. The initial screenshot prompted a framing adjustment to keep both endpoints visible. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- This checkpoint captures the implementation and first browser checks. The final route, signal, and 500-vehicle regression checks are still in progress. [Rubric criterion 4](../docs/rubric.html#c4)
+
 ## User prompt · Teacher and student guidance
 
 > part of our product must be TeacherAndStudentguidance in C:\Users\LENOVO\Documents\Jupiter Notebooks\HackatonIntel\TeacherAndStudentguidance
