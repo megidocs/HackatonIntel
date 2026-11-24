@@ -722,3 +722,23 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - Local `main` matches GitHub at the time of this sync, with the partner guide included. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Start milestone 3 after publishing the guide
+
+> after the commit push you may start next phase,
+
+### Decisions
+
+- Begin simulated green-wave priority and route-based civilian alerts after verifying the partner-guide push. Use a 20-second modeled arrival lookahead, a two-second simulated all-red clearance interval, and a 400 m road-following corridor. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Implemented priority scheduling for upcoming simulated signals, restoration of the normal cycle, and yielding for simulated civilians ahead on the same directed route. Added the green-wave switch, corridor overlay, and alert counters to the desktop simulator. Updated the partner checklist and [runbook](../backend/README.md). [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- The [priority check](../backend/check_priority.py) passed for clearance in both directions, opposing red, normal-cycle restoration, and route-only alerts. In the same seeded Bellevue–Times Square simulation, the baseline finished in 394.8 simulated seconds and priority finished in 288.4 seconds. The routing and simulator regression checks also passed on the verification port. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- This checkpoint contains the milestone 3 implementation and passing backend tests. The end-to-end browser check and demo-laptop restart are the next checks. [Rubric criterion 4](../docs/rubric.html#c4)

@@ -25,4 +25,5 @@
 | Routing | Bellevue → Times Square is about 3.16 km and 4.7 modeled minutes with the demo graph. `backend.check_routing` compares A* with Dijkstra on 100 pairs. |
 | Traffic and signals | **Start simulation** moves vehicles and advances the clock. Cars wait at red, proceed on green, and stop updating on **Pause**. Try 500 vehicles. |
 | Closures and recovery | Close a segment on the highlighted route, see it marked closed, and verify the rescue route changes. Reopen the segment and use **Reset** to restore the scenario. `backend.check_simulation` exercises these controls. |
+| Green wave and alerts | Reset and run once with **Green wave and alerts** off and once with it on at the same density. Watch signal priority, the moving corridor, and gold yielding vehicles. Compare the simulated arrival times with `backend.check_priority`. |
 | Presentation access | Open the deck with the presenter’s account or use an offline export. Confirm that each partner who will run the demo can access the GitHub repo. |

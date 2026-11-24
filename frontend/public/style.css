@@ -111,6 +111,14 @@ input[type="range"] { width: 100%; margin: 5px 0 9px; accent-color: var(--teal);
 .closure[aria-pressed="true"] { border-color: var(--amber); background: #30251e; }
 .closure-icon { color: var(--amber); font-size: 17px; line-height: 1; }
 .closure b { font-size: 10px; background: #253842; padding: 3px 6px; border-radius: 7px; }
+.priority-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; font-weight: 650;
+}
+.priority-row input { accent-color: var(--teal); width: 15px; height: 15px; margin: 0 3px 0 0; }
+.priority-metrics { display: flex; gap: 13px; margin-top: 6px; color: var(--muted); font-size: 11px; }
+.priority-metrics b { color: var(--teal); font-variant-numeric: tabular-nums; }
 
 .map-area { position: relative; overflow: hidden; isolation: isolate; background: #101e29; }
 #map, #vehicles { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -128,6 +136,7 @@ input[type="range"] { width: 100%; margin: 5px 0 9px; accent-color: var(--teal);
 .map-legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #a8c0d7; }
 .map-legend .legend-route { width: 15px; height: 3px; border-radius: 2px; background: var(--teal); }
 .map-legend .legend-signal { background: #e67780; }
+.map-legend .legend-alert { background: #ffd683; }
 .map-legend .legend-closure { border-radius: 1px; background: var(--amber); transform: rotate(45deg); }
 .map-label { color: #92a6b5; font: 600 10px "Segoe UI", sans-serif; letter-spacing: .15em; pointer-events: none; text-shadow: 0 1px 4px #08131b; }
 .maplibregl-ctrl-attrib { font-size: 10px; }

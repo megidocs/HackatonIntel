@@ -27,6 +27,7 @@ let frameVehicles = [];
 let frameStart = 0;
 let routeKey = "";
 let closureKey = null;
+let priorityKey = "";
 let signalTime = -1;
 let requestNumber = 0;
 let appliedRequest = 0;
@@ -75,6 +76,16 @@ function addLayers(data) {
       "circle-stroke-color": "#19252d", "circle-stroke-width": .65,
     },
   });
+  map.addSource("corridor", { type: "geojson", data: empty });
+  map.addLayer({
+    id: "alert-corridor", type: "line", source: "corridor",
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: {
+      "line-color": "#65e0ce",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 12, 14, 14, 21, 17, 43],
+      "line-opacity": .23,
+    },
+  });
   map.addSource("route", { type: "geojson", data: empty });
   for (const [id, color, width] of [["route-halo", "#102522", 9], ["route-line", "#65e0ce", 4]]) {
     map.addLayer({
@@ -86,6 +97,14 @@ function addLayers(data) {
   map.addLayer({
     id: "closed-roads", type: "line", source: "roads", filter: ["==", ["get", "segment"], -1],
     paint: { "line-color": "#ffad68", "line-width": 5, "line-dasharray": [1, 1.3] },
+  });
+  map.addSource("priority-signals", { type: "geojson", data: empty });
+  map.addLayer({
+    id: "priority-points", type: "circle", source: "priority-signals",
+    paint: {
+      "circle-color": ["case", ["==", ["get", "phase"], "priority"], "#65e0ce", "#ffd683"],
+      "circle-radius": 5, "circle-stroke-width": 1.5, "circle-stroke-color": "#142328",
+    },
   });
   map.addSource("endpoints", { type: "geojson", data: empty });
   map.addLayer({
@@ -128,6 +147,11 @@ function locationLabel(coordinates, defaultName, defaultPoint) {
     : [coordinates[1], coordinates[0]].map((coord) => coord.toFixed(4)).join(", ");
 }
 
+function clockText(seconds) {
+  const whole = Math.floor(seconds);
+  return [Math.floor(whole / 60), whole % 60].map((value) => String(value).padStart(2, "0")).join(":");
+}
+
 function showState(next) {
   const first = !state;
   const now = performance.now();
@@ -167,6 +191,16 @@ function showState(next) {
     closureKey = closureList;
     map.setFilter("closed-roads", ["in", ["get", "segment"], ["literal", next.closures]]);
   }
+  const priorityStateKey = JSON.stringify([next.corridor, next.priority_signals]);
+  if (priorityStateKey !== priorityKey) {
+    priorityKey = priorityStateKey;
+    map.getSource("corridor").setData(collection(next.corridor.length >= 2 ? [{
+      type: "Feature", geometry: { type: "LineString", coordinates: next.corridor }, properties: {},
+    }] : []));
+    map.getSource("priority-signals").setData(collection(
+      next.priority_signals.map((signal) => point(signal.point, { phase: signal.phase })),
+    ));
+  }
   const second = Math.floor(next.time);
   if (signalTime !== second) {
     signalTime = second;
@@ -177,15 +211,21 @@ function showState(next) {
     ]);
   }
 
-  $("#clock").textContent = [Math.floor(second / 60), second % 60].map((value) => String(value).padStart(2, "0")).join(":");
+  $("#clock").textContent = clockText(next.time);
   $("#connection").dataset.state = next.running ? "running" : "paused";
   $("#connection-text").textContent = next.running ? "Running" : "Paused";
   $("#play-text").textContent = next.running ? "Pause" : next.time > 0 ? "Resume" : "Start simulation";
   $("#play > span:first-child").textContent = next.running ? "Ⅱ" : "▶";
   $("#closure-count").textContent = next.closures.length;
+  $("#priority").checked = next.priority_enabled;
+  $("#priority-count").textContent = next.priority_signals.length;
+  $("#alert-count").textContent = next.alerted_count;
   $("#distance").textContent = next.route_status === "blocked" ? "—" : `${(next.route_meters / 1000).toFixed(2)} km`;
   $("#eta").textContent = next.route_status === "blocked" ? "—" : `${(next.route_seconds / 60).toFixed(1)} min`;
-  const status = { blocked: "No open route to the destination.", arrived: "Rescue vehicle reached its destination." };
+  const status = {
+    blocked: "No open route to the destination.",
+    arrived: `Arrived in ${clockText(next.arrival_time ?? 0)} simulated time.`,
+  };
   const routeStatus = status[next.route_status] ?? "";
   if ($("#route-status").textContent !== routeStatus) $("#route-status").textContent = routeStatus;
   if (document.activeElement !== $("#density")) {
@@ -236,6 +276,7 @@ function drawVehicles(now) {
   const mix = Math.min(1, (now - frameStart) / 210);
   const moving = new Path2D();
   const stopped = new Path2D();
+  const yielding = new Path2D();
   let emergency;
   for (const car of frameVehicles) {
     const before = previousVehicles.get(car.id) ?? car.point;
@@ -243,7 +284,7 @@ function drawVehicles(now) {
     if (screen.x < -10 || screen.y < -10 || screen.x > width + 10 || screen.y > height + 10) continue;
     if (car.id === 0) emergency = screen;
     else {
-      const path = car.stopped ? stopped : moving;
+      const path = car.alerted ? yielding : car.stopped ? stopped : moving;
       path.moveTo(screen.x + 2, screen.y);
       path.arc(screen.x, screen.y, 2, 0, Math.PI * 2);
     }
@@ -252,6 +293,8 @@ function drawVehicles(now) {
   context.fill(moving);
   context.fillStyle = "#7e91a0";
   context.fill(stopped);
+  context.fillStyle = "#ffd683";
+  context.fill(yielding);
   if (emergency) {
     context.beginPath();
     context.arc(emergency.x, emergency.y, 6, 0, Math.PI * 2);
@@ -354,4 +397,5 @@ $("#reset").addEventListener("click", () => {
 $("#density").addEventListener("input", (event) => { $("#density-output").textContent = event.target.value; });
 $("#density").addEventListener("change", (event) => refresh("/simulation/control", { density: Number(event.target.value) }));
 $("#speed").addEventListener("change", (event) => refresh("/simulation/control", { speed: Number(event.target.value) }));
+$("#priority").addEventListener("change", (event) => refresh("/simulation/control", { priority: event.target.checked }));
 document.addEventListener("keydown", (event) => { if (event.key === "Escape" && mode) setMode(); });

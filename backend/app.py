@@ -46,6 +46,7 @@ class SimulationControl(BaseModel):
     running: bool | None = None
     speed: Literal[1, 4, 8] | None = None
     density: int | None = Field(default=None, ge=0, le=500)
+    priority: bool | None = None
     reset: bool = False
 
 
@@ -146,6 +147,9 @@ def simulation_control(payload: SimulationControl, request: Request):
             simulation.speed = payload.speed
         if payload.density is not None:
             simulation.set_density(payload.density)
+            simulation.update_priority()
+        if payload.priority is not None:
+            simulation.set_priority(payload.priority)
         return simulation.snapshot()
 
 

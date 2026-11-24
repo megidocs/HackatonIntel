@@ -59,6 +59,13 @@
         <button id="closure" type="button" class="secondary closure" data-mode="closure" aria-pressed="false" disabled>
           <span class="closure-icon" aria-hidden="true">╱</span><span>Toggle road closure</span><b id="closure-count">0</b>
         </button>
+        <label class="priority-row" for="priority">
+          <span>Green wave and alerts</span><input id="priority" type="checkbox" checked disabled>
+        </label>
+        <div class="priority-metrics">
+          <span><b id="priority-count">0</b> priority signals</span>
+          <span><b id="alert-count">0</b> yield alerts</span>
+        </div>
       </section>
     </aside>
 
@@ -70,6 +77,7 @@
         <span><i class="legend-route"></i>Rescue route</span>
         <span><i class="legend-vehicle"></i>Civilian vehicle</span>
         <span><i class="legend-signal"></i>Signal</span>
+        <span><i class="legend-alert"></i>Yielding</span>
         <span><i class="legend-closure"></i>Road closure</span>
       </div>
     </section>
