@@ -102,3 +102,23 @@
 ### Session result
 
 - Amit can sign in to the laptop demo with the short Rescue alias and the password in the private configuration file. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Commit and sync
+
+> commit, sync,
+
+### Decisions
+
+- Include the pending Android installation records in this sync. The Rescue credential rotation was already on GitHub in `197044c`. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Reviewed the pending [Android installation log](2026-11-24-hackatonintel-mobile.md) for the Samsung and Xiaomi demo phones. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Confirmed `main` and `origin/main` were aligned before committing. The [dispatch checks](https://github.com/megidocs/HackatonIntel/actions/runs/45419875272) and [preview checks](https://github.com/megidocs/HackatonIntel/actions/runs/45419875312) passed for the final application changes. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- This documentation commit captures the outstanding Android installation evidence and the requested sync. [Rubric criterion 4](../docs/rubric.html#c4)

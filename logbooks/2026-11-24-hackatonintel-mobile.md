@@ -59,3 +59,63 @@
 ### Session result
 
 - ClearPath AI is installed and open on the physical Xiaomi. Its default server is the [public Render simulator](https://clearpath-hackatonintel.onrender.com/simulator). The on-device connection and spoken-alert rehearsal are still to be checked. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Install on the new USB-connected Android phone
+
+> install on the new android connected to USB
+
+### Decisions
+
+- The user requested a USB install on the newly connected phone. The assistant selected the only device listed by ADB and built the current Android app with its default Render server. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Built the debug APK from the current checkout and asked the user to approve Android's USB debugging prompt on the phone. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Flutter completed the Android debug build. ADB detected the physical device and repeatedly reported it as unauthorized. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The APK is ready. Installation and launch verification are pending USB debugging approval on the phone. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Retry installation on the new phone
+
+> install again. sorry.
+
+### Decisions
+
+- The user requested a retry. The assistant used the APK built in the previous attempt and targeted the same USB device, now authorized and identified as Samsung model SM-A566B. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Installed the debug APK over USB and launched ClearPath AI. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- ADB reported a successful streamed install and cold launch. Android reported version 1.0.0 and confirmed ClearPath AI was the foreground activity. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- ClearPath AI is installed and open on the Samsung. This installation check covered the app launch. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Install on the connected device
+
+> install on the connected device.
+
+### Decisions
+
+- The user requested an install. The assistant selected the only authorized USB device, Xiaomi model 2312FPCA6G, and chose a debug build from the current checkout. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Built the Android APK with Flutter, installed it over USB with ADB, and launched ClearPath AI. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- ADB reported a successful streamed install and launch. Android reported version 1.0.0 and showed ClearPath AI as the resumed activity. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- ClearPath AI 1.0.0 is installed on the connected Xiaomi. This check covered installation and launch. [Rubric criterion 4](../docs/rubric.html#c4)
