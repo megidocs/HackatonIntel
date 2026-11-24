@@ -2,7 +2,9 @@
 
 import argparse
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from threading import Barrier
 from time import perf_counter, time
 from urllib.parse import urlsplit
 from uuid import uuid4
@@ -22,9 +24,9 @@ def rehearsal(base: str, settings: dict[str, str], graph: Path) -> dict:
     tokens = {}
     trace = []
 
-    def record(label, response, started, expected=200):
+    def record(label, response, elapsed_ms, expected=200):
         trace.append({"step": label, "status": response.status_code,
-                      "duration_ms": round((perf_counter() - started) * 1000, 2)})
+                      "duration_ms": round(elapsed_ms, 2)})
         if response.status_code != expected:
             raise RuntimeError(f"{label} returned HTTP {response.status_code}; expected {expected}.")
         return response.json()
@@ -37,7 +39,7 @@ def rehearsal(base: str, settings: dict[str, str], graph: Path) -> dict:
             response = auth.post("/auth/v1/token?grant_type=password", json={
                 "email": settings[f"{prefix}_EMAIL"], "password": settings[f"{prefix}_PASSWORD"],
             })
-            tokens[role] = record(f"{role} sign-in", response, started)["access_token"]
+            tokens[role] = record(f"{role} sign-in", response, (perf_counter() - started) * 1000)["access_token"]
 
     router = ManhattanRouter(graph)
     node = next(node for node, data in router.graph.nodes(data=True) if "traffic_signals" in str(data.get("highway", "")))
@@ -46,7 +48,7 @@ def rehearsal(base: str, settings: dict[str, str], graph: Path) -> dict:
             started = perf_counter()
             response = api.request(method, f"/dispatch/{path}", json=payload,
                                    headers={"Authorization": f"Bearer {tokens[role]}"})
-            return record(label, response, started, expected)
+            return record(label, response, (perf_counter() - started) * 1000, expected)
 
         for role in tokens:
             assert call(f"{role} role", "GET", "me", role)["role"] == role
@@ -75,8 +77,21 @@ def rehearsal(base: str, settings: dict[str, str], graph: Path) -> dict:
             call("citizen priority denied", "POST", "preemption", "citizen", command, 403)
             assert call("assigned rescue priority audited", "POST", "preemption", "rescue", command)["request_id"] == request_id
             sample = {"time_ms": int(time() * 1000), "nonce": str(uuid4()), "lat": 40.7391, "lon": -73.9760}
-            call("citizen position accepted", "POST", "position", "citizen", sample)
-            call("replayed position denied", "POST", "position", "citizen", sample, 409)
+            ready = Barrier(2)
+
+            def send_sample():
+                ready.wait()
+                started = perf_counter()
+                response = api.post("/dispatch/position", json=sample,
+                                    headers={"Authorization": f"Bearer {tokens['citizen']}"})
+                return response, (perf_counter() - started) * 1000
+
+            # Submit both copies inside the freshness window, even with slow remote authentication.
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                pending = [pool.submit(send_sample) for _ in range(2)]
+                first, second = sorted((job.result() for job in pending), key=lambda result: result[0].status_code)
+            assert record("citizen position accepted", *first)["accepted"]
+            assert record("replayed position denied", *second, expected=409)["detail"] == "Duplicate or out-of-order position."
         finally:
             if assigned:
                 call("rescue arrives", "POST", f"assignments/{dispatch_id}/arrive", "rescue")

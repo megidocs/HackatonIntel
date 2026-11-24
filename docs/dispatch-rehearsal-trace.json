@@ -1,0 +1,98 @@
+{
+  "incident_id": "3c4b4c69-94e6-4c4f-a272-eab37aeee680",
+  "dispatch_id": "d262ed90-e6b7-4e19-a39a-e742d320e2ac",
+  "audit_request_id": "d4dc6f97-0f08-4347-afb5-aabcf5e68e78",
+  "draft_requires_review": true,
+  "trace": [
+    {
+      "step": "dispatcher sign-in",
+      "status": 200,
+      "duration_ms": 1162.89
+    },
+    {
+      "step": "rescue sign-in",
+      "status": 200,
+      "duration_ms": 418.32
+    },
+    {
+      "step": "citizen sign-in",
+      "status": 200,
+      "duration_ms": 919.87
+    },
+    {
+      "step": "dispatcher role",
+      "status": 200,
+      "duration_ms": 3787.9
+    },
+    {
+      "step": "rescue role",
+      "status": 200,
+      "duration_ms": 3531.41
+    },
+    {
+      "step": "citizen role",
+      "status": 200,
+      "duration_ms": 3142.85
+    },
+    {
+      "step": "available units",
+      "status": 200,
+      "duration_ms": 6315.83
+    },
+    {
+      "step": "dispatcher report draft",
+      "status": 200,
+      "duration_ms": 4726.67
+    },
+    {
+      "step": "open synthetic incident",
+      "status": 200,
+      "duration_ms": 6414.27
+    },
+    {
+      "step": "assign rescue unit",
+      "status": 200,
+      "duration_ms": 6454.38
+    },
+    {
+      "step": "rescue sees assignment",
+      "status": 200,
+      "duration_ms": 6632.43
+    },
+    {
+      "step": "citizen priority denied",
+      "status": 403,
+      "duration_ms": 3298.39
+    },
+    {
+      "step": "assigned rescue priority audited",
+      "status": 200,
+      "duration_ms": 5973.22
+    },
+    {
+      "step": "citizen position accepted",
+      "status": 200,
+      "duration_ms": 3763.24
+    },
+    {
+      "step": "replayed position denied",
+      "status": 409,
+      "duration_ms": 3762.88
+    },
+    {
+      "step": "rescue arrives",
+      "status": 200,
+      "duration_ms": 6314.45
+    },
+    {
+      "step": "dispatcher closes incident",
+      "status": 200,
+      "duration_ms": 6455.09
+    },
+    {
+      "step": "completed rescue priority denied",
+      "status": 403,
+      "duration_ms": 6492.68
+    }
+  ]
+}

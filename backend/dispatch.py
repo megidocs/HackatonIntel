@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from time import time
+from time import time_ns
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
 from uuid import UUID
@@ -227,11 +227,22 @@ def arrive(dispatch_id: UUID, actor: SignedIn, dispatch: Services):
     return dispatch.query("select clearpath.mark_arrived(%s, %s)", (actor.user_id, dispatch_id))[0]
 
 
+async def position_received_ms() -> int:
+    # This dependency runs before the Supabase identity and role lookups.
+    return time_ns() // 1_000_000
+
+
 @router.post("/position")
-def position(payload: PositionSample, actor: SignedIn, dispatch: Services, request: Request):
+def position(
+    payload: PositionSample,
+    received_ms: Annotated[int, Depends(position_received_ms)],
+    actor: SignedIn,
+    dispatch: Services,
+    request: Request,
+):
     if actor.role not in {"rescue", "citizen"}:
         raise HTTPException(403, "Only rescue and citizen accounts can send positions.")
-    if abs(time() * 1000 - payload.time_ms) > 2000:
+    if abs(received_ms - payload.time_ms) > 2000:
         raise HTTPException(409, "Position time is outside the two-second window.")
     try:
         request.app.state.router.nearest_node(payload.lat, payload.lon)

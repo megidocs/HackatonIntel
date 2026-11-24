@@ -13,6 +13,7 @@
 | Dispatch database | [Milestone 5 setup and verification](docs/dispatch.md) for authorized accounts and a local Redis instance. |
 | Incident report models | [Local report review and model comparison](models/README.md) for the authenticated dispatcher rehearsal. |
 | Model development for presenters | [Technical brief for the slide team](docs/model-development-brief.md) with the training method, benchmark, and demo example. |
+| Rehearsal and measurements | [Performance report and demo sequence](docs/rehearsal.md), including browser frame timing and the authenticated dispatch check. |
 | Presentation | [Hebrew slide deck and offline setup](docs/slides/pedagogy-deck/README.md) and [teacher and student guidance](TeacherAndStudentguidance/README.md). |
 | Reference material | [Specification](docs/specification.md), [judging rubric](docs/rubric.html), [T-model reference](docs/T-model-STEM-final-project.pdf), [development logbook](logbooks/2026-11-24-lenovo-hackatonintel.md), and [public deployment log](logbooks/2026-11-24-hackatonintel-public-hosting.md) |
 

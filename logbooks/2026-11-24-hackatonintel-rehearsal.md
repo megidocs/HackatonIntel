@@ -39,3 +39,23 @@
 ### Session result
 
 - The saved measurements and scripts are a milestone 7 checkpoint. The full rehearsal, position-rejection diagnosis, and presentation performance report remain pending after the sync. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User follow-up · Continue milestone 7
+
+> continue 7
+
+### Decisions
+
+- Resume the paused rehearsal. Diagnose the initial position rejection before changing the validation. Keep the public simulation and the signed-in dispatch rehearsal separate so the results describe the actual deployment. [Rubric criterion 1](../docs/rubric.html#c1)
+
+### AI contribution
+
+- Captured the position receive timestamp before Supabase checks and added a delayed-auth regression. Updated the rehearsal to submit duplicate positions together, so it checks Redis nonce handling inside the existing freshness window. Wrote the [performance report and sequence diagrams](../docs/rehearsal.md) and linked them from the partner guide and spec. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Reproduced the original two-second-window rejection at 3.61 and 3.79 seconds end to end. After the fix, the live signed-in rehearsal accepted a fresh position and rejected the duplicate nonce. A read-only Supabase query confirmed a closed incident, recorded arrival and exactly one matching audit row. [Rehearsal trace](../docs/dispatch-rehearsal-trace.json) · [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The laptop rehearsal and measurement write-up are ready to review. The physical Android check and final sync follow this checkpoint. [Rubric criterion 4](../docs/rubric.html#c4)

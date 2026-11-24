@@ -3,7 +3,7 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from time import time
+from time import sleep, time
 from uuid import uuid4
 
 import httpx
@@ -36,12 +36,15 @@ def main() -> None:
         with TestClient(app) as client:
             dispatch: DispatchServices = app.state.dispatch
             dispatch.identity.close()
+            auth_delay = 0
 
             def auth(request: httpx.Request):
                 assert request.url.path == "/auth/v1/user" and request.headers["apikey"]
                 token = request.headers["authorization"].removeprefix("Bearer ")
                 if token not in identities:
                     return httpx.Response(401)
+                if token == "citizen" and auth_delay:
+                    sleep(auth_delay)
                 return httpx.Response(200, json={"id": str(identities[token]), "user_metadata": {"role": "dispatcher"}})
 
             dispatch.identity = httpx.Client(
@@ -115,6 +118,10 @@ def main() -> None:
             key = f"clearpath:position:{identities['citizen']}"
             assert 0 < dispatch.redis.ttl(f"{key}:latest") <= 60
             assert 0 < dispatch.redis.ttl(f"{key}:nonce:{sample['nonce']}") <= 60
+
+            auth_delay = 2.1
+            fresh = dict(sample, nonce=str(uuid4()), time_ms=int(time() * 1000))
+            assert call("POST", "position", "citizen", fresh)["accepted"]
 
         assert owner.execute("select count(*) from clearpath.preemption_log").fetchone() == (1,)
         print("Verified PostgreSQL persistence, assignment concurrency, role enforcement and Redis replay/TTL checks.")
