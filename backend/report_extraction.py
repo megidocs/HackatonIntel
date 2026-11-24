@@ -72,12 +72,15 @@ def verified_location(report: str, draft: ReportDraft, router) -> dict | None:
     return {"label": label, "osm_node_id": node, "lat": graph_point["y"], "lon": graph_point["x"]}
 
 
-def extract_report(client: httpx.Client, base_url: str, report: str) -> ReportDraft:
+def extract_report(
+    client: httpx.Client, base_url: str, report: str, *, timeout: float | None = None, usage: dict | None = None
+) -> ReportDraft:
     address = urlsplit(base_url)
     if address.scheme != "http" or address.hostname not in {"127.0.0.1", "::1", "localhost"}:
         raise ValueError("The report model must run on local loopback.")
     response = client.post(
         base_url.rstrip("/") + "/v1/chat/completions",
+        **({"timeout": timeout} if timeout is not None else {}),
         json={
             "temperature": 0,
             "max_tokens": 144,
@@ -93,7 +96,11 @@ def extract_report(client: httpx.Client, base_url: str, report: str) -> ReportDr
         },
     )
     response.raise_for_status()
-    choice = response.json()["choices"][0]
+    payload = response.json()
+    if usage is not None:
+        for key in ("prompt_tokens", "completion_tokens"):
+            usage[key] = usage.get(key, 0) + payload.get("usage", {}).get(key, 0)
+    choice = payload["choices"][0]
     if choice["finish_reason"] != "stop":
         raise ValueError("The report response was incomplete.")
     draft = ReportDraft.model_validate_json(choice["message"]["content"])

@@ -1,0 +1,643 @@
+{
+  "summary": {
+    "cases": 30,
+    "copilot_correct": 22,
+    "baseline_correct": 20,
+    "copilot_mean_ms": 1593.5,
+    "baseline_mean_ms": 23.95,
+    "mean_tool_calls": 4.5
+  },
+  "cases": [
+    {
+      "case": "medical-1",
+      "expected_unit_types": [
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1618.9,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 421,
+        "completion_tokens": 70
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 36.76
+    },
+    {
+      "case": "medical-2",
+      "expected_unit_types": [
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1477.4,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 421,
+        "completion_tokens": 70
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 37.92
+    },
+    {
+      "case": "medical-3",
+      "expected_unit_types": [
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1516.8,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 423,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 32.67
+    },
+    {
+      "case": "medical-4",
+      "expected_unit_types": [
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1516.2,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 420,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 30.74
+    },
+    {
+      "case": "medical-5",
+      "expected_unit_types": [
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1590.7,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 422,
+        "completion_tokens": 76
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 32.46
+    },
+    {
+      "case": "fire-1",
+      "expected_unit_types": [
+        "fire"
+      ],
+      "copilot_unit_types": [
+        "fire"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1613.7,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 423,
+        "completion_tokens": 75
+      },
+      "baseline_unit_types": [
+        "fire"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 34.03
+    },
+    {
+      "case": "fire-2",
+      "expected_unit_types": [
+        "fire"
+      ],
+      "copilot_unit_types": [
+        "fire"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1555.4,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 424,
+        "completion_tokens": 72
+      },
+      "baseline_unit_types": [
+        "fire"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 33.47
+    },
+    {
+      "case": "fire-3",
+      "expected_unit_types": [
+        "fire"
+      ],
+      "copilot_unit_types": [
+        "fire"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1645.4,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 423,
+        "completion_tokens": 76
+      },
+      "baseline_unit_types": [
+        "fire"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 31.56
+    },
+    {
+      "case": "fire-4",
+      "expected_unit_types": [
+        "fire"
+      ],
+      "copilot_unit_types": [
+        "fire"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1577.2,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 421,
+        "completion_tokens": 72
+      },
+      "baseline_unit_types": [
+        "fire"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 36.53
+    },
+    {
+      "case": "fire-5",
+      "expected_unit_types": [
+        "fire"
+      ],
+      "copilot_unit_types": [
+        "fire"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1626.1,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 422,
+        "completion_tokens": 72
+      },
+      "baseline_unit_types": [
+        "fire"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 33.44
+    },
+    {
+      "case": "compound crash-1",
+      "expected_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 2072.8,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 449,
+        "completion_tokens": 87
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 17.43
+    },
+    {
+      "case": "compound crash-2",
+      "expected_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1940.1,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 440,
+        "completion_tokens": 83
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 16.55
+    },
+    {
+      "case": "compound crash-3",
+      "expected_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 2009.1,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 450,
+        "completion_tokens": 87
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 15.77
+    },
+    {
+      "case": "compound crash-4",
+      "expected_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": true,
+      "copilot_ms": 1903.5,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 437,
+        "completion_tokens": 83
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 14.78
+    },
+    {
+      "case": "compound crash-5",
+      "expected_unit_types": [
+        "fire",
+        "medical"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 2064.2,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 450,
+        "completion_tokens": 83
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 15.71
+    },
+    {
+      "case": "roadblock-1",
+      "expected_unit_types": [
+        "police"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 1805.6,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 441,
+        "completion_tokens": 76
+      },
+      "baseline_unit_types": [
+        "police"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 33.95
+    },
+    {
+      "case": "roadblock-2",
+      "expected_unit_types": [
+        "police"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 1695.6,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 437,
+        "completion_tokens": 76
+      },
+      "baseline_unit_types": [
+        "police"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 23.63
+    },
+    {
+      "case": "roadblock-3",
+      "expected_unit_types": [
+        "police"
+      ],
+      "copilot_unit_types": [
+        "medical"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 1745.0,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 424,
+        "completion_tokens": 73
+      },
+      "baseline_unit_types": [
+        "police"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 25.3
+    },
+    {
+      "case": "roadblock-4",
+      "expected_unit_types": [
+        "police"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 1741.0,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 437,
+        "completion_tokens": 72
+      },
+      "baseline_unit_types": [
+        "police"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 24.35
+    },
+    {
+      "case": "roadblock-5",
+      "expected_unit_types": [
+        "police"
+      ],
+      "copilot_unit_types": [
+        "fire",
+        "medical",
+        "police"
+      ],
+      "copilot_status": "pending",
+      "copilot_correct": false,
+      "copilot_ms": 1739.3,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 445,
+        "completion_tokens": 76
+      },
+      "baseline_unit_types": [
+        "police"
+      ],
+      "baseline_correct": true,
+      "baseline_ms": 25.46
+    },
+    {
+      "case": "duplicate-1",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1732.8,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 422,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 34.65
+    },
+    {
+      "case": "duplicate-2",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1625.6,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 422,
+        "completion_tokens": 71
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 36.01
+    },
+    {
+      "case": "duplicate-3",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1659.3,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 420,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 32.86
+    },
+    {
+      "case": "duplicate-4",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1637.0,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 423,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 32.75
+    },
+    {
+      "case": "duplicate-5",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1623.6,
+      "tools": 5,
+      "model_tokens": {
+        "prompt_tokens": 422,
+        "completion_tokens": 74
+      },
+      "baseline_unit_types": [
+        "medical"
+      ],
+      "baseline_correct": false,
+      "baseline_ms": 29.65
+    },
+    {
+      "case": "ambiguous-1",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 943.2,
+      "tools": 2,
+      "model_tokens": {
+        "prompt_tokens": 235,
+        "completion_tokens": 41
+      },
+      "baseline_unit_types": [],
+      "baseline_correct": true,
+      "baseline_ms": 0.0
+    },
+    {
+      "case": "ambiguous-2",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1002.0,
+      "tools": 2,
+      "model_tokens": {
+        "prompt_tokens": 235,
+        "completion_tokens": 45
+      },
+      "baseline_unit_types": [],
+      "baseline_correct": true,
+      "baseline_ms": 0.0
+    },
+    {
+      "case": "ambiguous-3",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 889.4,
+      "tools": 2,
+      "model_tokens": {
+        "prompt_tokens": 232,
+        "completion_tokens": 40
+      },
+      "baseline_unit_types": [],
+      "baseline_correct": true,
+      "baseline_ms": 0.0
+    },
+    {
+      "case": "ambiguous-4",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1194.7,
+      "tools": 2,
+      "model_tokens": {
+        "prompt_tokens": 237,
+        "completion_tokens": 55
+      },
+      "baseline_unit_types": [],
+      "baseline_correct": true,
+      "baseline_ms": 0.0
+    },
+    {
+      "case": "ambiguous-5",
+      "expected_unit_types": [],
+      "copilot_unit_types": [],
+      "copilot_status": "needs_clarification",
+      "copilot_correct": true,
+      "copilot_ms": 1043.3,
+      "tools": 2,
+      "model_tokens": {
+        "prompt_tokens": 237,
+        "completion_tokens": 45
+      },
+      "baseline_unit_types": [],
+      "baseline_correct": true,
+      "baseline_ms": 0.0
+    }
+  ]
+}

@@ -11,6 +11,7 @@
 | Backend checks | [FastAPI docs](http://127.0.0.1:8000/docs) and [health](http://127.0.0.1:8000/health) on that same machine |
 | Public Supabase project URL | [https://uodbkiyevjwgmjnofcpj.supabase.co](https://uodbkiyevjwgmjnofcpj.supabase.co). This is Hackathon-supa’s hosted API base URL. |
 | Dispatch database | [Milestone 5 setup and verification](docs/dispatch.md) for authorized accounts and a local Redis instance. |
+| Google sign-in and Rescue accounts | [Provider setup and enrollment](docs/google-rescue-enrollment.md) for the selected Google identities. |
 | Incident report models | [Local report review and model comparison](models/README.md) for the authenticated dispatcher rehearsal. |
 | Model development for presenters | [Technical brief for the slide team](docs/model-development-brief.md) with the training method, benchmark, and demo example. |
 | Rehearsal and measurements | [Performance report and demo sequence](docs/rehearsal.md), including browser frame timing and the authenticated dispatch check. |

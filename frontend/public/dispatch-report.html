@@ -21,6 +21,9 @@
     dl { display: grid; grid-template-columns: minmax(6rem, 1fr) 2fr; gap: .65rem; }
     dt { font-weight: 650; }
     dd { margin: 0; overflow-wrap: anywhere; }
+    .actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .unit { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: .65rem; }
+    .unit input { width: auto; }
     :focus-visible { outline: 2px solid #8ee5d1; outline-offset: 3px; }
   </style>
   <script type="module" src="/sim/assets/dispatch-report.js"></script>
@@ -35,7 +38,10 @@
       <input id="token" type="password" autocomplete="off" spellcheck="false" required>
       <label for="report">Incident report</label>
       <textarea id="report" maxlength="1200" required></textarea>
-      <button id="suggest" type="submit">Draft report</button>
+      <div class="actions">
+        <button type="submit" value="extract">Draft report</button>
+        <button type="submit" value="copilot">Propose dispatch</button>
+      </div>
     </form>
     <p id="status" role="status"></p>
     <section id="review" hidden>
@@ -47,6 +53,17 @@
         <dt>Units to consider</dt><dd id="units"></dd>
       </dl>
     </section>
+    <section id="dispatch-review" hidden>
+      <h2>Review proposed dispatch</h2>
+      <p id="dispatch-summary"></p>
+      <div id="dispatch-candidates"></div>
+      <div class="actions">
+        <button id="approve-dispatch" type="button">Approve selected units</button>
+        <button id="reject-dispatch" type="button">Reject draft</button>
+      </div>
+      <p id="dispatch-status" role="status"></p>
+    </section>
+    <p><a href="/docs#tag/dispatch">Manual dispatch API</a></p>
   </main>
 </body>
 </html>

@@ -3,16 +3,18 @@ from dataclasses import dataclass
 from time import time_ns
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import httpx
 import psycopg
 from fastapi import APIRouter, Depends, HTTPException, Request, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from psycopg.conninfo import conninfo_to_dict
+from psycopg.types.json import Jsonb
 from pydantic import BaseModel, Field
 from redis import Redis, RedisError
 
+from .copilot import plan_dispatch
 from .report_extraction import extract_report, verified_location
 from .routing import PointOutsideGraph
 
@@ -169,6 +171,11 @@ class FreeTextReport(BaseModel):
     report: str = Field(min_length=1, max_length=1200)
 
 
+class DraftReview(BaseModel):
+    decision: Literal["approved", "rejected"]
+    unit_ids: list[UUID] = Field(default_factory=list, max_length=3)
+
+
 @router.get("/me")
 def me(actor: SignedIn):
     return {"user_id": actor.user_id, "role": actor.role}
@@ -199,6 +206,47 @@ def report_suggestion(payload: FreeTextReport, actor: SignedIn, request: Request
     except PointOutsideGraph:
         location = None
     return {"proposal": draft, "map_location": location, "requires_review": True}
+
+
+@router.post("/copilot/drafts")
+def draft_dispatch(payload: FreeTextReport, actor: SignedIn, dispatch: Services, request: Request):
+    if actor.role != "dispatcher":
+        raise HTTPException(403, "Only a dispatcher can use the copilot.")
+    model_url = os.getenv("CLEARPATH_MODEL_URL")
+    if not model_url:
+        return {"status": "manual", "reason": "The local model is disabled.", "trace": []}
+    if not payload.report.strip():
+        raise HTTPException(422, "Enter an incident report.")
+    simulation = request.app.state.simulation
+    with simulation.lock:
+        blocked = frozenset(edge for edge, road in simulation.roads.items() if road.segment in simulation.closed)
+
+    def board():
+        return dispatch.query("select clearpath.dispatch_board(%s)", (actor.user_id,))[0]
+
+    try:
+        with httpx.Client(timeout=10, trust_env=False) as client:
+            result = plan_dispatch(payload.report.strip(), client, model_url, simulation.router, board, blocked)
+        if result["status"] == "pending":
+            draft_id = uuid4()
+            dispatch.query("select clearpath.save_dispatch_draft(%s,%s,%s,%s)", (
+                actor.user_id, draft_id, Jsonb(result["proposal"]), Jsonb(result["trace"]),
+            ))
+            result["draft_id"] = draft_id
+        return result
+    except HTTPException as error:
+        if error.status_code != 503:
+            raise
+        return {"status": "manual", "reason": "Dispatch storage is unavailable.", "trace": []}
+
+
+@router.post("/copilot/drafts/{draft_id}/review")
+def review_dispatch(draft_id: UUID, payload: DraftReview, actor: SignedIn, dispatch: Services):
+    if actor.role != "dispatcher":
+        raise HTTPException(403, "Only a dispatcher can review a draft.")
+    return dispatch.query("select clearpath.review_dispatch_draft(%s,%s,%s,%s::uuid[])", (
+        actor.user_id, draft_id, payload.decision, sorted(payload.unit_ids),
+    ))[0]
 
 
 @router.post("/incidents")
