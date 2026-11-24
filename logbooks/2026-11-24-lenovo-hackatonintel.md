@@ -1049,3 +1049,27 @@ The user added this requirement while the guidance was being written:
 ### Session result
 
 - Milestone 5 is complete. Milestone 6 has working extraction and classification and a synthetic benchmark, with human-written evaluation pending. Milestone 7 remains partial and milestone 8 remains planned. [Rubric criterion 4](../docs/rubric.html#c4)
+
+## User prompt · Update the slides for milestones 6 to 8
+
+> PULL
+
+> Yes, update slides
+
+### Decisions
+
+- The user asked to pull, then to update the slides after the pull brought in the copilot, rehearsal and Rescue sign-in commits. [Rubric criterion 4](../docs/rubric.html#c4)
+- All eight milestones are marked done. This supersedes the earlier status review in this logbook, which predates the commits that completed milestones 7 and 8. Milestone 6 has a trained TF-IDF classifier (25/32) and local Qwen3 drafting (27/32) with schema and location checks. Milestone 7 has the [rehearsal report](../docs/rehearsal.md) with sequence diagrams, CPU-scheduling measurements, 60 FPS with 500 vehicles, and a phone rehearsal. Milestone 8 has the [copilot](../docs/copilot.md), with 22/30 against the baseline's 20/30, dispatcher approval, a blocked injection and a manual fallback. [Rubric criterion 3](../docs/rubric.html#c3)
+- The remaining-work slide now lists what the sources record as open. It covers an independent student-authored evaluation, beyond category, for the models and copilot. It covers the copilot's 6.13-second proposal against the 5-second goal and its 0/5 on roadblocks, the unmeasured 300 ms phone-to-screen target and the Wi-Fi versus cellular comparison, and the system gaps: Android sign-in, laptop-only dispatch, models and copilot, priority requests not driving signals, and real GPS with background push. [Rubric criterion 4](../docs/rubric.html#c4)
+
+### AI contribution
+
+- Claude read the [model development brief](../docs/model-development-brief.md), the [models README](../models/README.md), the copilot guide, the rehearsal report and the models, copilot and rehearsal logbooks. It moved the language model from the cloud column into the server box, because it runs locally through llama.cpp, and added the dispatcher copilot. It updated the milestone and remaining-work slides and their speaker notes, and rebuilt `deck.html`. [Rubric criterion 2](../docs/rubric.html#c2)
+
+### Independent checks
+
+- Measured all eight slides: each ends inside the slide margin and no text overflows. With one cloud card removed, the left arrows no longer lined up with their cards. After the fix, both arrow centres match their card centres to the pixel. [Rubric criterion 3](../docs/rubric.html#c3)
+
+### Session result
+
+- The updated deck is committed locally. Publishing to claude.ai and pushing to GitHub wait for the user's approval. [Rubric criterion 4](../docs/rubric.html#c4)

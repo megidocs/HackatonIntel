@@ -90,6 +90,7 @@ h1 { font-family: 'Rubik', Arial, sans-serif; font-weight: 700; font-size: 120px
 .tag.live { background: #2E6E62; color: #F7F5EF; }
 .tag.plan { background: #FBFAF6; color: #6B4A12; border: 2px dashed #B7832F; }
 .alinks { width: 130px; display: flex; flex-direction: column; justify-content: space-around; }
+.alinks.top { justify-content: flex-start; padding-top: 68px; gap: 92px; }
 .alink { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .proto { font-size: 24px; font-weight: 600; color: var(--accent); text-align: center; white-space: nowrap; }
 .proto.small { font-weight: 400; color: var(--soft); white-space: normal; line-height: 1.25; }
