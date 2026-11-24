@@ -940,4 +940,4 @@ The user added this requirement while the guidance was being written:
 
 ### Session result
 
-- The guidance and the algorithms skill now match the decision. Committed locally; not yet pushed. [Rubric criterion 4](../docs/rubric.html#c4)
+- The guidance and the algorithms skill now match the decision. At the user's request (“Push”), the commit is pushed to `origin/main` after a clean pull. [Rubric criterion 4](../docs/rubric.html#c4)
